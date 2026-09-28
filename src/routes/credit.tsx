@@ -30,7 +30,7 @@ export const Route = createFileRoute("/credit")({
       },
     ],
   }),
-  component: Credit;
+  component: Credit,
 });
 
 const STAGES = ["Authorization", "Receipt", "Verification", "Settlement"] as const;
