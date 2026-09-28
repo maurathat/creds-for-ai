@@ -17,7 +17,7 @@ function label(k: string) {
   return k.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
 }
 
-export function DataTable({ rows, columns }: { rows: readonly Row[]; columns?: string[] }) {
+export function DataTable({ rows, columns }: { rows: readonly Row[]; columns?: string[] | undefined }) {
   const cols = columns ?? (rows[0] ? Object.keys(rows[0]) : []);
   return (
     <div className="overflow-x-auto">
@@ -59,7 +59,7 @@ export function DataPage({
   title: string;
   description: string;
   level: Maturity;
-  sections: { title: string; subtitle?: string; rows: readonly Row[]; columns?: string[] }[];
+  sections: { title: string; rows: readonly Row[]; columns?: string[] }[];
   children?: ReactNode;
 }) {
   return (
@@ -68,7 +68,7 @@ export function DataPage({
         <PageHeader kicker={kicker} title={title} description={description} level={level} />
         {children}
         {sections.map((s) => (
-          <Panel key={s.title} title={s.title} subtitle={s.subtitle} bodyClassName="p-0">
+          <Panel key={s.title} title={s.title} bodyClassName="p-0">
             <DataTable rows={s.rows} columns={s.columns} />
           </Panel>
         ))}
