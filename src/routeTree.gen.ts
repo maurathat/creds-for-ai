@@ -16,12 +16,16 @@ import { Route as MachineCreditRouteImport } from './routes/machine-credit'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as OverviewRouteImport } from './routes/overview'
 import { Route as PriceIndexRouteImport } from './routes/price-index'
+import { Route as ProcureRouteImport } from './routes/procure'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as ReceiptsRouteImport } from './routes/receipts'
 import { Route as ReputationRouteImport } from './routes/reputation'
 import { Route as ReservationsRouteImport } from './routes/reservations'
 import { Route as SecondaryMarketRouteImport } from './routes/secondary-market'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SettlementRouteImport } from './routes/settlement'
+import { Route as OperationsIndexRouteImport } from './routes/operations/index'
+import { Route as OperationsOperationIdRouteImport } from './routes/operations/$operationId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +62,11 @@ const PriceIndexRoute = PriceIndexRouteImport.update({
   path: '/price-index',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProcureRoute = ProcureRouteImport.update({
+  id: '/procure',
+  path: '/procure',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProvidersRoute = ProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
@@ -88,6 +97,21 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettlementRoute = SettlementRouteImport.update({
+  id: '/settlement',
+  path: '/settlement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperationsIndexRoute = OperationsIndexRouteImport.update({
+  id: '/operations/',
+  path: '/operations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperationsOperationIdRoute = OperationsOperationIdRouteImport.update({
+  id: '/operations/$operationId',
+  path: '/operations/$operationId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -97,12 +121,16 @@ export interface FileRoutesByFullPath {
   '/market': typeof MarketRoute
   '/overview': typeof OverviewRoute
   '/price-index': typeof PriceIndexRoute
+  '/procure': typeof ProcureRoute
   '/providers': typeof ProvidersRoute
   '/receipts': typeof ReceiptsRoute
   '/reputation': typeof ReputationRoute
   '/reservations': typeof ReservationsRoute
   '/secondary-market': typeof SecondaryMarketRoute
   '/settings': typeof SettingsRoute
+  '/settlement': typeof SettlementRoute
+  '/operations/$operationId': typeof OperationsOperationIdRoute
+  '/operations/': typeof OperationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -112,12 +140,16 @@ export interface FileRoutesByTo {
   '/market': typeof MarketRoute
   '/overview': typeof OverviewRoute
   '/price-index': typeof PriceIndexRoute
+  '/procure': typeof ProcureRoute
   '/providers': typeof ProvidersRoute
   '/receipts': typeof ReceiptsRoute
   '/reputation': typeof ReputationRoute
   '/reservations': typeof ReservationsRoute
   '/secondary-market': typeof SecondaryMarketRoute
   '/settings': typeof SettingsRoute
+  '/settlement': typeof SettlementRoute
+  '/operations/$operationId': typeof OperationsOperationIdRoute
+  '/operations': typeof OperationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -128,12 +160,16 @@ export interface FileRoutesById {
   '/market': typeof MarketRoute
   '/overview': typeof OverviewRoute
   '/price-index': typeof PriceIndexRoute
+  '/procure': typeof ProcureRoute
   '/providers': typeof ProvidersRoute
   '/receipts': typeof ReceiptsRoute
   '/reputation': typeof ReputationRoute
   '/reservations': typeof ReservationsRoute
   '/secondary-market': typeof SecondaryMarketRoute
   '/settings': typeof SettingsRoute
+  '/settlement': typeof SettlementRoute
+  '/operations/$operationId': typeof OperationsOperationIdRoute
+  '/operations/': typeof OperationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -145,12 +181,16 @@ export interface FileRouteTypes {
     | '/market'
     | '/overview'
     | '/price-index'
+    | '/procure'
     | '/providers'
     | '/receipts'
     | '/reputation'
     | '/reservations'
     | '/secondary-market'
     | '/settings'
+    | '/settlement'
+    | '/operations/$operationId'
+    | '/operations/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -160,12 +200,16 @@ export interface FileRouteTypes {
     | '/market'
     | '/overview'
     | '/price-index'
+    | '/procure'
     | '/providers'
     | '/receipts'
     | '/reputation'
     | '/reservations'
     | '/secondary-market'
     | '/settings'
+    | '/settlement'
+    | '/operations/$operationId'
+    | '/operations'
   id:
     | '__root__'
     | '/'
@@ -175,12 +219,16 @@ export interface FileRouteTypes {
     | '/market'
     | '/overview'
     | '/price-index'
+    | '/procure'
     | '/providers'
     | '/receipts'
     | '/reputation'
     | '/reservations'
     | '/secondary-market'
     | '/settings'
+    | '/settlement'
+    | '/operations/$operationId'
+    | '/operations/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -191,12 +239,16 @@ export interface RootRouteChildren {
   MarketRoute: typeof MarketRoute
   OverviewRoute: typeof OverviewRoute
   PriceIndexRoute: typeof PriceIndexRoute
+  ProcureRoute: typeof ProcureRoute
   ProvidersRoute: typeof ProvidersRoute
   ReceiptsRoute: typeof ReceiptsRoute
   ReputationRoute: typeof ReputationRoute
   ReservationsRoute: typeof ReservationsRoute
   SecondaryMarketRoute: typeof SecondaryMarketRoute
   SettingsRoute: typeof SettingsRoute
+  SettlementRoute: typeof SettlementRoute
+  OperationsOperationIdRoute: typeof OperationsOperationIdRoute
+  OperationsIndexRoute: typeof OperationsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -250,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PriceIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/procure': {
+      id: '/procure'
+      path: '/procure'
+      fullPath: '/procure'
+      preLoaderRoute: typeof ProcureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/providers': {
       id: '/providers'
       path: '/providers'
@@ -292,6 +351,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settlement': {
+      id: '/settlement'
+      path: '/settlement'
+      fullPath: '/settlement'
+      preLoaderRoute: typeof SettlementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/operations/': {
+      id: '/operations/'
+      path: '/operations'
+      fullPath: '/operations/'
+      preLoaderRoute: typeof OperationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/operations/$operationId': {
+      id: '/operations/$operationId'
+      path: '/operations/$operationId'
+      fullPath: '/operations/$operationId'
+      preLoaderRoute: typeof OperationsOperationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -303,12 +383,16 @@ const rootRouteChildren: RootRouteChildren = {
   MarketRoute: MarketRoute,
   OverviewRoute: OverviewRoute,
   PriceIndexRoute: PriceIndexRoute,
+  ProcureRoute: ProcureRoute,
   ProvidersRoute: ProvidersRoute,
   ReceiptsRoute: ReceiptsRoute,
   ReputationRoute: ReputationRoute,
   ReservationsRoute: ReservationsRoute,
   SecondaryMarketRoute: SecondaryMarketRoute,
   SettingsRoute: SettingsRoute,
+  SettlementRoute: SettlementRoute,
+  OperationsOperationIdRoute: OperationsOperationIdRoute,
+  OperationsIndexRoute: OperationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

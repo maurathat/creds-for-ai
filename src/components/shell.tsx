@@ -15,14 +15,26 @@ import {
   Settings2,
   Menu,
   X,
+  SlidersHorizontal,
+  Workflow,
+  Link2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FACILITY, VIU_SPOT } from "@/lib/credence";
+import { useHealth } from "@/lib/credence-api/hooks";
 
+// The P0 workflow, in the order an agent's purchase moves through it. These pages read the
+// Credence API; the prototype pages below them still show the original seeded data.
 const NAV = [
+  { to: "/market", label: "Inference Market", icon: Store, tag: "P0" },
+  { to: "/procure", label: "Procurement", icon: SlidersHorizontal, tag: "P0" },
+  { to: "/operations", label: "Purchases", icon: Workflow, tag: "P0" },
+  { to: "/credit", label: "Credit", icon: Landmark, tag: "P0" },
+  { to: "/receipts", label: "Receipts", icon: ReceiptText, tag: "P0" },
+  { to: "/settlement", label: "XRPL Settlement", icon: Link2, tag: "P0" },
+] as const;
+
+const PROTOTYPE_NAV = [
   { to: "/overview", label: "Overview", icon: LayoutDashboard, tag: "" },
-  { to: "/credit", label: "Credit", icon: Landmark, tag: "LIVE" },
-  { to: "/market", label: "Inference Market", icon: Store, tag: "SIM" },
   { to: "/providers", label: "Providers", icon: Server, tag: "SIM" },
   { to: "/reputation", label: "Reputation", icon: BadgeCheck, tag: "SIM" },
   { to: "/reservations", label: "Reservations", icon: CalendarClock, tag: "RM" },
@@ -30,12 +42,11 @@ const NAV = [
   { to: "/secondary-market", label: "Secondary Market", icon: ArrowLeftRight, tag: "RM" },
   { to: "/price-index", label: "Price Index", icon: GaugeIcon, tag: "RM" },
   { to: "/machine-credit", label: "Machine Credit", icon: Wallet, tag: "RM" },
-  { to: "/receipts", label: "Receipts", icon: ReceiptText, tag: "LIVE" },
   { to: "/settings", label: "Settings", icon: Settings2, tag: "" },
 ] as const;
 
 const TAG_CLS: Record<string, string> = {
-  LIVE: "text-success",
+  P0: "text-primary",
   SIM: "text-warn",
   RM: "text-roadmap",
 };
@@ -43,7 +54,24 @@ const TAG_CLS: Record<string, string> = {
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex flex-col gap-0.5 px-2">
-      {NAV.map((item) => (
+      <div className="label-xs px-2.5 pb-1">Procurement workflow</div>
+      <NavItems items={NAV} onNavigate={onNavigate} />
+      <div className="label-xs px-2.5 pb-1 pt-4">Prototype · seeded data</div>
+      <NavItems items={PROTOTYPE_NAV} onNavigate={onNavigate} />
+    </nav>
+  );
+}
+
+function NavItems({
+  items,
+  onNavigate,
+}: {
+  items: readonly ((typeof NAV)[number] | (typeof PROTOTYPE_NAV)[number])[];
+  onNavigate?: (() => void) | undefined;
+}) {
+  return (
+    <>
+      {items.map((item) => (
         <Link
           key={item.to}
           to={item.to}
@@ -63,7 +91,43 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
           )}
         </Link>
       ))}
-    </nav>
+    </>
+  );
+}
+
+/** Computed from the API's health check, never typed: the app shows no connection it lacks. */
+function StatusBadge() {
+  const health = useHealth();
+  if (health.isLoading) {
+    return (
+      <span className="rounded-md border border-border px-2 py-1 text-[11px] text-muted-foreground">
+        Checking API…
+      </span>
+    );
+  }
+  if (health.error || !health.data) {
+    return (
+      <span className="flex items-center gap-1.5 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1 text-[11px] text-destructive">
+        <span className="size-1.5 rounded-full bg-destructive" />
+        Credence API unreachable
+      </span>
+    );
+  }
+  const ledger = health.data.ledger;
+  return (
+    <span className="flex items-center gap-2">
+      <span className="flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 px-2 py-1 text-[11px] text-primary">
+        <span className="size-1.5 rounded-full bg-primary" />
+        API · {health.data.mode}
+      </span>
+      <span
+        className="flex items-center gap-1.5 rounded-md border border-border-strong bg-surface-2 px-2 py-1 text-[11px] text-muted-foreground"
+        title={ledger.note}
+      >
+        <span className="size-1.5 rounded-full bg-muted-foreground" />
+        {ledger.connected ? `Ledger · ${ledger.network}` : "No ledger connection"}
+      </span>
+    </span>
   );
 }
 
@@ -93,12 +157,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           <NavList />
         </div>
         <div className="border-t border-sidebar-border px-4 py-3.5">
-          <div className="label-xs">Settlement asset</div>
-          <div className="num mt-1 text-xs text-foreground">RLUSD · XRPL</div>
-          <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>VIU spot</span>
-            <span className="num text-primary">{VIU_SPOT.toFixed(3)}</span>
-          </div>
+          <div className="label-xs">Unit of account</div>
+          <div className="num mt-1 text-xs text-foreground">micro-tRLUSD</div>
+          <div className="mt-1 text-[11px] text-muted-foreground">tRLUSD is a test token.</div>
         </div>
       </aside>
 
@@ -112,26 +173,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Menu className="size-4" />
           </button>
           <div className="hidden items-center gap-6 text-[11px] text-muted-foreground lg:flex">
-            <span>
-              Borrower <span className="num text-foreground">{FACILITY.borrower}</span>
-            </span>
-            <span>
-              Facility{" "}
-              <span className="num text-foreground">{FACILITY.limit.toFixed(2)} RLUSD</span>
-            </span>
-            <span>
-              Available{" "}
-              <span className="num text-primary">{FACILITY.available.toFixed(2)} RLUSD</span>
-            </span>
+            Inference procurement under spending, credit and evidence policies
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden text-[11px] text-muted-foreground sm:inline">
-              Prototype — demo data
-            </span>
-            <span className="flex items-center gap-1.5 rounded-md border border-success/40 bg-success/10 px-2 py-1 text-[11px] text-success">
-              <span className="size-1.5 rounded-full bg-success" />
-              XRPL connected
-            </span>
+            <StatusBadge />
           </div>
         </div>
 
@@ -140,9 +185,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
 
         <footer className="border-t border-border px-4 py-5 text-[11px] leading-relaxed text-muted-foreground lg:px-8">
-          Credence Markets is a product-vision prototype. One flow (Credence Credit) is a live MVP;
-          all other surfaces are simulated or roadmap. Nothing here is a regulated exchange, a credit
-          rating, an offer of credit, or production-ready. No regulatory approval is claimed.
+          Credence is a Kessai product. The procurement workflow pages read Credence's offline API:
+          Core policy dry runs, recorded offline purchase runs and labelled fixtures. Amounts are in
+          tRLUSD, a test token. Accounting settlement is not XRPL settlement, and no XRPL
+          transaction exists. Prototype pages show seeded data only. Nothing here is
+          production-ready.
         </footer>
       </div>
 

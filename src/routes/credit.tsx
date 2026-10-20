@@ -1,264 +1,151 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { KeyRound, PlayCircle, ShieldAlert } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { KeyRound } from "lucide-react";
 import { AppShell } from "@/components/shell";
-import { Chip, Gauge, KV, MaturityTag, PageHeader, Panel } from "@/components/kit";
+import { Chip, KV, PageHeader, Panel, RoadmapNote } from "@/components/kit";
 import {
-  ATTACK_CASES,
-  CORE_FLOW,
-  FACILITY,
-  REPAYMENTS,
-  ROOT_ACTIONS,
-  TRANSACTIONS,
-  UTILIZATION,
-} from "@/lib/credence";
+  Money,
+  OfflineNotice,
+  OutcomeChip,
+  QueryState,
+  SourceNote,
+  TierBadge,
+} from "@/components/credence";
+import { useExposure, useOperations } from "@/lib/credence-api/hooks";
+import type { AccountingExposure, Exposure } from "@/lib/credence-api/types";
+import { formatMicro, STATE_LABEL } from "@/lib/credence-api/view";
+import { ROOT_ACTIONS } from "@/lib/credence";
+
+type Search = { operation?: string };
 
 export const Route = createFileRoute("/credit")({
+  validateSearch: (search: Record<string, unknown>): Search =>
+    typeof search["operation"] === "string" ? { operation: search["operation"] } : {},
   head: () => ({
     meta: [
-      { title: "Credence Credit — machine credit facility for verified inference" },
+      { title: "Credit — Credence Markets" },
       {
         name: "description",
         content:
-          "Live MVP: a purpose-bound 500 RLUSD facility letting ResearchBot-17 buy Tier-2 verified inference from an approved provider, settled on the XRP Ledger.",
-      },
-      { property: "og:title", content: "Credence Credit — machine credit facility" },
-      {
-        property: "og:description",
-        content:
-          "Utilization, repayment schedule, hardware-root signing policy and an attack-case verifier with PASS/REJECT outcomes.",
+          "Facility limit, headroom, held exposure and drawn accounting from Credence Core's records.",
       },
     ],
   }),
   component: Credit,
 });
 
-const STAGES = ["Authorization", "Receipt", "Verification", "Settlement"] as const;
+const PARTS: { key: keyof Exposure; label: string; cls: string }[] = [
+  { key: "drawn_micro_trlusd", label: "Drawn", cls: "bg-primary" },
+  { key: "held_micro_trlusd", label: "Held", cls: "bg-warn" },
+  { key: "headroom_micro_trlusd", label: "Headroom", cls: "bg-success/40" },
+];
 
-function Simulator() {
-  const [running, setRunning] = useState(false);
-  const [stage, setStage] = useState(-1);
-
-  useEffect(() => {
-    if (!running) return;
-    if (stage >= STAGES.length - 1) {
-      const done = setTimeout(() => setRunning(false), 600);
-      return () => clearTimeout(done);
-    }
-    const t = setTimeout(() => setStage((s) => s + 1), 850);
-    return () => clearTimeout(t);
-  }, [running, stage]);
-
-  const start = () => {
-    setStage(0);
-    setRunning(true);
-  };
-
-  const detail = [
-    "Facility check: provider allowlist ✓ · profile digest ✓ · available 362.40 RLUSD ✓",
-    "Northstar Compute returns a Tier-2 signed delivery receipt for 24 VIU.",
-    "Kessai serialization re-derived; request/response/profile binding matches.",
-    "Policy co-signs. 10.46 RLUSD settled; XRPL facility state updated.",
-  ];
-
+/** Proportional bar. Tiny amounts get a minimum visible width so a non-zero value is never hidden. */
+function ExposureBar({ exposure }: { exposure: Exposure }) {
+  const limit = exposure.limit_micro_trlusd || 1;
   return (
-    <Panel
-      title="Simulate inference purchase"
-      subtitle="Walks one conforming draw through the live settlement path"
-      right={<MaturityTag level="live" />}
-    >
-      <button
-        onClick={start}
-        disabled={running}
-        className="inline-flex items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-      >
-        <PlayCircle className="size-4" />
-        {running ? "Running…" : "Simulate inference purchase"}
-      </button>
-
-      <ol className="mt-5 space-y-2">
-        {STAGES.map((s, i) => {
-          const active = stage === i;
-          const done = stage > i;
-          return (
-            <li
-              key={s}
-              className={`rounded-md border px-3.5 py-3 transition-all duration-500 ${
-                active
-                  ? "border-primary/50 bg-primary/10"
-                  : done
-                    ? "border-success/40 bg-success/5"
-                    : "border-border bg-surface-2 opacity-60"
-              }`}
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span className="flex items-center gap-2.5 text-xs font-medium">
-                  <span className="num text-[11px] text-muted-foreground">0{i + 1}</span>
-                  {s}
-                </span>
-                {done ? (
-                  <Chip tone="pass">Complete</Chip>
-                ) : active ? (
-                  <Chip tone="info">In progress</Chip>
-                ) : (
-                  <Chip tone="neutral">Pending</Chip>
-                )}
-              </div>
-              {(active || done) && (
-                <p className="animate-fade-in mt-2 text-[11px] leading-relaxed text-muted-foreground">
-                  {detail[i]}
-                </p>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-      {stage === STAGES.length - 1 && !running && (
-        <p className="animate-fade-in mt-4 text-[11px] text-success">
-          Settled. No hardware confirmation required — this purchase was in policy.
-        </p>
-      )}
-    </Panel>
+    <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-muted">
+      {PARTS.map((p) => {
+        const v = exposure[p.key];
+        if (v === 0) return null;
+        const pct = Math.max((v / limit) * 100, p.key === "headroom_micro_trlusd" ? 0 : 1.5);
+        return (
+          <div
+            key={p.key}
+            className={p.cls}
+            style={{ width: `${pct}%` }}
+            title={`${p.label}: ${formatMicro(v)} micro-tRLUSD`}
+          />
+        );
+      })}
+    </div>
   );
 }
 
-function Credit() {
+function Dashboard({ exposure }: { exposure: AccountingExposure }) {
+  const c = exposure.current;
   return (
-    <AppShell>
-      <PageHeader
-        kicker="Core flow"
-        title="Credence Credit"
-        level="live"
-        description="A machine credit facility that lets an autonomous agent purchase verified inference. Purpose-bound, provider-bound and profile-bound: the agent spends operationally, while facility terms change only under hardware-root authority."
-        actions={<Chip tone="info">XRPL settlement · RLUSD</Chip>}
-      />
-
-      <div className="grid gap-5 xl:grid-cols-[1.4fr_1fr]">
-        <Panel title="Active facility" right={<Chip tone="pass">{FACILITY.status}</Chip>}>
-          <div className="grid gap-x-8 sm:grid-cols-2">
-            <div>
-              <KV k="Facility ID" v={FACILITY.id} mono />
-              <KV k="Borrower" v={FACILITY.borrower} mono />
-              <KV k="Borrower account" v={FACILITY.borrowerAccount} mono />
-              <KV k="Facility limit" v={`${FACILITY.limit.toFixed(2)} RLUSD`} mono />
-              <KV k="Available" v={`${FACILITY.available.toFixed(2)} RLUSD`} mono />
-              <KV k="Outstanding" v={`${FACILITY.outstanding.toFixed(2)} RLUSD`} mono />
-              <KV k="Purpose" v={FACILITY.purpose} />
+    <>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {(
+          [
+            ["Facility limit", c.limit_micro_trlusd, exposure.terms.limit],
+            ["Available headroom", c.headroom_micro_trlusd, exposure.terms.headroom],
+            ["Held exposure", c.held_micro_trlusd, exposure.terms.held],
+            ["Drawn (accounting)", c.drawn_micro_trlusd, exposure.terms.drawn],
+          ] as const
+        ).map(([label, value, term]) => (
+          <div key={label} className="panel p-4">
+            <div className="label-xs">{label}</div>
+            <div className="mt-2">
+              <Money micro={value} emphasis />
             </div>
-            <div>
-              <KV k="Approved provider" v={FACILITY.provider} mono />
-              <KV k="Model" v={FACILITY.model} />
-              <KV k="Artifact digest" v={FACILITY.digest} mono />
-              <KV k="Precision" v={FACILITY.precision} mono />
-              <KV k="Evidence tier" v={<span className="text-primary">{FACILITY.evidenceTier}</span>} mono />
-              <KV k="Ledger" v={FACILITY.ledger} mono />
-              <KV k="Settlement asset" v={FACILITY.settlement} mono />
-            </div>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">{term}</p>
           </div>
-        </Panel>
-
-        <div className="grid gap-5">
-          <Panel title="Utilization">
-            <Gauge value={UTILIZATION} label="of 500 RLUSD drawn" />
-            <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
-              <div className="rounded-md bg-surface-2 px-3 py-2.5">
-                <div className="label-xs">Available</div>
-                <div className="num mt-1 text-primary">{FACILITY.available.toFixed(2)}</div>
-              </div>
-              <div className="rounded-md bg-surface-2 px-3 py-2.5">
-                <div className="label-xs">APR</div>
-                <div className="num mt-1">{FACILITY.apr}%</div>
-              </div>
-            </div>
-          </Panel>
-          <Panel title="Approved execution profile">
-            <div className="space-y-2 text-xs">
-              <KV k="Profile digest" v={FACILITY.profileDigest} mono />
-              <KV k="Artifact" v="Meridian-70B-Instruct (open weights)" />
-              <KV k="Precision / quantization" v="BF16" mono />
-              <KV k="Kessai serialization" v="Canonical request binding v1" />
-            </div>
-          </Panel>
-        </div>
+        ))}
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[1fr_1.1fr]">
-        <Panel
-          title="Hardware-root signing policy"
-          subtitle="The hardware wallet is the constitution, not the cashier"
-          right={<KeyRound className="size-4 text-primary" />}
-        >
-          <div className="mb-4 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2.5">
-              <div className="label-xs">Root authority</div>
-              <div className="num mt-1 text-xs">{FACILITY.rootAuthority}</div>
-            </div>
-            <div className="rounded-md border border-border bg-surface-2 px-3 py-2.5">
-              <div className="label-xs">Operational authority</div>
-              <div className="num mt-1 text-xs">{FACILITY.opAuthority}</div>
-            </div>
-          </div>
-          <ul className="space-y-1.5">
-            {ROOT_ACTIONS.map((a) => (
-              <li
-                key={a.action}
-                className="flex items-start justify-between gap-3 rounded-md bg-surface-2 px-3 py-2"
-              >
-                <span>
-                  <span className="block text-xs">{a.action}</span>
-                  <span className="text-[11px] text-muted-foreground">{a.detail}</span>
-                </span>
-                <Chip tone={a.root ? "warn" : "pass"}>
-                  {a.root ? "Ledger approval required" : "In policy"}
-                </Chip>
-              </li>
-            ))}
-          </ul>
-        </Panel>
-
-        <Simulator />
-      </div>
-
-      <Panel title="Core flow" subtitle="Request → verification → settlement → reputation">
-        <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
-          {CORE_FLOW.map((s) => (
-            <div key={s.step} className="rounded-md border border-border bg-surface-2 px-3.5 py-3">
-              <div className="num text-[11px] text-primary">0{s.step}</div>
-              <div className="mt-1 text-xs font-medium">{s.title}</div>
-              <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">{s.detail}</p>
-            </div>
+      <Panel
+        title={`Facility ${exposure.facility_id}`}
+        subtitle={`${exposure.invariant} · as of step "${c.step}" (${c.at}, test clock)`}
+      >
+        <ExposureBar exposure={c} />
+        <div className="mt-2 flex flex-wrap gap-4 text-[11px] text-muted-foreground">
+          {PARTS.map((p) => (
+            <span key={p.key} className="flex items-center gap-1.5">
+              <span className={`size-2 rounded-full ${p.cls}`} /> {p.label}
+            </span>
           ))}
+          <span>
+            Non-zero drawn and held get a minimum bar width; exact values are in the figures.
+          </span>
+        </div>
+        <div className="mt-4 grid gap-x-8 sm:grid-cols-2">
+          <div>
+            <KV k="Status" v={exposure.facility.status} mono />
+            <KV
+              k="Minimum evidence tier"
+              v={<TierBadge evidence={exposure.facility.minimum_evidence_tier} />}
+            />
+            <KV k="Allowed providers" v={exposure.facility.allowed_providers.join(", ")} mono />
+          </div>
+          <div>
+            <KV k="Maturity" v={exposure.facility.maturity_at} mono />
+            <KV k="XRPL loan" v={exposure.facility.xrpl_loan_id ?? "none (accounting only)"} mono />
+            <KV k="Currency" v="micro-tRLUSD (tRLUSD is a test token)" />
+          </div>
         </div>
       </Panel>
 
-      <Panel title="Facility requests" subtitle="Draw attempts against FAC-XRPL-0x7C41" bodyClassName="p-0">
+      <Panel title="Exposure through the purchase" subtitle={exposure.source} bodyClassName="p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border text-left">
-                {["Request", "Timestamp", "Provider", "Profile", "VIU", "RLUSD", "Outcome", "Detail"].map(
-                  (h) => (
-                    <th key={h} className="label-xs px-4 py-2.5 font-medium">
-                      {h}
-                    </th>
-                  ),
-                )}
+                {["Step", "Journal", "Drawn", "Held", "Headroom", ""].map((h, i) => (
+                  <th key={`${h}${i}`} className="label-xs px-4 py-2.5 font-medium">
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {TRANSACTIONS.map((t) => (
-                <tr key={t.id} className="border-b border-border/60 last:border-0">
-                  <td className="num px-4 py-2.5">{t.id}</td>
-                  <td className="num px-4 py-2.5 text-muted-foreground">{t.ts}</td>
-                  <td className="px-4 py-2.5">{t.provider}</td>
-                  <td className="px-4 py-2.5 text-muted-foreground">{t.profile}</td>
-                  <td className="num px-4 py-2.5">{t.viu}</td>
-                  <td className="num px-4 py-2.5">{t.rlusd.toFixed(2)}</td>
-                  <td className="px-4 py-2.5">
-                    <Chip tone={t.outcome === "PASS" ? "pass" : "reject"}>{t.outcome}</Chip>
+              {exposure.timeline.map((p, i) => (
+                <tr key={`${p.step}-${i}`} className="border-b border-border/60 last:border-0">
+                  <td className="num px-4 py-2">{p.step}</td>
+                  <td className="num px-4 py-2 text-muted-foreground">
+                    {p.journal_state ? STATE_LABEL[p.journal_state] : "—"}
                   </td>
-                  <td className="px-4 py-2.5 text-[11px] text-muted-foreground">
-                    {t.outcome === "PASS" ? `XRPL ${t.xrpl}` : t.reason}
+                  <td className="px-4 py-2">
+                    <Money micro={p.drawn_micro_trlusd} />
+                  </td>
+                  <td className="px-4 py-2">
+                    <Money micro={p.held_micro_trlusd} />
+                  </td>
+                  <td className="px-4 py-2">
+                    <Money micro={p.headroom_micro_trlusd} />
+                  </td>
+                  <td className="w-48 px-4 py-2">
+                    <ExposureBar exposure={p} />
                   </td>
                 </tr>
               ))}
@@ -266,70 +153,89 @@ function Credit() {
           </table>
         </div>
       </Panel>
+    </>
+  );
+}
 
-      <div className="grid gap-5 xl:grid-cols-[1.25fr_1fr]">
-        <Panel
-          title="Attack-case verifier"
-          subtitle="One valid request and six rejected examples"
-          right={<ShieldAlert className="size-4 text-warn" />}
-          bodyClassName="p-0"
-        >
-          <ul className="divide-y divide-border">
-            {ATTACK_CASES.map((c) => (
-              <li key={c.id} className="px-5 py-3.5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="flex items-center gap-2.5">
-                    <span className="num text-[11px] text-muted-foreground">{c.id}</span>
-                    <span className="text-xs font-medium">{c.name}</span>
-                  </span>
-                  <Chip tone={c.outcome === "PASS" ? "pass" : "reject"}>{c.outcome}</Chip>
-                </div>
-                <div className="num mt-1.5 text-[11px] text-muted-foreground">{c.input}</div>
-                <div className="mt-1 text-[11px] text-muted-foreground">
-                  <span className="text-foreground/70">Check:</span> {c.check} · {c.note}
-                </div>
-              </li>
-            ))}
-          </ul>
+function Credit() {
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/credit" });
+  const operations = useOperations();
+  const selected = search.operation ?? operations.data?.[0]?.operation_id;
+  const exposure = useExposure(selected);
+  const current = operations.data?.find((o) => o.operation_id === selected);
+
+  return (
+    <AppShell>
+      <PageHeader
+        kicker="Credit"
+        title="Credit facility"
+        description="Limit, headroom, held exposure and drawn accounting, read from Credence Core's accounting records. Drawn is Credence's record of verified spending; it is not confirmed XRPL loan principal."
+        actions={<Chip tone="info">Accounting only · no XRPL loan</Chip>}
+      />
+      <OfflineNotice />
+      <QueryState isLoading={operations.isLoading} error={operations.error}>
+        <Panel title="Recorded run" subtitle="Each recorded offline run has its own facility state">
+          <div className="flex flex-wrap items-center gap-3">
+            <select
+              className="rounded-md border border-border-strong bg-surface-2 px-2.5 py-1.5 text-xs"
+              value={selected ?? ""}
+              onChange={(e) => void navigate({ search: { operation: e.target.value } })}
+            >
+              {operations.data?.map((o) => (
+                <option key={o.operation_id} value={o.operation_id}>
+                  {o.title}
+                </option>
+              ))}
+            </select>
+            {current && <OutcomeChip outcome={current.outcome_class} />}
+            {current && (
+              <Link
+                to="/operations/$operationId"
+                params={{ operationId: current.operation_id }}
+                className="text-[11px] text-primary hover:underline"
+              >
+                Open purchase lifecycle →
+              </Link>
+            )}
+          </div>
         </Panel>
+        <QueryState isLoading={exposure.isLoading} error={exposure.error}>
+          {exposure.data && <Dashboard exposure={exposure.data} />}
+        </QueryState>
+      </QueryState>
 
-        <div className="space-y-5">
-          <Panel title="Repayment schedule" bodyClassName="p-0">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-border text-left">
-                  {["ID", "Due", "Principal", "Interest", "Status"].map((h) => (
-                    <th key={h} className="label-xs px-5 py-2.5 font-medium">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {REPAYMENTS.map((r) => (
-                  <tr key={r.id} className="border-b border-border/60 last:border-0">
-                    <td className="num px-5 py-2.5">{r.id}</td>
-                    <td className="num px-5 py-2.5 text-muted-foreground">{r.due}</td>
-                    <td className="num px-5 py-2.5">{r.principal.toFixed(2)}</td>
-                    <td className="num px-5 py-2.5">{r.interest.toFixed(2)}</td>
-                    <td className="px-5 py-2.5">
-                      <Chip tone={r.status === "Paid" ? "pass" : "neutral"}>{r.status}</Chip>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Panel>
-          <Panel title="XRPL role">
-            <p className="text-[11px] leading-relaxed text-muted-foreground">
-              XRPL carries credit and facility state, settlement in RLUSD, account identity and
-              facility transaction references. XRPL does not natively enforce application-level
-              provider, model, precision or amount rules. Credence policy plus co-signing enforces
-              those terms before settlement is released.
-            </p>
-          </Panel>
-        </div>
-      </div>
+      <Panel
+        title="Hardware-root signing policy"
+        subtitle="Design intent from the build plan"
+        right={<KeyRound className="size-4 text-roadmap" />}
+      >
+        <RoadmapNote>
+          Not implemented at this baseline: no Ledger device, owner approval or facility change flow
+          is connected. Shown so the intended authority split is visible.
+        </RoadmapNote>
+        <ul className="mt-3 space-y-1.5">
+          {ROOT_ACTIONS.map((a) => (
+            <li
+              key={a.action}
+              className="flex items-start justify-between gap-3 rounded-md bg-surface-2 px-3 py-2"
+            >
+              <span>
+                <span className="block text-xs">{a.action}</span>
+                <span className="text-[11px] text-muted-foreground">{a.detail}</span>
+              </span>
+              <Chip tone={a.root ? "roadmap" : "neutral"}>
+                {a.root ? "Owner approval (planned)" : "Agent, in policy"}
+              </Chip>
+            </li>
+          ))}
+        </ul>
+      </Panel>
+      <SourceNote>
+        Facility exposure moves only through Core: a reservation holds the quote's maximum cost,
+        accounting settlement replaces the hold with the verified charge, and a release or expiry
+        frees it.
+      </SourceNote>
     </AppShell>
   );
 }
