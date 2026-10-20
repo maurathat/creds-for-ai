@@ -6,9 +6,15 @@ export const Route = createFileRoute("/reputation")({
   head: () => ({
     meta: [
       { title: "Reputation — Credence Markets" },
-      { name: "description", content: "Conformity, disputes, SLA performance and buyer ratings per provider." },
+      {
+        name: "description",
+        content: "Conformity, disputes, SLA performance and buyer ratings per provider.",
+      },
       { property: "og:title", content: "Reputation — Credence Markets" },
-      { property: "og:description", content: "Conformity, disputes, SLA performance and buyer ratings per provider." },
+      {
+        property: "og:description",
+        content: "Conformity, disputes, SLA performance and buyer ratings per provider.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -24,7 +30,18 @@ function Page() {
       description="Conformity, disputes, SLA performance and buyer ratings per provider."
       level="simulated"
       sections={[
-        { title: "Reputation ledger", rows: PROVIDERS.map(p => ({ name: p.name, reputation: p.reputation, conforming: p.conforming, disputes: p.disputes, slaPerf: p.slaPerf, availability: p.availability, buyerRating: p.buyerRating })) },
+        {
+          title: "Reputation ledger",
+          rows: PROVIDERS.map((p) => ({
+            name: p.name,
+            reputation: p.reputation,
+            conforming: p.conforming,
+            disputes: p.disputes,
+            slaPerf: p.slaPerf,
+            availability: p.availability,
+            buyerRating: p.buyerRating,
+          })),
+        },
       ]}
     />
   );

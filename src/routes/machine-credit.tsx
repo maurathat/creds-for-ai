@@ -6,9 +6,15 @@ export const Route = createFileRoute("/machine-credit")({
   head: () => ({
     meta: [
       { title: "Machine Credit — Credence Markets" },
-      { name: "description", content: "Facility classes beyond inference, and approved merchant categories." },
+      {
+        name: "description",
+        content: "Facility classes beyond inference, and approved merchant categories.",
+      },
       { property: "og:title", content: "Machine Credit — Credence Markets" },
-      { property: "og:description", content: "Facility classes beyond inference, and approved merchant categories." },
+      {
+        property: "og:description",
+        content: "Facility classes beyond inference, and approved merchant categories.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -25,7 +31,7 @@ function Page() {
       level="roadmap"
       sections={[
         { title: "Facility classes", rows: FACILITY_CLASSES },
-        { title: "Merchant categories", rows: MERCHANT_CATEGORIES.map(c => ({ category: c })) },
+        { title: "Merchant categories", rows: MERCHANT_CATEGORIES.map((c) => ({ category: c })) },
         { title: "Revenue", rows: REVENUE_SERIES },
       ]}
     />

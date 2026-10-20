@@ -6,9 +6,17 @@ export const Route = createFileRoute("/providers")({
   head: () => ({
     meta: [
       { title: "Providers — Credence Markets" },
-      { name: "description", content: "Listed execution providers with models, artifacts, precision and credit eligibility." },
+      {
+        name: "description",
+        content:
+          "Listed execution providers with models, artifacts, precision and credit eligibility.",
+      },
       { property: "og:title", content: "Providers — Credence Markets" },
-      { property: "og:description", content: "Listed execution providers with models, artifacts, precision and credit eligibility." },
+      {
+        property: "og:description",
+        content:
+          "Listed execution providers with models, artifacts, precision and credit eligibility.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -23,9 +31,7 @@ function Page() {
       title="Provider directory"
       description="Listed execution providers with models, artifacts, precision and credit eligibility."
       level="simulated"
-      sections={[
-        { title: "Providers", rows: PROVIDERS },
-      ]}
+      sections={[{ title: "Providers", rows: PROVIDERS }]}
     />
   );
 }

@@ -6,9 +6,15 @@ export const Route = createFileRoute("/secondary-market")({
   head: () => ({
     meta: [
       { title: "Secondary Market — Credence Markets" },
-      { name: "description", content: "Order book for transferring reserved capacity and forwards." },
+      {
+        name: "description",
+        content: "Order book for transferring reserved capacity and forwards.",
+      },
       { property: "og:title", content: "Secondary Market — Credence Markets" },
-      { property: "og:description", content: "Order book for transferring reserved capacity and forwards." },
+      {
+        property: "og:description",
+        content: "Order book for transferring reserved capacity and forwards.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

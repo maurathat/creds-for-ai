@@ -17,7 +17,13 @@ function label(k: string) {
   return k.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
 }
 
-export function DataTable({ rows, columns }: { rows: readonly Row[]; columns?: string[] | undefined }) {
+export function DataTable({
+  rows,
+  columns,
+}: {
+  rows: readonly Row[];
+  columns?: string[] | undefined;
+}) {
   const cols = columns ?? (rows[0] ? Object.keys(rows[0]) : []);
   return (
     <div className="overflow-x-auto">
@@ -35,7 +41,10 @@ export function DataTable({ rows, columns }: { rows: readonly Row[]; columns?: s
           {rows.map((r, i) => (
             <tr key={i} className="border-b border-border/60 last:border-0">
               {cols.map((c) => (
-                <td key={c} className="whitespace-nowrap px-3 py-2 font-mono text-xs text-foreground">
+                <td
+                  key={c}
+                  className="whitespace-nowrap px-3 py-2 font-mono text-xs text-foreground"
+                >
                   {fmt(r[c])}
                 </td>
               ))}

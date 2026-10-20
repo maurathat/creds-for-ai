@@ -6,9 +6,15 @@ export const Route = createFileRoute("/forwards")({
   head: () => ({
     meta: [
       { title: "Forwards — Credence Markets" },
-      { name: "description", content: "Forward contracts to hedge future verified inference prices." },
+      {
+        name: "description",
+        content: "Forward contracts to hedge future verified inference prices.",
+      },
       { property: "og:title", content: "Forwards — Credence Markets" },
-      { property: "og:description", content: "Forward contracts to hedge future verified inference prices." },
+      {
+        property: "og:description",
+        content: "Forward contracts to hedge future verified inference prices.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

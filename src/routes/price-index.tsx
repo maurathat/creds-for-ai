@@ -6,9 +6,15 @@ export const Route = createFileRoute("/price-index")({
   head: () => ({
     meta: [
       { title: "Price Index — Credence Markets" },
-      { name: "description", content: "Reference prices for verified inference units (VIU) in RLUSD." },
+      {
+        name: "description",
+        content: "Reference prices for verified inference units (VIU) in RLUSD.",
+      },
       { property: "og:title", content: "Price Index — Credence Markets" },
-      { property: "og:description", content: "Reference prices for verified inference units (VIU) in RLUSD." },
+      {
+        property: "og:description",
+        content: "Reference prices for verified inference units (VIU) in RLUSD.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

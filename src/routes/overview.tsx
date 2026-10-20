@@ -189,7 +189,10 @@ function Overview() {
         </Panel>
       </div>
 
-      <Panel title="Market stack" subtitle="Credit → Marketplace → Reservations → Forwards → Secondary Markets">
+      <Panel
+        title="Market stack"
+        subtitle="Credit → Marketplace → Reservations → Forwards → Secondary Markets"
+      >
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
           {STACK.map((s, i) => (
             <div key={s.k} className="flex flex-1 items-center gap-3">
@@ -212,7 +215,11 @@ function Overview() {
       </Panel>
 
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <Panel title="Recent receipt activity" right={<Chip tone="pass">Live MVP</Chip>} bodyClassName="p-0">
+        <Panel
+          title="Recent receipt activity"
+          right={<Chip tone="pass">Live MVP</Chip>}
+          bodyClassName="p-0"
+        >
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>

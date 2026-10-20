@@ -6,9 +6,15 @@ export const Route = createFileRoute("/reservations")({
   head: () => ({
     meta: [
       { title: "Reservations — Credence Markets" },
-      { name: "description", content: "Reserved VIU capacity by execution profile and delivery window." },
+      {
+        name: "description",
+        content: "Reserved VIU capacity by execution profile and delivery window.",
+      },
       { property: "og:title", content: "Reservations — Credence Markets" },
-      { property: "og:description", content: "Reserved VIU capacity by execution profile and delivery window." },
+      {
+        property: "og:description",
+        content: "Reserved VIU capacity by execution profile and delivery window.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -23,9 +29,7 @@ function Page() {
       title="Capacity reservations"
       description="Reserved VIU capacity by execution profile and delivery window."
       level="simulated"
-      sections={[
-        { title: "Reservations", rows: RESERVATIONS },
-      ]}
+      sections={[{ title: "Reservations", rows: RESERVATIONS }]}
     />
   );
 }

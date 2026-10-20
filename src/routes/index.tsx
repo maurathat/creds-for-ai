@@ -142,7 +142,10 @@ function Home() {
             <div className="label-xs">Market stack</div>
             <ol className="mt-4 space-y-2.5">
               {STACK.map((s, i) => (
-                <li key={s.k} className="flex items-start gap-3 rounded-md bg-surface-2 px-3 py-2.5">
+                <li
+                  key={s.k}
+                  className="flex items-start gap-3 rounded-md bg-surface-2 px-3 py-2.5"
+                >
                   <span className="num mt-0.5 text-[11px] text-primary">0{i + 1}</span>
                   <span>
                     <span className="block text-sm font-medium">{s.k}</span>
