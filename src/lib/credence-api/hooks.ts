@@ -1,11 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiBaseUrl, createHttpClient, type CredenceClient } from "./client";
-import type { ProcurementForm } from "./types";
+import { getSessionToken } from "./session";
+import type { PrepareBody, ProcurementForm, SignedObjectJson } from "./types";
 
 let client: CredenceClient | undefined;
 
 export function credenceClient(): CredenceClient {
-  client ??= createHttpClient(apiBaseUrl());
+  client ??= createHttpClient(apiBaseUrl(), undefined, getSessionToken);
   return client;
 }
 
@@ -93,3 +94,70 @@ export const useEvaluateProcurement = () =>
 
 export const useSubmitPurchase = () =>
   useMutation({ mutationFn: (form: ProcurementForm) => credenceClient().submitPurchase(form) });
+
+// --- I2a: integrated offline service. Live data changes, so these refetch. -------------------
+
+const LIVE = { staleTime: 0, retry: 0 } as const;
+
+export const useLiveSession = (token: string | null) =>
+  useQuery({
+    queryKey: ["credence", "live", "session", token],
+    queryFn: () => credenceClient().liveSession(),
+    enabled: !!token,
+    ...LIVE,
+  });
+
+export const useLiveOperations = (token: string | null) =>
+  useQuery({
+    queryKey: ["credence", "live", "operations", token],
+    queryFn: () => credenceClient().listLiveOperations(),
+    enabled: !!token,
+    ...LIVE,
+  });
+
+export const useLiveOperation = (operationId: string) =>
+  useQuery({
+    queryKey: ["credence", "live", "operation", operationId],
+    queryFn: () => credenceClient().getLiveOperation(operationId),
+    ...LIVE,
+  });
+
+export const useLiveExposure = (operationId: string) =>
+  useQuery({
+    queryKey: ["credence", "live", "exposure", operationId],
+    queryFn: () => credenceClient().getLiveExposure(operationId),
+    ...LIVE,
+  });
+
+export const useLivePayment = (operationId: string) =>
+  useQuery({
+    queryKey: ["credence", "live", "payment", operationId],
+    queryFn: () => credenceClient().getLivePayment(operationId),
+    ...LIVE,
+  });
+
+export const useLiveReceipt = (digest: string | null | undefined) =>
+  useQuery({
+    queryKey: ["credence", "live", "receipt", digest],
+    queryFn: () => credenceClient().getLiveReceipt(digest as string),
+    enabled: !!digest,
+    ...LIVE,
+  });
+
+export const usePreparePurchase = () =>
+  useMutation({ mutationFn: (body: PrepareBody) => credenceClient().preparePurchase(body) });
+
+export const useSubmitSignedPurchase = () =>
+  useMutation({
+    mutationFn: (body: { preparation_id: string; prompt: string; signature: SignedObjectJson }) =>
+      credenceClient().submitSignedPurchase(body),
+  });
+
+export const useLiveResponse = (operationId: string) => {
+  const queries = useQueryClient();
+  return useMutation({
+    mutationFn: (authorization: Record<string, unknown>) =>
+      credenceClient().postLiveResponse(operationId, authorization),
+    onSettled: () => queries.invalidateQueries({ queryKey: ["credence", "live"] }),
+  });
+};

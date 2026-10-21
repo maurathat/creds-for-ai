@@ -25,6 +25,7 @@ import { Route as ReservationsRouteImport } from './routes/reservations'
 import { Route as SecondaryMarketRouteImport } from './routes/secondary-market'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SettlementRouteImport } from './routes/settlement'
+import { Route as LiveOperationIdRouteImport } from './routes/live/$operationId'
 import { Route as OperationsIndexRouteImport } from './routes/operations/index'
 import { Route as OperationsOperationIdRouteImport } from './routes/operations/$operationId'
 
@@ -108,6 +109,11 @@ const SettlementRoute = SettlementRouteImport.update({
   path: '/settlement',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LiveOperationIdRoute = LiveOperationIdRouteImport.update({
+  id: '/live/$operationId',
+  path: '/live/$operationId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OperationsIndexRoute = OperationsIndexRouteImport.update({
   id: '/operations/',
   path: '/operations/',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/secondary-market': typeof SecondaryMarketRoute
   '/settings': typeof SettingsRoute
   '/settlement': typeof SettlementRoute
+  '/live/$operationId': typeof LiveOperationIdRoute
   '/operations/$operationId': typeof OperationsOperationIdRoute
   '/operations/': typeof OperationsIndexRoute
 }
@@ -156,6 +163,7 @@ export interface FileRoutesByTo {
   '/secondary-market': typeof SecondaryMarketRoute
   '/settings': typeof SettingsRoute
   '/settlement': typeof SettlementRoute
+  '/live/$operationId': typeof LiveOperationIdRoute
   '/operations/$operationId': typeof OperationsOperationIdRoute
   '/operations': typeof OperationsIndexRoute
 }
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/secondary-market': typeof SecondaryMarketRoute
   '/settings': typeof SettingsRoute
   '/settlement': typeof SettlementRoute
+  '/live/$operationId': typeof LiveOperationIdRoute
   '/operations/$operationId': typeof OperationsOperationIdRoute
   '/operations/': typeof OperationsIndexRoute
 }
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/secondary-market'
     | '/settings'
     | '/settlement'
+    | '/live/$operationId'
     | '/operations/$operationId'
     | '/operations/'
   fileRoutesByTo: FileRoutesByTo
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/secondary-market'
     | '/settings'
     | '/settlement'
+    | '/live/$operationId'
     | '/operations/$operationId'
     | '/operations'
   id:
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/secondary-market'
     | '/settings'
     | '/settlement'
+    | '/live/$operationId'
     | '/operations/$operationId'
     | '/operations/'
   fileRoutesById: FileRoutesById
@@ -260,6 +272,7 @@ export interface RootRouteChildren {
   SecondaryMarketRoute: typeof SecondaryMarketRoute
   SettingsRoute: typeof SettingsRoute
   SettlementRoute: typeof SettlementRoute
+  LiveOperationIdRoute: typeof LiveOperationIdRoute
   OperationsOperationIdRoute: typeof OperationsOperationIdRoute
   OperationsIndexRoute: typeof OperationsIndexRoute
 }
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettlementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/live/$operationId': {
+      id: '/live/$operationId'
+      path: '/live/$operationId'
+      fullPath: '/live/$operationId'
+      preLoaderRoute: typeof LiveOperationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/operations/': {
       id: '/operations/'
       path: '/operations'
@@ -412,6 +432,7 @@ const rootRouteChildren: RootRouteChildren = {
   SecondaryMarketRoute: SecondaryMarketRoute,
   SettingsRoute: SettingsRoute,
   SettlementRoute: SettlementRoute,
+  LiveOperationIdRoute: LiveOperationIdRoute,
   OperationsOperationIdRoute: OperationsOperationIdRoute,
   OperationsIndexRoute: OperationsIndexRoute,
 }

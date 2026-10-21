@@ -3,9 +3,11 @@
 
 import type {
   EvidenceTierInfo,
+  IntegrationHealth,
   OperationState,
   OutcomeClass,
   ProcurementEvaluation,
+  SignedObjectJson,
   XrplSettlementState,
 } from "./types";
 
@@ -132,7 +134,7 @@ export const XRPL_STATE_LABEL: Record<XrplSettlementState, string> = {
   unknown_reconciliation_required: "Unknown: reconciliation required",
 };
 
-/** The three kinds of data the app can show, and the one it cannot show yet. */
+/** The kinds of data the app can show, and the one it cannot show yet. */
 export const PROVENANCE = {
   live_evidence: {
     label: "Recorded live evidence",
@@ -144,10 +146,14 @@ export const PROVENANCE = {
     detail:
       "Real Integration service code run offline with fake providers, synthetic responses and TEST keys. No provider was called and nothing was paid.",
   },
-  live_operation: {
-    label: "Live operation (not connected)",
+  integrated_offline: {
+    label: "Integrated offline service",
     detail:
-      "Live purchases, reads and payments need the accepted integration backend. None is shown here.",
+      "Real Integration service embedded in the API process, with offline mock providers (no provider is called), TEST provider keys and configured demo prices. The agent signs each purchase outside the browser. No XRPL payment.",
+  },
+  live_operation: {
+    label: "Live provider execution (not enabled)",
+    detail: "Live provider calls, XRPL payments and lending are not enabled. None is shown here.",
   },
 } as const;
 
@@ -174,7 +180,7 @@ export function purchaseAction(evaluation: ProcurementEvaluation | undefined): P
   }
   if (evaluation.form.max_total_cost_micro_trlusd !== null) {
     return {
-      label: "Live purchase not connected",
+      label: "No recorded run",
       enabled: false,
       note: "The price cap is preview-only: Core applied it in this dry run, but the purchase path cannot carry a buyer price cap yet.",
     };
@@ -187,8 +193,81 @@ export function purchaseAction(evaluation: ProcurementEvaluation | undefined): P
     };
   }
   return {
-    label: "Live purchase not connected",
+    label: "No recorded run",
     enabled: false,
-    note: "Live purchases need the accepted integration backend. No recorded run exists for this policy.",
+    note: "No recorded offline run exists for this policy. An integrated offline purchase (mock providers) can be prepared below.",
   };
+}
+
+/**
+ * Whether an integrated offline purchase may be prepared after a dry run. Display only: the
+ * service and Core decide; this only avoids offering a button the backend will refuse.
+ */
+export function livePurchaseAction(
+  evaluation: ProcurementEvaluation | undefined,
+  integration: IntegrationHealth | undefined,
+  hasSession: boolean,
+): PurchaseAction {
+  const label = "Prepare purchase (offline mock providers)";
+  if (!integration?.integrated_service) {
+    return {
+      label,
+      enabled: false,
+      note: "The API is not running the integrated service. Start it with `uv run python -m credence.api.offline_demo serve <demo-dir>`.",
+    };
+  }
+  if (!hasSession) {
+    return { label, enabled: false, note: "Enter the agent's session token first." };
+  }
+  if (!evaluation) return { label, enabled: false, note: "Run the Core policy dry run first." };
+  if (evaluation.chosen_provider_id === null) {
+    return { label, enabled: false, note: "No offer qualifies under this policy." };
+  }
+  if (evaluation.form.max_total_cost_micro_trlusd !== null) {
+    return {
+      label,
+      enabled: false,
+      note: "The price cap is preview-only. Clear it to purchase at each quote's own maximum.",
+    };
+  }
+  return {
+    label,
+    enabled: true,
+    note: "Core selects the offer again against the facility's real holds; the service stores the exact request for the agent to verify and sign outside this app. Nothing is reserved yet.",
+  };
+}
+
+/** Parse a pasted C3A SignedObject. Refuses anything else, including extra members. */
+export function parseSignedObject(text: string): SignedObjectJson {
+  const value: unknown = JSON.parse(text);
+  const members = ["object_type", "schema_version", "object_digest", "key_id", "signature"];
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    Array.isArray(value) ||
+    Object.keys(value).sort().join() !== [...members].sort().join() ||
+    !members.every((m) => typeof (value as Record<string, unknown>)[m] === "string")
+  ) {
+    throw new Error("Not a SignedObject: expected exactly " + members.join(", "));
+  }
+  if ((value as SignedObjectJson).object_type !== "credence.signed_object") {
+    throw new Error("Not a credence.signed_object");
+  }
+  return value as SignedObjectJson;
+}
+
+/** Parse a pasted ResponseAuthorization (I1e). Refuses anything else. */
+export function parseResponseAuthorization(text: string): Record<string, string> {
+  const value: unknown = JSON.parse(text);
+  const members = ["operation_id", "action", "agent_key_id", "nonce", "expires_at", "signature"];
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    Array.isArray(value) ||
+    Object.keys(value).sort().join() !== [...members].sort().join() ||
+    !members.every((m) => typeof (value as Record<string, unknown>)[m] === "string")
+  ) {
+    throw new Error("Not a ResponseAuthorization: expected exactly " + members.join(", "));
+  }
+  return value as Record<string, string>;
 }

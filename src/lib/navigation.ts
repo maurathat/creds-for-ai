@@ -5,7 +5,7 @@
 export const PRIMARY_NAV = [
   { to: "/market", label: "Inference Market", tag: "P0" },
   { to: "/procure", label: "Procurement", tag: "P0" },
-  { to: "/operations", label: "Recorded Purchases", tag: "P0" },
+  { to: "/operations", label: "Purchases", tag: "P0" },
   { to: "/credit", label: "Credit", tag: "P0" },
   { to: "/receipts", label: "Receipts", tag: "P0" },
   { to: "/settlement", label: "XRPL Settlement", tag: "P0" },

@@ -9,6 +9,17 @@ export type EvidenceTierInfo = {
   description: string;
 };
 
+export type IntegrationHealth =
+  | { integrated_service: false }
+  | {
+      integrated_service: true;
+      providers: "offline_mock";
+      providers_note: string;
+      live_provider_execution: false;
+      buyer_price_cap: "preview_only";
+      xrpl: "not_connected";
+    };
+
 export type Health = {
   mode: "offline";
   baseline: string;
@@ -16,6 +27,7 @@ export type Health = {
   live_purchases: boolean;
   ledger: { connected: boolean; network: string | null; note: string };
   currency: { code: "tRLUSD"; unit: string; micro_units_per_token: number; note: string };
+  integration: IntegrationHealth;
 };
 
 export type Provider = {
@@ -353,3 +365,171 @@ export type ResponseRetrieval = {
   code: string;
   detail: string;
 };
+
+// --- I2a: the integrated offline service (/v0/live). Every call carries the agent session. ----
+
+export type LiveSession = {
+  agent_id: string;
+  agent_key_id: string;
+  subject: string;
+  key_status: "current";
+  facility_ids: string[];
+  note: string;
+};
+
+export type LiveExposure = {
+  at: string;
+  limit_micro_trlusd: number;
+  drawn_micro_trlusd: number;
+  held_micro_trlusd: number;
+  headroom_micro_trlusd: number;
+  source: string;
+};
+
+export type LiveFacility = {
+  facility_id: string;
+  title: string;
+  terms: { digest: string; object: CanonicalObject };
+  terms_source: string;
+  procurement_classes: { digest: string; object: CanonicalObject }[];
+  minimum_evidence_tier: EvidenceTierInfo;
+  allowed_providers: string[];
+  status: string;
+  maturity_at: string;
+  xrpl_loan_id: string | null;
+  exposure: LiveExposure;
+  invariant: string;
+  history_note: string;
+};
+
+/** POST body for preparePurchase: the procurement and the prompt's digest (never the prompt). */
+export type PrepareBody = Omit<
+  ProcurementForm,
+  "prompt" | "facility_limit_micro_trlusd" | "facility_drawn_micro_trlusd"
+> & { prompt_digest: string; facility_id?: string | null; idempotency_key?: string | null };
+
+export type Preparation = {
+  preparation_id: string;
+  operation_id: string;
+  agent_key_id: string;
+  facility_id: string;
+  provider_id: string;
+  provider: { display_name: string; role: string; relationship: string } | null;
+  provider_label: string;
+  quote_id: string;
+  nonce: string;
+  created_at: string;
+  expires_at: string;
+  prompt_digest: string;
+  market_digest: string;
+  request: { digest: string; object: CanonicalObject; canonical_json: string };
+  signing: { domain: string; statement_hex: string; note: string };
+  price: { max_total_cost_micro_trlusd: number; price_kind: "configured_demo"; label: string };
+  quote: { digest: string; object: CanonicalObject };
+  service_class: { digest: string; object: CanonicalObject };
+  execution_profile: { digest: string; object: CanonicalObject; model_identifier: string };
+  evidence: EvidenceTierInfo;
+};
+
+/** A C3A SignedObject produced by the agent outside the browser. */
+export type SignedObjectJson = {
+  object_type: string;
+  schema_version: string;
+  object_digest: string;
+  key_id: string;
+  signature: string;
+};
+
+export type LiveReport = {
+  operation_id: string;
+  state: OperationState;
+  outcome_class: OutcomeClass;
+  state_text: string;
+  detail: string | null;
+  reservation_id: string | null;
+  provider_id: string | null;
+  receipt_digest: string | null;
+  reason_code: string | null;
+  source: "integrated_offline_service";
+};
+
+export type LiveOperationSummary = {
+  operation_id: string;
+  facility_id: string;
+  provider_id: string | null;
+  state: OperationState;
+  outcome_class: OutcomeClass;
+  reason_code: string | null;
+  detail: string | null;
+  receipt_digest: string | null;
+  created_at: string;
+  updated_at: string;
+  source: "integrated_offline_service";
+};
+
+export type LiveOperationPage = {
+  operations: LiveOperationSummary[];
+  next_after: string | null;
+  source: "integrated_offline_service";
+  source_label: string;
+};
+
+export type LiveEvent = { event: string; at: string; source: string; detail: string | null };
+
+export type LiveOperationDetail = LiveOperationSummary & {
+  source_label: string;
+  state_text: string;
+  lifecycle: { state: OperationState; label: string; reached: boolean }[];
+  events: LiveEvent[];
+  events_note: string;
+  operation: Record<string, string | null>;
+  objects: Record<string, CanonicalObject | null>;
+  quote_max_total_cost_micro_trlusd: number | null;
+  response: { available_to_agent: boolean; retained: boolean; note: string };
+};
+
+export type LiveOperationExposure = LiveFacility & { operation_id: string };
+
+export type LivePayment = {
+  operation_id: string;
+  xrpl: {
+    state: XrplSettlementState;
+    source: "no_xrpl_adapter";
+    transaction_hash: string | null;
+    validated_ledger_index: number | null;
+    last_ledger_sequence: number | null;
+    engine_result: string | null;
+    detail: string;
+  };
+  accounting: { settlement_outcome: string | null; state: OperationState; note: string };
+};
+
+export type LiveReceipt = Omit<ReceiptEvidence, "source" | "verifier" | "chain"> & {
+  source: "integrated_offline_service";
+  provider_label: string;
+  verifier: {
+    outcome: string | null;
+    reason_code: string | null;
+    decision_digest: string | null;
+    decision: CanonicalObject | null;
+  };
+  accounting: {
+    settled: boolean;
+    actual_amount_micro_trlusd: number | null;
+    settled_at: string | null;
+    reservation_id: string | null;
+    note: string;
+  };
+  disputes: { kind: string; reason_code: string }[];
+  late_delivery: boolean;
+  chain: {
+    previous_receipt_digest: string | null;
+    first_on_facility: boolean;
+    accounting_settled: boolean;
+    chain_head: string | null;
+    is_chain_head: boolean;
+    note: string;
+  };
+};
+
+export type LiveResponseResult = { kind: "retrieved"; text: string } | { kind: "acknowledged" };

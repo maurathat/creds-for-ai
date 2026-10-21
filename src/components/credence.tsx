@@ -108,9 +108,13 @@ export function QueryState({
           <p className="text-muted-foreground">
             Start the offline API from the repository root:{" "}
             <code className="num text-foreground">
+              uv run python -m credence.api.offline_demo serve &lt;demo-dir&gt;
+            </code>{" "}
+            (integrated offline service) or{" "}
+            <code className="num text-foreground">
               uv run uvicorn --factory credence.api.app:create_app --port 8000
             </code>{" "}
-            (expected at <span className="num">{apiBaseUrl()}</span>).
+            (recorded runs only) (expected at <span className="num">{apiBaseUrl()}</span>).
           </p>
         )}
       </div>
@@ -158,9 +162,10 @@ export function LifecycleTrack({
 export function OfflineNotice() {
   return (
     <DemoNote>
-      Offline P0. Procurement evaluations are real Credence Core policy dry runs: they reserve no
-      funds and execute no inference. Purchases shown are recorded offline test executions, not live
-      purchases. Prices are configured demo prices in tRLUSD, a test token. No XRPL payment has been
+      Offline. Procurement evaluations are real Credence Core policy dry runs: they reserve no funds
+      and execute no inference. Purchases are either recorded offline test executions or integrated
+      offline purchases through the embedded Integration service with mock providers; no provider is
+      called. Prices are configured demo prices in tRLUSD, a test token. No XRPL payment has been
       submitted.
     </DemoNote>
   );
@@ -169,7 +174,12 @@ export function OfflineNotice() {
 export type ProvenanceKind = keyof typeof PROVENANCE;
 
 export function ProvenanceChip({ kind }: { kind: ProvenanceKind }) {
-  const tone = kind === "live_evidence" ? "info" : kind === "offline_test" ? "warn" : "neutral";
+  const tone =
+    kind === "live_evidence"
+      ? "info"
+      : kind === "offline_test" || kind === "integrated_offline"
+        ? "warn"
+        : "neutral";
   return <Chip tone={tone}>{PROVENANCE[kind].label}</Chip>;
 }
 

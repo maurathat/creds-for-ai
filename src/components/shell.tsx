@@ -184,10 +184,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <footer className="border-t border-border px-4 py-5 text-[11px] leading-relaxed text-muted-foreground lg:px-8">
           Credence is a Kessai product. The procurement workflow pages read Credence's offline API:
-          Core policy dry runs, recorded offline purchase runs and labelled fixtures. Amounts are in
-          tRLUSD, a test token. Accounting settlement is not XRPL settlement, and no XRPL
-          transaction exists. Prototype pages show seeded data only. Nothing here is
-          production-ready.
+          Core policy dry runs, integrated offline purchases with mock providers, recorded offline
+          purchase runs and labelled fixtures. Amounts are in tRLUSD, a test token. Accounting
+          settlement is not XRPL settlement, and no XRPL transaction exists. Prototype pages show
+          seeded data only. Nothing here is production-ready.
         </footer>
       </div>
 

@@ -20,6 +20,8 @@ import {
 import { ApiError } from "@/lib/credence-api/client";
 import type { ProcurementEvaluation, ProcurementForm, Provider } from "@/lib/credence-api/types";
 import { purchaseAction } from "@/lib/credence-api/view";
+import { AgentSessionPanel, useAgentToken } from "@/components/agent-session";
+import { LivePurchasePanel } from "@/components/live-purchase";
 
 export const Route = createFileRoute("/procure")({
   head: () => ({
@@ -386,6 +388,7 @@ function Page() {
   const navigate = useNavigate();
   const [presetId, setPresetId] = useState<string>("scenario-a-general");
   const [form, setForm] = useState<ProcurementForm | null>(null);
+  const [token, setToken] = useAgentToken();
 
   useEffect(() => {
     if (!form && presets.data?.[0]) setForm(presets.data[0].form);
@@ -492,12 +495,19 @@ function Page() {
         </Panel>
       )}
       {evaluate.data && <OfferComparison result={evaluate.data} />}
+      <AgentSessionPanel token={token} setToken={setToken} />
+      {/* Keyed by the dry run, so an edited policy never submits an older preparation. */}
+      <LivePurchasePanel
+        key={evaluate.data?.evaluated_at ?? "none"}
+        evaluation={evaluate.data}
+        hasSession={!!token}
+      />
       {evaluate.data && evaluate.data.form.max_total_cost_micro_trlusd !== null && (
         <SourceNote>
           <Chip tone="warn">Preview</Chip> The price cap of{" "}
           <span className="num">{evaluate.data.form.max_total_cost_micro_trlusd}</span> micro-tRLUSD
-          was enforced by Core in this dry run only. No authorized purchase can carry it until the
-          backend supports a buyer price cap.
+          was enforced by Core in this dry run only. No purchase can carry it until the backend
+          supports a buyer price cap (CR-2); the integrated purchase refuses a capped policy.
         </SourceNote>
       )}
     </AppShell>

@@ -1,5 +1,5 @@
 // Seeded demo data for the Credence Markets prototype.
-// All values are fictional demo data unless explicitly noted as Live MVP state.
+// All values are fictional seeded prototype data. None is live state.
 
 export type Maturity = "live" | "simulated" | "roadmap";
 

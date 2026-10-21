@@ -110,10 +110,10 @@ describe("purchase action", () => {
     expect(purchaseAction(evaluation({ chosen_provider_id: null })).enabled).toBe(false);
   });
 
-  test("a custom policy cannot purchase: live purchases are not connected", () => {
+  test("a custom policy has no recording to open", () => {
     const action = purchaseAction(evaluation({ matching_preset: null }));
     expect(action.enabled).toBe(false);
-    expect(action.label).toBe("Live purchase not connected");
+    expect(action.label).toBe("No recorded run");
   });
 
   test("a price cap is preview-only", () => {
@@ -134,18 +134,18 @@ describe("purchase action", () => {
 });
 
 describe("provenance", () => {
-  test("live evidence, offline test executions and future live operations are distinct", () => {
+  test("live evidence, offline test executions and live provider execution are distinct", () => {
     const html = renderToStaticMarkup(
       <ProvenanceLegend kinds={["live_evidence", "offline_test"]} />,
     );
     expect(html).toContain("Recorded live evidence");
     expect(html).toContain("Recorded offline test execution");
-    expect(html).toContain("Live operation (not connected)");
+    expect(html).toContain("Live provider execution (not enabled)");
   });
 
-  test("the not-connected live kind is always shown", () => {
+  test("the not-enabled live kind is always shown", () => {
     const html = renderToStaticMarkup(<ProvenanceLegend kinds={["offline_test"]} />);
-    expect(html).toContain("Live operation (not connected)");
+    expect(html).toContain("Live provider execution (not enabled)");
     expect(html).not.toContain("Recorded live evidence");
   });
 });

@@ -4,6 +4,11 @@
 // procurement is evaluated by Core behind the API, and response retrieval needs an
 // authorization signed by the agent outside the browser. When the accepted integration backend
 // replaces the offline adapter, only the server behind these routes changes.
+//
+// I2a: the `live*` methods call the integrated offline service (/v0/live) with the agent's
+// session token. The token authenticates API calls; it is not a signing key. Purchases and
+// response access still need Ed25519 signatures the agent makes outside this app, which the
+// client forwards unchanged.
 
 import type {
   AccountingExposure,
@@ -20,6 +25,18 @@ import type {
   ReceiptSummary,
   ResponseRetrieval,
   XrplSettlementFixtures,
+  LiveFacility,
+  LiveOperationDetail,
+  LiveOperationExposure,
+  LiveOperationPage,
+  LivePayment,
+  LiveReceipt,
+  LiveReport,
+  LiveResponseResult,
+  LiveSession,
+  PrepareBody,
+  Preparation,
+  SignedObjectJson,
 } from "./types";
 
 export const API_PREFIX = "/v0";
@@ -45,6 +62,25 @@ export interface CredenceClient {
   ): Promise<ResponseRetrieval>;
   getPaymentStatus(operationId: string): Promise<PaymentStatus>;
   xrplSettlementFixtures(): Promise<XrplSettlementFixtures>;
+  // I2a, integrated offline service. Each needs the agent session token.
+  liveSession(): Promise<LiveSession>;
+  liveFacilities(): Promise<LiveFacility[]>;
+  preparePurchase(body: PrepareBody): Promise<Preparation>;
+  getPreparation(preparationId: string): Promise<Preparation>;
+  submitSignedPurchase(body: {
+    preparation_id: string;
+    prompt: string;
+    signature: SignedObjectJson;
+  }): Promise<LiveReport>;
+  listLiveOperations(after?: string | null): Promise<LiveOperationPage>;
+  getLiveOperation(operationId: string): Promise<LiveOperationDetail>;
+  getLiveExposure(operationId: string): Promise<LiveOperationExposure>;
+  getLivePayment(operationId: string): Promise<LivePayment>;
+  getLiveReceipt(receiptDigest: string): Promise<LiveReceipt>;
+  postLiveResponse(
+    operationId: string,
+    authorization: SignedResponseAuthorization,
+  ): Promise<LiveResponseResult>;
 }
 
 export class ApiError extends Error {
@@ -77,10 +113,11 @@ async function errorFrom(response: Response): Promise<ApiError> {
 export function createHttpClient(
   baseUrl: string = DEFAULT_API_BASE_URL,
   fetchImpl: FetchLike = (input, init) => fetch(input, init),
+  sessionToken: () => string | null = () => null,
 ): CredenceClient {
   const root = baseUrl.replace(/\/+$/, "") + API_PREFIX;
 
-  async function call<T>(path: string, init?: RequestInit): Promise<T> {
+  async function raw(path: string, init?: RequestInit): Promise<Response> {
     let response: Response;
     try {
       response = await fetchImpl(root + path, init);
@@ -88,8 +125,29 @@ export function createHttpClient(
       throw new ApiError(0, "API_UNREACHABLE", `No response from ${root}: ${String(cause)}`);
     }
     if (!response.ok) throw await errorFrom(response);
-    return (await response.json()) as T;
+    return response;
   }
+
+  async function call<T>(path: string, init?: RequestInit): Promise<T> {
+    return (await (await raw(path, init)).json()) as T;
+  }
+
+  function authed(init: RequestInit = {}): RequestInit {
+    const token = sessionToken();
+    if (!token) throw new ApiError(401, "AUTHENTICATION_REQUIRED", "No agent session token set.");
+    return { ...init, headers: { ...(init.headers ?? {}), authorization: `Bearer ${token}` } };
+  }
+
+  const live = async <T>(path: string) => call<T>(`/live${path}`, authed());
+  const livePost = async (path: string, body: unknown) =>
+    raw(
+      `/live${path}`,
+      authed({
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      }),
+    );
 
   const post = <T>(path: string, body: unknown) =>
     call<T>(path, {
@@ -125,6 +183,24 @@ export function createHttpClient(
     },
     getPaymentStatus: (id) => call(`${op(id)}/payment`),
     xrplSettlementFixtures: () => call("/xrpl/settlement-fixtures"),
+    liveSession: () => live("/session"),
+    liveFacilities: () => live("/facilities"),
+    preparePurchase: async (body) =>
+      (await (await livePost("/purchases/prepare", body)).json()) as Preparation,
+    getPreparation: (id) => live(`/purchases/preparations/${encodeURIComponent(id)}`),
+    submitSignedPurchase: async (body) =>
+      (await (await livePost("/purchases/submit", body)).json()) as LiveReport,
+    listLiveOperations: (after) =>
+      live(after ? `/operations?after=${encodeURIComponent(after)}` : "/operations"),
+    getLiveOperation: (id) => live(op(id)),
+    getLiveExposure: (id) => live(`${op(id)}/exposure`),
+    getLivePayment: (id) => live(`${op(id)}/payment`),
+    getLiveReceipt: (digest) => live(`/receipts/${encodeURIComponent(digest)}`),
+    async postLiveResponse(id, authorization) {
+      const response = await livePost(`${op(id)}/response`, authorization);
+      if (response.status === 204) return { kind: "acknowledged" };
+      return { kind: "retrieved", text: await response.text() };
+    },
   };
 }
 

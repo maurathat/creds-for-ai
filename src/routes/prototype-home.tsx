@@ -69,7 +69,7 @@ function Home() {
         <div className="mx-auto max-w-[1200px] px-5 py-20 md:py-28">
           <div className="flex flex-wrap items-center gap-2">
             <MaturityTag level="live" />
-            <Chip tone="neutral">Credence Credit is the live MVP</Chip>
+            <Chip tone="neutral">Seeded prototype: nothing on this page is live</Chip>
             <Chip tone="roadmap">Other modules simulated / roadmap</Chip>
           </div>
           <h1 className="mt-7 text-5xl font-semibold tracking-tight md:text-7xl">Credence</h1>

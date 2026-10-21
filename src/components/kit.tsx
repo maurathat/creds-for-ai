@@ -3,7 +3,7 @@ import type { Maturity } from "@/lib/credence";
 import type { ReactNode } from "react";
 
 const MATURITY_COPY: Record<Maturity, { label: string; cls: string }> = {
-  live: { label: "Live MVP", cls: "border-success/40 bg-success/10 text-success" },
+  live: { label: "Prototype (seeded)", cls: "border-warn/40 bg-warn/10 text-warn" },
   simulated: { label: "Simulated", cls: "border-warn/40 bg-warn/10 text-warn" },
   roadmap: { label: "Roadmap", cls: "border-roadmap/40 bg-roadmap/10 text-roadmap" },
 };
