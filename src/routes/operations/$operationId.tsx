@@ -9,11 +9,12 @@ import {
   Money,
   OutcomeChip,
   QueryState,
+  ProvenanceChip,
   SourceNote,
 } from "@/components/credence";
 import { useOperation, usePaymentStatus } from "@/lib/credence-api/hooks";
 import type { OperationDetail, OperationStep } from "@/lib/credence-api/types";
-import { humanize, STATE_LABEL, XRPL_STATE_TONE } from "@/lib/credence-api/view";
+import { STATE_LABEL, XRPL_STATE_LABEL, XRPL_STATE_TONE } from "@/lib/credence-api/view";
 
 export const Route = createFileRoute("/operations/$operationId")({
   head: () => ({ meta: [{ title: "Purchase — Credence Markets" }] }),
@@ -150,7 +151,7 @@ function SettlementPanel({ op }: { op: OperationDetail }) {
         right={
           payment.data && (
             <Chip tone={XRPL_STATE_TONE[payment.data.xrpl.state]}>
-              {humanize(payment.data.xrpl.state)}
+              {XRPL_STATE_LABEL[payment.data.xrpl.state]}
             </Chip>
           )
         }
@@ -216,18 +217,21 @@ function Detail({ op }: { op: OperationDetail }) {
   return (
     <>
       <PageHeader
-        kicker="Purchase lifecycle"
+        kicker="Recorded purchase · offline test execution"
         title={op.title}
         description={op.summary}
         actions={
           <div className="flex flex-wrap gap-1.5">
+            <ProvenanceChip kind="offline_test" />
             <OutcomeChip outcome={op.outcome_class} />
             {op.interrupted && <Chip tone="warn">Interrupted</Chip>}
           </div>
         }
       />
       <SourceNote>
-        <span className="text-foreground">Recorded offline run. </span>
+        <span className="text-foreground">
+          Recorded offline test execution, not a live purchase.{" "}
+        </span>
         {op.source.provenance} <span className="text-foreground">Harness: </span>
         {op.source.harness}.
       </SourceNote>

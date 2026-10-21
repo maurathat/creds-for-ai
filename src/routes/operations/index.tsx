@@ -1,7 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/shell";
 import { Chip, PageHeader, Panel } from "@/components/kit";
-import { Money, OfflineNotice, OutcomeChip, QueryState, SourceNote } from "@/components/credence";
+import {
+  Money,
+  OfflineNotice,
+  OutcomeChip,
+  ProvenanceLegend,
+  QueryState,
+  SourceNote,
+} from "@/components/credence";
 import { useOperations } from "@/lib/credence-api/hooks";
 import { STATE_LABEL } from "@/lib/credence-api/view";
 
@@ -24,12 +31,13 @@ function Page() {
     <AppShell>
       <PageHeader
         kicker="Purchase lifecycle"
-        title="Purchases"
-        description="Each row is one purchase operation recorded from an offline run of Credence's Integration service: settled, rejected, released, interrupted, unknown and disputed outcomes."
+        title="Recorded purchases"
+        description="Each row is one recorded offline test execution of Credence's Integration service: settled, rejected, released, interrupted, unknown and disputed outcomes. None is a live purchase."
       />
       <OfflineNotice />
+      <ProvenanceLegend kinds={["offline_test"]} />
       <QueryState isLoading={operations.isLoading} error={operations.error}>
-        <Panel title="Recorded operations" bodyClassName="p-0">
+        <Panel title="Recorded offline test executions" bodyClassName="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>

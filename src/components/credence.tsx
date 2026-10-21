@@ -10,6 +10,7 @@ import {
   formatMicro,
   formatTrlusd,
   lifecycleView,
+  PROVENANCE,
   OUTCOME_LABEL,
   OUTCOME_TONE,
   shortDigest,
@@ -157,9 +158,43 @@ export function LifecycleTrack({
 export function OfflineNotice() {
   return (
     <DemoNote>
-      Offline P0. Procurement is evaluated by Credence Core as a dry run. Purchases are replays of
-      recorded offline runs (fake providers, TEST keys). Prices are configured demo prices in
-      tRLUSD, a test token. No XRPL transaction exists.
+      Offline P0. Procurement evaluations are real Credence Core policy dry runs: they reserve no
+      funds and execute no inference. Purchases shown are recorded offline test executions, not live
+      purchases. Prices are configured demo prices in tRLUSD, a test token. No XRPL payment has been
+      submitted.
     </DemoNote>
+  );
+}
+
+export type ProvenanceKind = keyof typeof PROVENANCE;
+
+export function ProvenanceChip({ kind }: { kind: ProvenanceKind }) {
+  const tone = kind === "live_evidence" ? "info" : kind === "offline_test" ? "warn" : "neutral";
+  return <Chip tone={tone}>{PROVENANCE[kind].label}</Chip>;
+}
+
+/** Which kind of data a page shows, with the kind it cannot show yet always listed last. */
+export function ProvenanceLegend({ kinds }: { kinds: ProvenanceKind[] }) {
+  const shown: ProvenanceKind[] = [
+    ...kinds.filter((k) => k !== "live_operation"),
+    "live_operation",
+  ];
+  return (
+    <ul className="grid gap-2 md:grid-cols-3" aria-label="Data provenance">
+      {shown.map((kind) => (
+        <li
+          key={kind}
+          className={cn(
+            "rounded-md border border-border bg-surface-2 px-3 py-2",
+            kind === "live_operation" && "opacity-70",
+          )}
+        >
+          <ProvenanceChip kind={kind} />
+          <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
+            {PROVENANCE[kind].detail}
+          </p>
+        </li>
+      ))}
+    </ul>
   );
 }

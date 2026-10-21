@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { CircleCheck, CircleX, FlaskConical, Send } from "lucide-react";
+import { CircleCheck, CircleX, FlaskConical, History } from "lucide-react";
 import { AppShell } from "@/components/shell";
 import { Chip, PageHeader, Panel } from "@/components/kit";
 import {
@@ -19,6 +19,7 @@ import {
 } from "@/lib/credence-api/hooks";
 import { ApiError } from "@/lib/credence-api/client";
 import type { ProcurementEvaluation, ProcurementForm, Provider } from "@/lib/credence-api/types";
+import { purchaseAction } from "@/lib/credence-api/view";
 
 export const Route = createFileRoute("/procure")({
   head: () => ({
@@ -149,8 +150,8 @@ function PolicyForm({
           />
         </Field>
         <Field
-          label="Maximum acceptable price (micro-tRLUSD)"
-          hint="Empty: each offer's own quote maximum, as the integrated purchase path does today."
+          label="Maximum acceptable price (micro-tRLUSD) · preview only"
+          hint="Core applies this cap in the dry run (PRICE_ABOVE_MAX). The purchase path cannot carry a buyer price cap yet, so no purchase can be made under it. Empty: each offer's own quote maximum, as the integrated purchase path does today."
         >
           <input
             className={inputCls}
@@ -291,8 +292,8 @@ function OfferComparison({ result }: { result: ProcurementEvaluation }) {
   return (
     <Panel
       title="Offer comparison under this policy"
-      subtitle={`Core policy dry run at ${result.evaluated_at} · ${result.competition}`}
-      right={<Chip tone="info">Dry run</Chip>}
+      subtitle={`Real Credence Core policy dry run at ${result.evaluated_at} · no funds reserved · no inference executed · ${result.competition}`}
+      right={<Chip tone="info">Core dry run</Chip>}
       bodyClassName="p-0"
     >
       <div className="overflow-x-auto">
@@ -400,9 +401,17 @@ function Page() {
     }
   };
 
-  const onSubmit = async () => {
-    if (!form) return;
-    const result = await submit.mutateAsync(form);
+  // Any edit invalidates the last dry run, so the button never acts on a stale evaluation.
+  const editForm = (next: ProcurementForm) => {
+    setForm(next);
+    evaluate.reset();
+    submit.reset();
+  };
+  const action = purchaseAction(evaluate.data);
+
+  const onViewRecorded = async () => {
+    if (!evaluate.data || !action.enabled) return;
+    const result = await submit.mutateAsync(evaluate.data.form);
     if (result.mode === "offline_replay") {
       await navigate({
         to: "/operations/$operationId",
@@ -418,7 +427,7 @@ function Page() {
       <PageHeader
         kicker="Procurement"
         title="Define a procurement"
-        description="State what the agent may buy: model, workload, price ceiling, evidence floor, providers and facility constraints. Credence Core decides which offers qualify; this page shows its decisions and reasons."
+        description="State what the agent may buy: model, workload, price ceiling, evidence floor, providers and facility constraints. Credence Core decides which offers qualify in a real policy dry run, which reserves no funds and executes no inference."
       />
       <OfflineNotice />
       <QueryState
@@ -447,7 +456,7 @@ function Page() {
           }
         >
           {form && providers.data && (
-            <PolicyForm form={form} setForm={setForm} providers={providers.data} />
+            <PolicyForm form={form} setForm={editForm} providers={providers.data} />
           )}
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <button
@@ -456,22 +465,19 @@ function Page() {
               className="inline-flex items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
             >
               <FlaskConical className="size-4" />
-              {evaluate.isPending ? "Evaluating…" : "Evaluate offers (Core dry run)"}
+              {evaluate.isPending ? "Running dry run…" : "Run Core policy dry run"}
             </button>
             <button
-              onClick={() => void onSubmit()}
-              disabled={!form || !evaluate.data?.chosen_provider_id || submit.isPending}
+              onClick={() => void onViewRecorded()}
+              disabled={!action.enabled || submit.isPending}
               className="inline-flex items-center gap-2 rounded-md border border-border-strong px-3.5 py-2 text-xs font-semibold hover:bg-surface-2 disabled:opacity-40"
-              title={
-                evaluate.data?.chosen_provider_id
-                  ? undefined
-                  : "Evaluate first; a purchase needs a qualifying offer"
-              }
+              title={action.note}
             >
-              <Send className="size-4" />
-              Submit purchase
+              <History className="size-4" />
+              {action.label}
             </button>
           </div>
+          <p className="mt-2 text-[11px] text-muted-foreground">{action.note}</p>
         </Panel>
       </QueryState>
 
@@ -481,16 +487,17 @@ function Page() {
         </SourceNote>
       )}
       {submit.data?.mode === "not_available" && (
-        <Panel title="Not submitted" right={<Chip tone="warn">{submit.data.code}</Chip>}>
+        <Panel title="No recorded purchase" right={<Chip tone="warn">{submit.data.code}</Chip>}>
           <p className="text-xs text-muted-foreground">{submit.data.detail}</p>
         </Panel>
       )}
       {evaluate.data && <OfferComparison result={evaluate.data} />}
-      {evaluate.data && evaluate.data.matching_preset && (
+      {evaluate.data && evaluate.data.form.max_total_cost_micro_trlusd !== null && (
         <SourceNote>
-          This policy matches the preset{" "}
-          <span className="num">{evaluate.data.matching_preset}</span>. Submitting opens its
-          recorded offline run; no purchase is made.
+          <Chip tone="warn">Preview</Chip> The price cap of{" "}
+          <span className="num">{evaluate.data.form.max_total_cost_micro_trlusd}</span> micro-tRLUSD
+          was enforced by Core in this dry run only. No authorized purchase can carry it until the
+          backend supports a buyer price cap.
         </SourceNote>
       )}
     </AppShell>

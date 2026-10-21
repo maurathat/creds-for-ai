@@ -2,7 +2,15 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { CircleCheck, CircleMinus, CircleX } from "lucide-react";
 import { AppShell } from "@/components/shell";
 import { Chip, KV, PageHeader, Panel } from "@/components/kit";
-import { Digest, Money, QueryState, SourceNote, TierBadge } from "@/components/credence";
+import {
+  Digest,
+  Money,
+  ProvenanceChip,
+  ProvenanceLegend,
+  QueryState,
+  SourceNote,
+  TierBadge,
+} from "@/components/credence";
 import { useReceiptEvidence, useReceipts } from "@/lib/credence-api/hooks";
 import type { ReceiptEvidence } from "@/lib/credence-api/types";
 import { humanize } from "@/lib/credence-api/view";
@@ -44,6 +52,7 @@ function Inspector({ e }: { e: ReceiptEvidence }) {
   return (
     <div className="space-y-5">
       <SourceNote>
+        <ProvenanceChip kind={offline ? "offline_test" : "live_evidence"} />{" "}
         <span className="text-foreground">{e.source_label}. </span>
         {offline
           ? "Evidence from a recorded offline run: synthetic responses, and any provider signature is made with a TEST key standing in for the provider. It is not a provider attestation."
@@ -215,6 +224,7 @@ function Page() {
         description="Each receipt binds the purchase request, the execution profile, the provider and the response digest. Signatures and digests are re-checked by Credence Core's own functions when you open a receipt."
       />
       <QueryState isLoading={receipts.isLoading} error={receipts.error}>
+        <ProvenanceLegend kinds={["live_evidence", "offline_test"]} />
         <Panel title="Receipts" bodyClassName="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
@@ -248,11 +258,13 @@ function Page() {
                       <Digest value={r.receipt_digest} />
                     </td>
                     <td className="px-4 py-2.5">
-                      <Chip tone={r.source === "recorded_live_observation" ? "info" : "warn"}>
-                        {r.source === "recorded_live_observation"
-                          ? "Live recording"
-                          : "Offline run"}
-                      </Chip>
+                      <ProvenanceChip
+                        kind={
+                          r.source === "recorded_live_observation"
+                            ? "live_evidence"
+                            : "offline_test"
+                        }
+                      />
                     </td>
                     <td className="num px-4 py-2.5">{r.provider_id}</td>
                     <td className="px-4 py-2.5">

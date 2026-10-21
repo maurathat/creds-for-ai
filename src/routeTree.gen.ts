@@ -17,6 +17,7 @@ import { Route as MarketRouteImport } from './routes/market'
 import { Route as OverviewRouteImport } from './routes/overview'
 import { Route as PriceIndexRouteImport } from './routes/price-index'
 import { Route as ProcureRouteImport } from './routes/procure'
+import { Route as PrototypeHomeRouteImport } from './routes/prototype-home'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as ReceiptsRouteImport } from './routes/receipts'
 import { Route as ReputationRouteImport } from './routes/reputation'
@@ -65,6 +66,11 @@ const PriceIndexRoute = PriceIndexRouteImport.update({
 const ProcureRoute = ProcureRouteImport.update({
   id: '/procure',
   path: '/procure',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrototypeHomeRoute = PrototypeHomeRouteImport.update({
+  id: '/prototype-home',
+  path: '/prototype-home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProvidersRoute = ProvidersRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/overview': typeof OverviewRoute
   '/price-index': typeof PriceIndexRoute
   '/procure': typeof ProcureRoute
+  '/prototype-home': typeof PrototypeHomeRoute
   '/providers': typeof ProvidersRoute
   '/receipts': typeof ReceiptsRoute
   '/reputation': typeof ReputationRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/overview': typeof OverviewRoute
   '/price-index': typeof PriceIndexRoute
   '/procure': typeof ProcureRoute
+  '/prototype-home': typeof PrototypeHomeRoute
   '/providers': typeof ProvidersRoute
   '/receipts': typeof ReceiptsRoute
   '/reputation': typeof ReputationRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/overview': typeof OverviewRoute
   '/price-index': typeof PriceIndexRoute
   '/procure': typeof ProcureRoute
+  '/prototype-home': typeof PrototypeHomeRoute
   '/providers': typeof ProvidersRoute
   '/receipts': typeof ReceiptsRoute
   '/reputation': typeof ReputationRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/overview'
     | '/price-index'
     | '/procure'
+    | '/prototype-home'
     | '/providers'
     | '/receipts'
     | '/reputation'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/overview'
     | '/price-index'
     | '/procure'
+    | '/prototype-home'
     | '/providers'
     | '/receipts'
     | '/reputation'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/overview'
     | '/price-index'
     | '/procure'
+    | '/prototype-home'
     | '/providers'
     | '/receipts'
     | '/reputation'
@@ -240,6 +252,7 @@ export interface RootRouteChildren {
   OverviewRoute: typeof OverviewRoute
   PriceIndexRoute: typeof PriceIndexRoute
   ProcureRoute: typeof ProcureRoute
+  PrototypeHomeRoute: typeof PrototypeHomeRoute
   ProvidersRoute: typeof ProvidersRoute
   ReceiptsRoute: typeof ReceiptsRoute
   ReputationRoute: typeof ReputationRoute
@@ -307,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/procure'
       fullPath: '/procure'
       preLoaderRoute: typeof ProcureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prototype-home': {
+      id: '/prototype-home'
+      path: '/prototype-home'
+      fullPath: '/prototype-home'
+      preLoaderRoute: typeof PrototypeHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/providers': {
@@ -384,6 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   OverviewRoute: OverviewRoute,
   PriceIndexRoute: PriceIndexRoute,
   ProcureRoute: ProcureRoute,
+  PrototypeHomeRoute: PrototypeHomeRoute,
   ProvidersRoute: ProvidersRoute,
   ReceiptsRoute: ReceiptsRoute,
   ReputationRoute: ReputationRoute,

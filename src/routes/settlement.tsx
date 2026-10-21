@@ -4,7 +4,7 @@ import { Chip, KV, PageHeader, Panel } from "@/components/kit";
 import { OutcomeChip, QueryState, SourceNote } from "@/components/credence";
 import { useOperations, usePaymentStatus, useXrplFixtures } from "@/lib/credence-api/hooks";
 import type { OperationSummary } from "@/lib/credence-api/types";
-import { humanize, XRPL_STATE_TONE } from "@/lib/credence-api/view";
+import { XRPL_STATE_LABEL, XRPL_STATE_TONE } from "@/lib/credence-api/view";
 
 export const Route = createFileRoute("/settlement")({
   head: () => ({
@@ -39,7 +39,7 @@ function PaymentRow({ op }: { op: OperationSummary }) {
       <td className="px-4 py-2.5">
         {payment.data ? (
           <Chip tone={XRPL_STATE_TONE[payment.data.xrpl.state]}>
-            {humanize(payment.data.xrpl.state)}
+            {XRPL_STATE_LABEL[payment.data.xrpl.state]}
           </Chip>
         ) : payment.error ? (
           <Chip tone="reject">unavailable</Chip>
@@ -97,7 +97,7 @@ function Page() {
       <QueryState isLoading={fixtures.isLoading} error={fixtures.error}>
         {fixtures.data && (
           <Panel
-            title="XRPL settlement states the UI is prepared for"
+            title="Simulated XRPL settlement states (fixtures)"
             subtitle={fixtures.data.id}
             right={<Chip tone="warn">UI fixtures</Chip>}
           >
@@ -109,7 +109,7 @@ function Page() {
                 <div key={s.state} className="rounded-md border border-border bg-surface-2 p-3.5">
                   <div className="flex items-center justify-between gap-2">
                     <Chip tone={XRPL_STATE_TONE[s.state]}>{s.label}</Chip>
-                    <span className="label-xs">Fixture</span>
+                    <Chip tone="warn">Fixture · not observed</Chip>
                   </div>
                   <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
                     {s.meaning}

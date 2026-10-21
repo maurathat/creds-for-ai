@@ -1,7 +1,13 @@
 // Presentation helpers for Credence API data. Formatting and labels only: no rule here decides
 // eligibility, settlement or authorization. Every state and code shown comes from the API.
 
-import type { EvidenceTierInfo, OperationState, OutcomeClass, XrplSettlementState } from "./types";
+import type {
+  EvidenceTierInfo,
+  OperationState,
+  OutcomeClass,
+  ProcurementEvaluation,
+  XrplSettlementState,
+} from "./types";
 
 export const MICRO_PER_TOKEN = 1_000_000;
 
@@ -114,4 +120,75 @@ export function lifecycleView(
 
 export function humanize(code: string): string {
   return code.replace(/_/g, " ");
+}
+
+/** XRPL settlement labels. `not_submitted` says plainly that no payment exists. */
+export const XRPL_STATE_LABEL: Record<XrplSettlementState, string> = {
+  not_submitted: "Not submitted · no XRPL payment",
+  pending_confirmation: "Pending confirmation",
+  validated_success: "Validated: success",
+  validated_failure: "Validated: failure",
+  expired_not_included: "Expired: confirmed not included",
+  unknown_reconciliation_required: "Unknown: reconciliation required",
+};
+
+/** The three kinds of data the app can show, and the one it cannot show yet. */
+export const PROVENANCE = {
+  live_evidence: {
+    label: "Recorded live evidence",
+    detail:
+      "Receipts from the real 2026-10-19 run: a Nebius Token Factory response witnessed by Credence's gateway, and a local Qwen delivery signed by its provider key.",
+  },
+  offline_test: {
+    label: "Recorded offline test execution",
+    detail:
+      "Real Integration service code run offline with fake providers, synthetic responses and TEST keys. No provider was called and nothing was paid.",
+  },
+  live_operation: {
+    label: "Live operation (not connected)",
+    detail:
+      "Live purchases, reads and payments need the accepted integration backend. None is shown here.",
+  },
+} as const;
+
+export type PurchaseAction = { label: string; enabled: boolean; note: string };
+
+/**
+ * What the purchase button may do after a dry run. Only a policy matching a preset with a recorded
+ * offline run can open that recording; nothing here starts a purchase.
+ */
+export function purchaseAction(evaluation: ProcurementEvaluation | undefined): PurchaseAction {
+  if (!evaluation) {
+    return {
+      label: "View recorded purchase",
+      enabled: false,
+      note: "Run the Core policy dry run first.",
+    };
+  }
+  if (evaluation.chosen_provider_id === null) {
+    return {
+      label: "View recorded purchase",
+      enabled: false,
+      note: "No offer qualifies under this policy, so there is nothing to purchase.",
+    };
+  }
+  if (evaluation.form.max_total_cost_micro_trlusd !== null) {
+    return {
+      label: "Live purchase not connected",
+      enabled: false,
+      note: "The price cap is preview-only: Core applied it in this dry run, but the purchase path cannot carry a buyer price cap yet.",
+    };
+  }
+  if (evaluation.matching_preset !== null) {
+    return {
+      label: "View recorded purchase",
+      enabled: true,
+      note: `Opens the recorded offline test execution for ${evaluation.matching_preset}. No purchase is made.`,
+    };
+  }
+  return {
+    label: "Live purchase not connected",
+    enabled: false,
+    note: "Live purchases need the accepted integration backend. No recorded run exists for this policy.",
+  };
 }

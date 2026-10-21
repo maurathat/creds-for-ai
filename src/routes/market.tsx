@@ -97,7 +97,7 @@ function ProviderCard({ provider }: { provider: Provider }) {
         </SourceNote>
         <SourceNote>
           <span className="text-foreground">Availability: not monitored. </span>
-          Last recorded delivery {provider.availability.last_recorded_delivery.completed_at}
+          Last recorded live delivery {provider.availability.last_recorded_delivery.completed_at}
           {provider.availability.last_recorded_delivery.latency_ms !== null &&
             ` (${provider.availability.last_recorded_delivery.latency_ms} ms)`}{" "}
           in <span className="num">{provider.availability.last_recorded_delivery.source}</span>.

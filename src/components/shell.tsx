@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import {
   LayoutDashboard,
@@ -18,46 +18,52 @@ import {
   SlidersHorizontal,
   Workflow,
   Link2,
+  Home,
+  ChevronRight,
+  type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHealth } from "@/lib/credence-api/hooks";
+import { ConnectionBadges, type ApiStatus } from "@/components/status";
+import { isPrototypePath, PRIMARY_NAV, PROTOTYPE_BANNER, PROTOTYPE_NAV } from "@/lib/navigation";
 
-// The P0 workflow, in the order an agent's purchase moves through it. These pages read the
-// Credence API; the prototype pages below them still show the original seeded data.
-const NAV = [
-  { to: "/market", label: "Inference Market", icon: Store, tag: "P0" },
-  { to: "/procure", label: "Procurement", icon: SlidersHorizontal, tag: "P0" },
-  { to: "/operations", label: "Purchases", icon: Workflow, tag: "P0" },
-  { to: "/credit", label: "Credit", icon: Landmark, tag: "P0" },
-  { to: "/receipts", label: "Receipts", icon: ReceiptText, tag: "P0" },
-  { to: "/settlement", label: "XRPL Settlement", icon: Link2, tag: "P0" },
-] as const;
-
-const PROTOTYPE_NAV = [
-  { to: "/overview", label: "Overview", icon: LayoutDashboard, tag: "" },
-  { to: "/providers", label: "Providers", icon: Server, tag: "SIM" },
-  { to: "/reputation", label: "Reputation", icon: BadgeCheck, tag: "SIM" },
-  { to: "/reservations", label: "Reservations", icon: CalendarClock, tag: "RM" },
-  { to: "/forwards", label: "Forwards", icon: LineChart, tag: "RM" },
-  { to: "/secondary-market", label: "Secondary Market", icon: ArrowLeftRight, tag: "RM" },
-  { to: "/price-index", label: "Price Index", icon: GaugeIcon, tag: "RM" },
-  { to: "/machine-credit", label: "Machine Credit", icon: Wallet, tag: "RM" },
-  { to: "/settings", label: "Settings", icon: Settings2, tag: "" },
-] as const;
+const ICONS: Record<string, LucideIcon> = {
+  "/market": Store,
+  "/procure": SlidersHorizontal,
+  "/operations": Workflow,
+  "/credit": Landmark,
+  "/receipts": ReceiptText,
+  "/settlement": Link2,
+  "/prototype-home": Home,
+  "/overview": LayoutDashboard,
+  "/providers": Server,
+  "/reputation": BadgeCheck,
+  "/reservations": CalendarClock,
+  "/forwards": LineChart,
+  "/secondary-market": ArrowLeftRight,
+  "/price-index": GaugeIcon,
+  "/machine-credit": Wallet,
+  "/settings": Settings2,
+};
 
 const TAG_CLS: Record<string, string> = {
   P0: "text-primary",
-  SIM: "text-warn",
-  RM: "text-roadmap",
+  PROTO: "text-warn",
 };
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   return (
     <nav className="flex flex-col gap-0.5 px-2">
       <div className="label-xs px-2.5 pb-1">Procurement workflow</div>
-      <NavItems items={NAV} onNavigate={onNavigate} />
-      <div className="label-xs px-2.5 pb-1 pt-4">Prototype · seeded data</div>
-      <NavItems items={PROTOTYPE_NAV} onNavigate={onNavigate} />
+      <NavItems items={PRIMARY_NAV} onNavigate={onNavigate} />
+      <details className="group/proto mt-4" open={isPrototypePath(pathname)}>
+        <summary className="label-xs flex cursor-pointer list-none items-center gap-1 px-2.5 pb-1">
+          <ChevronRight className="size-3 transition-transform group-open/proto:rotate-90" />
+          Prototype pages · seeded data, not live
+        </summary>
+        <NavItems items={PROTOTYPE_NAV} onNavigate={onNavigate} />
+      </details>
     </nav>
   );
 }
@@ -66,68 +72,59 @@ function NavItems({
   items,
   onNavigate,
 }: {
-  items: readonly ((typeof NAV)[number] | (typeof PROTOTYPE_NAV)[number])[];
+  items: readonly ((typeof PRIMARY_NAV)[number] | (typeof PROTOTYPE_NAV)[number])[];
   onNavigate?: (() => void) | undefined;
 }) {
   return (
     <>
-      {items.map((item) => (
-        <Link
-          key={item.to}
-          to={item.to}
-          onClick={onNavigate}
-          activeProps={{
-            className:
-              "bg-sidebar-accent text-sidebar-accent-foreground border-l-primary shadow-[inset_1px_0_0_0_var(--color-primary)]",
-          }}
-          className="group flex items-center gap-2.5 rounded-md border-l-2 border-l-transparent px-2.5 py-2 text-[13px] text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
-        >
-          <item.icon className="size-4 shrink-0 opacity-70" />
-          <span className="flex-1 truncate">{item.label}</span>
-          {item.tag && (
-            <span className={cn("text-[9px] font-semibold tracking-widest", TAG_CLS[item.tag])}>
-              {item.tag}
-            </span>
-          )}
-        </Link>
-      ))}
+      {items.map((item) => {
+        const Icon = ICONS[item.to] ?? Store;
+        return (
+          <Link
+            key={item.to}
+            to={item.to}
+            onClick={onNavigate}
+            activeProps={{
+              className:
+                "bg-sidebar-accent text-sidebar-accent-foreground border-l-primary shadow-[inset_1px_0_0_0_var(--color-primary)]",
+            }}
+            className="group flex items-center gap-2.5 rounded-md border-l-2 border-l-transparent px-2.5 py-2 text-[13px] text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
+          >
+            <Icon className="size-4 shrink-0 opacity-70" />
+            <span className="flex-1 truncate">{item.label}</span>
+            {item.tag && (
+              <span className={cn("text-[9px] font-semibold tracking-widest", TAG_CLS[item.tag])}>
+                {item.tag}
+              </span>
+            )}
+          </Link>
+        );
+      })}
     </>
   );
 }
 
-/** Computed from the API's health check, never typed: the app shows no connection it lacks. */
+/** API availability comes from the health check; XRPL connectivity is never inferred from it. */
 function StatusBadge() {
   const health = useHealth();
-  if (health.isLoading) {
-    return (
-      <span className="rounded-md border border-border px-2 py-1 text-[11px] text-muted-foreground">
-        Checking API…
-      </span>
-    );
-  }
-  if (health.error || !health.data) {
-    return (
-      <span className="flex items-center gap-1.5 rounded-md border border-destructive/40 bg-destructive/10 px-2 py-1 text-[11px] text-destructive">
-        <span className="size-1.5 rounded-full bg-destructive" />
-        Credence API unreachable
-      </span>
-    );
-  }
-  const ledger = health.data.ledger;
+  const api: ApiStatus = health.isLoading
+    ? { kind: "checking" }
+    : health.error || !health.data
+      ? { kind: "unreachable" }
+      : { kind: "ok", mode: health.data.mode };
+  return <ConnectionBadges api={api} />;
+}
+
+function PrototypeBanner() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  if (!isPrototypePath(pathname)) return null;
   return (
-    <span className="flex items-center gap-2">
-      <span className="flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 px-2 py-1 text-[11px] text-primary">
-        <span className="size-1.5 rounded-full bg-primary" />
-        API · {health.data.mode}
-      </span>
-      <span
-        className="flex items-center gap-1.5 rounded-md border border-border-strong bg-surface-2 px-2 py-1 text-[11px] text-muted-foreground"
-        title={ledger.note}
-      >
-        <span className="size-1.5 rounded-full bg-muted-foreground" />
-        {ledger.connected ? `Ledger · ${ledger.network}` : "No ledger connection"}
-      </span>
-    </span>
+    <p
+      role="note"
+      className="rounded-md border border-warn/50 bg-warn/10 px-3.5 py-2.5 text-xs font-medium leading-relaxed text-warn"
+    >
+      {PROTOTYPE_BANNER}
+    </p>
   );
 }
 
@@ -181,6 +178,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
 
         <main className="mx-auto w-full max-w-[1400px] flex-1 space-y-7 px-4 py-7 lg:px-8">
+          <PrototypeBanner />
           {children}
         </main>
 
