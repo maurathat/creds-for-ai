@@ -4,4 +4,4 @@
 - [x] Credit: step-by-step purchase simulation + Reset + Simulate attack
 - [x] Polish pass: phone-width pages, mobile top nav with current-page highlight, AA contrast, concept ribbons
 - [x] Raise font sizes site-wide (min 11px, body 15px)
-- [ ] More color in text: green/cyan/gold accents on numbers and key values
+- [x] More color in text: green/cyan/gold accents on numbers and key values
