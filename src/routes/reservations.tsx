@@ -7,9 +7,9 @@ export const Route = createFileRoute("/reservations")({
   head: () => ({
     meta: [
       { title: "Reservations — Claw Street" },
-      { name: "description", content: "Reserved VIU capacity by execution profile and delivery window." },
+      { name: "description", content: "Agent procurement concept: reserving inference capacity by execution profile and delivery window. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:title", content: "Reservations — Claw Street" },
-      { property: "og:description", content: "Reserved VIU capacity by execution profile and delivery window." },
+      { property: "og:description", content: "Agent procurement concept: reserving inference capacity by execution profile and delivery window. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -21,8 +21,8 @@ function Page() {
   return (
     <DataPage
       kicker="Reservations"
-      title="Capacity reservations"
-      description="Reserved VIU capacity by execution profile and delivery window."
+      title="Capacity reservations (concept)"
+      description="Agent procurement concept: reserving inference capacity by execution profile and delivery window. Inactive concept preview — browser simulation, seeded data."
       level="concept"
       banner={<ConceptRibbon />}
       sections={[

@@ -28,12 +28,12 @@ export const Route = createFileRoute("/overview")({
       {
         name: "description",
         content:
-          "Executive dashboard for Credence: active credit facilities, verified inference purchased, provider conformity and VIU spot reference price.",
+          "Browser simulation dashboard for Claw Street: seeded facility accounting, inference purchased, provider conformity and an illustrative VIU price.",
       },
       { property: "og:title", content: "Overview — Claw Street" },
       {
         property: "og:description",
-        content: "Credit, marketplace, reservations, forwards and secondary market at a glance.",
+        content: "Seeded AI-agent procurement figures at a glance. Browser simulation · no provider calls · no payments.",
       },
     ],
   }),
@@ -41,11 +41,11 @@ export const Route = createFileRoute("/overview")({
 });
 
 const STACK = [
-  { k: "Credit", s: "Core demo", tone: "pass" as const, to: "/credit" as const },
-  { k: "Marketplace", s: "Core demo", tone: "pass" as const, to: "/market" as const },
+  { k: "Credit", s: "Simulated", tone: "pass" as const, to: "/credit" as const },
+  { k: "Procurement", s: "Simulated", tone: "pass" as const, to: "/market" as const },
   { k: "Reservations", s: "Concept", tone: "roadmap" as const, to: "/reservations" as const },
-  { k: "Forwards", s: "Concept", tone: "roadmap" as const, to: "/forwards" as const },
-  { k: "Secondary Market", s: "Concept", tone: "roadmap" as const, to: "/secondary-market" as const },
+  { k: "Forward procurement", s: "Concept", tone: "roadmap" as const, to: "/forwards" as const },
+  { k: "Capacity transfers", s: "Concept", tone: "roadmap" as const, to: "/secondary-market" as const },
 ];
 
 const chartAxis = {
@@ -73,11 +73,11 @@ function Overview() {
       <PageHeader
         kicker="Executive dashboard"
         title="Overview"
-        description="Credence finances verified inference for autonomous agents. Credit is the core demo; market, reservations, forwards, index and secondary surfaces are simulated or roadmap."
+        description="Browser simulation of AI-agent procurement with seeded data. Credit is the core simulated flow; procurement routing is simulated; reservations, forward procurement, price reference and capacity transfers are inactive concept previews."
         actions={
           <>
-            <Chip tone="pass">1 live facility</Chip>
-            <Chip tone="info">Target: RLUSD settlement on XRPL</Chip>
+            <Chip tone="pass">1 simulated facility</Chip>
+            <Chip tone="neutral">XRPL settlement · not connected</Chip>
           </>
         }
       />
@@ -85,7 +85,7 @@ function Overview() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
         <Metric label="Active credit facilities" value="1" hint="ResearchBot-17 · Active" />
         <Metric
-          label="Verified inference purchased"
+          label="Inference purchased (simulated)"
           value="1,284"
           unit="VIU"
           delta="+18.2% MoM"
@@ -111,7 +111,7 @@ function Overview() {
         <Panel
           title="Facility utilization & cumulative verified spend"
           subtitle="Facility FAC-XRPL-0x7C41 · since 2026-07-14"
-          right={<Chip tone="pass">Core demo</Chip>}
+          right={<Chip tone="pass">Simulated · seeded</Chip>}
         >
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -149,7 +149,7 @@ function Overview() {
 
         <Panel
           title="VIU spot reference price"
-          subtitle="CVII composite · tRLUSD (test asset) per Verified Inference Unit"
+          subtitle="Illustrative · tRLUSD (synthetic test unit) per inference unit"
           right={<Chip tone="warn">Simulated</Chip>}
         >
           <div className="h-64">
@@ -189,7 +189,7 @@ function Overview() {
         </Panel>
       </div>
 
-      <Panel title="Market stack" subtitle="Credit → Marketplace → Reservations → Forwards → Secondary Markets">
+      <Panel title="Market stack" subtitle="Credit → Procurement → Reservations → Forward procurement → Capacity transfers">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
           {STACK.map((s, i) => (
             <div key={s.k} className="flex flex-1 items-center gap-3">
@@ -212,7 +212,7 @@ function Overview() {
       </Panel>
 
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <Panel title="Recent receipt activity" right={<Chip tone="pass">Core demo</Chip>} bodyClassName="p-0">
+        <Panel title="Recent receipt activity" right={<Chip tone="pass">Simulated · seeded</Chip>} bodyClassName="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>

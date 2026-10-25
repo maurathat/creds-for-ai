@@ -6,9 +6,9 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings — Claw Street" },
-      { name: "description", content: "Actions that require the Ledger hardware root. The hardware wallet is the constitution, not the cashier." },
+      { name: "description", content: "Design ambition: facility changes would require a Ledger hardware root. Ledger hardware is not connected in this browser simulation." },
       { property: "og:title", content: "Settings — Claw Street" },
-      { property: "og:description", content: "Actions that require the Ledger hardware root. The hardware wallet is the constitution, not the cashier." },
+      { property: "og:description", content: "Design ambition: facility changes would require a Ledger hardware root. Ledger hardware is not connected in this browser simulation." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -21,8 +21,8 @@ function Page() {
     <DataPage
       kicker="Settings"
       title="Account & signing policy"
-      description="Actions that require the Ledger hardware root. The hardware wallet is the constitution, not the cashier."
-      level="live"
+      description="Design ambition: facility changes would require a Ledger hardware root. Ledger hardware is not connected in this browser simulation."
+      level="roadmap"
       sections={[
         { title: "Root-gated actions", rows: ROOT_ACTIONS },
         { title: "Operating profile", rows: [OPERATING_PROFILE] },

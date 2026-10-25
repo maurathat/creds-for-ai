@@ -18,17 +18,18 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FACILITY, VIU_SPOT } from "@/lib/credence";
+import { SimulationDisclosure } from "@/components/kit";
 
 const NAV = [
   { to: "/overview", label: "Overview", icon: LayoutDashboard, tag: "" },
   { to: "/credit", label: "Credit", icon: Landmark, tag: "DEMO" },
-  { to: "/market", label: "Inference Market", icon: Store, tag: "SIM" },
+  { to: "/market", label: "Procurement", icon: Store, tag: "SIM" },
   { to: "/providers", label: "Providers", icon: Server, tag: "SIM" },
   { to: "/reputation", label: "Reputation", icon: BadgeCheck, tag: "SIM" },
   { to: "/reservations", label: "Reservations", icon: CalendarClock, tag: "RM" },
-  { to: "/forwards", label: "Forwards", icon: LineChart, tag: "RM" },
-  { to: "/secondary-market", label: "Secondary Market", icon: ArrowLeftRight, tag: "RM" },
-  { to: "/price-index", label: "Price Index", icon: GaugeIcon, tag: "RM" },
+  { to: "/forwards", label: "Forward procurement", icon: LineChart, tag: "RM" },
+  { to: "/secondary-market", label: "Capacity transfers", icon: ArrowLeftRight, tag: "RM" },
+  { to: "/price-index", label: "Price reference", icon: GaugeIcon, tag: "RM" },
   { to: "/machine-credit", label: "Machine Credit", icon: Wallet, tag: "RM" },
   { to: "/receipts", label: "Receipts", icon: ReceiptText, tag: "DEMO" },
   { to: "/settings", label: "Settings", icon: Settings2, tag: "" },
@@ -42,12 +43,12 @@ const TAG_CLS: Record<string, string> = {
 
 const MOBILE_NAV = [
   { to: "/overview", label: "Overview" },
-  { to: "/market", label: "Market" },
+  { to: "/market", label: "Procurement" },
   { to: "/credit", label: "Credit" },
   { to: "/receipts", label: "Receipts" },
   { to: "/reservations", label: "Reservations" },
-  { to: "/forwards", label: "Forwards" },
-  { to: "/secondary-market", label: "Secondary Market" },
+  { to: "/forwards", label: "Forward procurement" },
+  { to: "/secondary-market", label: "Capacity transfers" },
 ] as const;
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
@@ -101,8 +102,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           <NavList />
         </div>
         <div className="border-t border-sidebar-border px-4 py-3.5">
-          <div className="label-xs">Settlement asset</div>
-          <div className="num mt-1 text-sm text-foreground">tRLUSD (test asset) · XRPL Testnet</div>
+          <div className="label-xs">Accounting unit</div>
+          <div className="num mt-1 text-sm text-foreground">tRLUSD · synthetic test unit</div>
+          <div className="mt-1 text-[12px] text-muted-foreground">Not connected to XRPL</div>
           <div className="mt-2 flex items-center justify-between text-[12.5px] text-muted-foreground">
             <span>VIU spot</span>
             <span className="num text-primary">{VIU_SPOT.toFixed(3)}</span>
@@ -111,6 +113,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-col">
+        <SimulationDisclosure />
         <div className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background/85 px-4 py-2.5 backdrop-blur lg:px-8">
           <button
             onClick={() => setOpen(true)}
@@ -134,11 +137,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden text-[14px] text-muted-foreground sm:inline">
-              Concept preview · illustrative data
+              Seeded data · in-browser accounting only
             </span>
             <span className="flex items-center gap-1.5 rounded-md border border-border-strong bg-muted px-2.5 py-1 text-[14px] text-muted-foreground">
               <span className="size-1.5 rounded-full bg-muted-foreground" />
-              XRPL Testnet · in integration
+              XRPL settlement · not connected
             </span>
           </div>
         </div>
@@ -162,9 +165,11 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <footer className="border-t border-border px-4 py-5 text-[12.5px] leading-relaxed text-muted-foreground lg:px-8">
           <div className="mb-2 text-foreground/80">Claw Street · Powered by Credence · Built by Kessai Labs</div>
-          Claw Street is a product-vision prototype. One flow (Credence Credit) is a core demo;
-          all other surfaces are simulated or roadmap. Nothing here is a regulated exchange, a credit
-          rating, an offer of credit, or production-ready. No regulatory approval is claimed.
+          This public site is a browser-only simulation with seeded data. It does not run Credence
+          Core, make provider calls, verify signatures or move funds; credit figures are in-browser
+          accounting only. Forward procurement, capacity transfers and other concept pages are
+          inactive previews. Nothing here is an exchange, a credit rating, an offer of credit, or
+          production-ready. No regulatory approval is claimed.
         </footer>
       </div>
 

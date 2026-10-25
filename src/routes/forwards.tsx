@@ -6,10 +6,10 @@ import { FORWARDS, FORWARD_CURVE } from "@/lib/credence";
 export const Route = createFileRoute("/forwards")({
   head: () => ({
     meta: [
-      { title: "Forwards — Claw Street" },
-      { name: "description", content: "Commercial forward delivery agreements for future verified inference capacity." },
+      { title: "Forward Procurement (concept) — Claw Street" },
+      { name: "description", content: "Agent procurement concept: pre-agreeing future inference capacity with a provider. Not a tradable contract. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:title", content: "Forwards — Claw Street" },
-      { property: "og:description", content: "Commercial forward delivery agreements for future verified inference capacity." },
+      { property: "og:description", content: "Agent procurement concept: pre-agreeing future inference capacity with a provider. Not a tradable contract. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -20,14 +20,14 @@ export const Route = createFileRoute("/forwards")({
 function Page() {
   return (
     <DataPage
-      kicker="Forwards"
-      title="Inference forwards"
-      description="Commercial forward delivery agreements for future verified inference capacity."
+      kicker="Forward procurement"
+      title="Forward procurement (concept)"
+      description="Agent procurement concept: pre-agreeing future inference capacity with a provider. Not a tradable contract. Inactive concept preview — browser simulation, seeded data."
       level="roadmap"
       banner={<ConceptRibbon />}
       sections={[
-        { title: "Forward contracts", rows: FORWARDS },
-        { title: "Forward curve", rows: FORWARD_CURVE },
+        { title: "Procurement agreements (illustrative)", rows: FORWARDS },
+        { title: "Illustrative price path (simulated)", rows: FORWARD_CURVE },
       ]}
     />
   );
