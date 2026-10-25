@@ -1,14 +1,29 @@
-// Navigation for the app shell. The primary journey holds only the procurement workflow pages,
+// Navigation for the app shell. The primary journey holds only the Claw Street workflow pages,
 // which read the Credence API. The original prototype pages keep their seeded data and code but
 // sit outside that journey, behind a collapsed group, and carry a prototype banner.
 
 export const PRIMARY_NAV = [
-  { to: "/market", label: "Inference Market", tag: "P0" },
-  { to: "/procure", label: "Procurement", tag: "P0" },
-  { to: "/operations", label: "Purchases", tag: "P0" },
-  { to: "/credit", label: "Credit", tag: "P0" },
-  { to: "/receipts", label: "Receipts", tag: "P0" },
-  { to: "/settlement", label: "XRPL Settlement", tag: "P0" },
+  { to: "/", label: "Overview", tag: "" },
+  { to: "/market", label: "Marketplace", tag: "" },
+  { to: "/procure", label: "Agent Purchase", tag: "" },
+  { to: "/credit", label: "Credit & Payments", tag: "" },
+  { to: "/receipts", label: "Evidence", tag: "" },
+  { to: "/activity", label: "Activity", tag: "" },
+] as const;
+
+/** Detail pages of the same journey: every purchase, and the XRPL status vocabulary. */
+export const DETAIL_NAV = [
+  { to: "/operations", label: "Purchases", tag: "" },
+  { to: "/settlement", label: "XRPL status", tag: "" },
+] as const;
+
+/** Integrations that are not live in this build. Shown only as not connected. */
+export const NOT_LIVE_INTEGRATIONS = [
+  { name: "XRPL ledger payments", detail: "No XRPL transaction is built, signed or submitted." },
+  { name: "QuickNode XRPL reads", detail: "No ledger read is connected." },
+  { name: "t54 purchases", detail: "No t54 purchase path is connected." },
+  { name: "Verifiable Intent", detail: "No Verifiable Intent credential is issued or checked." },
+  { name: "x402 payments", detail: "No x402 payment is made." },
 ] as const;
 
 export const PROTOTYPE_NAV = [

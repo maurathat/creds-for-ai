@@ -4,6 +4,7 @@
 import type {
   EvidenceTierInfo,
   IntegrationHealth,
+  LiveOperationDetail,
   OperationState,
   OutcomeClass,
   ProcurementEvaluation,
@@ -270,4 +271,87 @@ export function parseResponseAuthorization(text: string): Record<string, string>
     throw new Error("Not a ResponseAuthorization: expected exactly " + members.join(", "));
   }
   return value as Record<string, string>;
+}
+
+/** The Agent Purchase progression, in order. Display only: each step is reached only when the
+ * API reports the record that proves it. */
+export const PURCHASE_STEPS = [
+  "Core evaluation",
+  "Purchase prepared",
+  "Agent signed (outside the browser)",
+  "Signed submission",
+  "Offline provider executed",
+  "Receipt verified · accounting settled",
+  "Response retrieved",
+  "Acknowledged",
+] as const;
+
+export type StepStatus = "done" | "current" | "stopped" | "pending";
+
+/** Before submission: the dry run, the preparation and the pasted signature. */
+export function preSubmitSteps(evaluated: boolean, prepared: boolean, signed: boolean): number {
+  if (!evaluated) return 0;
+  if (!prepared) return 1;
+  return signed ? 3 : 2;
+}
+
+/**
+ * After submission, from the operation's lifecycle (each stage reached only on its persisted
+ * record). Returns the completed step count and whether the operation ended off the path.
+ */
+export function liveSteps(
+  lifecycle: { state: OperationState; reached: boolean }[],
+  state: OperationState,
+): { done: number; stopped: boolean } {
+  const reached = new Set(lifecycle.filter((s) => s.reached).map((s) => s.state));
+  let done = 4; // a journaled operation was evaluated, prepared, signed and submitted
+  for (const stage of ["delivered", "settled", "retrieved", "acknowledged"] as const) {
+    if (!reached.has(stage)) break;
+    done += 1;
+  }
+  const onPath = ["intent", "reserved", "executing", "delivered", "settled", "retrieved"];
+  const stopped = done < PURCHASE_STEPS.length && !onPath.includes(state);
+  return { done, stopped };
+}
+
+export function stepStatuses(done: number, stopped = false): StepStatus[] {
+  return PURCHASE_STEPS.map((_, i) =>
+    i < done ? "done" : i === done ? (stopped ? "stopped" : "current") : "pending",
+  );
+}
+
+export type ActivityRow = {
+  at: string;
+  event: string;
+  detail: string | null;
+  operation_id: string;
+  provider_id: string | null;
+  outcome_class: OutcomeClass;
+};
+
+/** One chronological feed, newest first, of the events each operation's records persisted.
+ * "latest_transition" is omitted: it repeats the time of the last real event. */
+export function activityFeed(operations: LiveOperationDetail[]): ActivityRow[] {
+  const rows = operations.flatMap((op) =>
+    op.events
+      .filter((e) => e.event !== "latest_transition")
+      .map((e, index) => ({
+        index,
+        row: {
+          at: e.at,
+          event: e.event,
+          detail: e.detail,
+          operation_id: op.operation_id,
+          provider_id: op.provider_id,
+          outcome_class: op.outcome_class,
+        },
+      })),
+  );
+  rows.sort(
+    (a, b) =>
+      b.row.at.localeCompare(a.row.at) ||
+      b.row.operation_id.localeCompare(a.row.operation_id) ||
+      b.index - a.index,
+  );
+  return rows.map((r) => r.row);
 }

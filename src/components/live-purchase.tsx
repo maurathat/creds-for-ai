@@ -11,7 +11,8 @@ import { ApiError } from "@/lib/credence-api/client";
 import { useHealth, usePreparePurchase, useSubmitSignedPurchase } from "@/lib/credence-api/hooks";
 import { promptDigest, shellQuote } from "@/lib/credence-api/session";
 import type { Preparation, ProcurementEvaluation } from "@/lib/credence-api/types";
-import { livePurchaseAction, parseSignedObject } from "@/lib/credence-api/view";
+import { livePurchaseAction, parseSignedObject, preSubmitSteps } from "@/lib/credence-api/view";
+import { PurchaseSteps } from "@/components/claw";
 
 const areaCls =
   "num w-full rounded-md border border-border-strong bg-surface-2 px-2.5 py-1.5 text-[11px] text-foreground focus:border-primary focus:outline-none";
@@ -132,6 +133,11 @@ export function LivePurchasePanel({
       subtitle="Prepare on the server, sign outside the browser, submit"
       right={<Chip tone="warn">Offline mock providers</Chip>}
     >
+      <div className="mb-4">
+        <PurchaseSteps
+          done={preSubmitSteps(!!evaluation, !!preparation, signature.trim().length > 0)}
+        />
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => void onPrepare()}

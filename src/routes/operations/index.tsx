@@ -16,7 +16,7 @@ import { STATE_LABEL } from "@/lib/credence-api/view";
 export const Route = createFileRoute("/operations/")({
   head: () => ({
     meta: [
-      { title: "Purchases — Credence Markets" },
+      { title: "Purchases — Claw Street" },
       {
         name: "description",
         content:

@@ -14,6 +14,7 @@ import {
   TierBadge,
 } from "@/components/credence";
 import { AgentSessionPanel, useAgentToken } from "@/components/agent-session";
+import { PurchaseSteps } from "@/components/claw";
 import { ApiError } from "@/lib/credence-api/client";
 import {
   useLiveExposure,
@@ -25,6 +26,7 @@ import {
 import type { LiveOperationDetail } from "@/lib/credence-api/types";
 import {
   humanize,
+  liveSteps,
   parseResponseAuthorization,
   STATE_LABEL,
   XRPL_STATE_LABEL,
@@ -32,7 +34,7 @@ import {
 } from "@/lib/credence-api/view";
 
 export const Route = createFileRoute("/live/$operationId")({
-  head: () => ({ meta: [{ title: "Integrated purchase — Credence Markets" }] }),
+  head: () => ({ meta: [{ title: "Integrated purchase — Claw Street" }] }),
   component: Page,
 });
 
@@ -295,6 +297,9 @@ function Detail({ op }: { op: LiveOperationDetail }) {
         }
       />
       <SourceNote>{op.source_label}. No XRPL payment exists for this purchase.</SourceNote>
+      <Panel title="Agent purchase progression" subtitle="Each step from the record that proves it">
+        <PurchaseSteps {...liveSteps(op.lifecycle, op.state)} />
+      </Panel>
       <Panel title="Lifecycle" subtitle={`Current journal state: ${STATE_LABEL[op.state]}`}>
         <LifecycleTrack
           stages={op.lifecycle.map((s) => ({ ...s, observed_in_snapshot: s.reached }))}

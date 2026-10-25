@@ -17,7 +17,7 @@ import type { OperationDetail, OperationStep } from "@/lib/credence-api/types";
 import { STATE_LABEL, XRPL_STATE_LABEL, XRPL_STATE_TONE } from "@/lib/credence-api/view";
 
 export const Route = createFileRoute("/operations/$operationId")({
-  head: () => ({ meta: [{ title: "Purchase — Credence Markets" }] }),
+  head: () => ({ meta: [{ title: "Purchase — Claw Street" }] }),
   component: Page,
 });
 

@@ -20,14 +20,24 @@ import {
   Link2,
   Home,
   ChevronRight,
+  History,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHealth } from "@/lib/credence-api/hooks";
 import { ConnectionBadges, type ApiStatus } from "@/components/status";
-import { isPrototypePath, PRIMARY_NAV, PROTOTYPE_BANNER, PROTOTYPE_NAV } from "@/lib/navigation";
+import {
+  DETAIL_NAV,
+  isPrototypePath,
+  PRIMARY_NAV,
+  PROTOTYPE_BANNER,
+  PROTOTYPE_NAV,
+} from "@/lib/navigation";
+import { BRAND, ClawStreetLockup } from "@/components/brand";
 
 const ICONS: Record<string, LucideIcon> = {
+  "/": LayoutDashboard,
+  "/activity": History,
   "/market": Store,
   "/procure": SlidersHorizontal,
   "/operations": Workflow,
@@ -55,8 +65,10 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   return (
     <nav className="flex flex-col gap-0.5 px-2">
-      <div className="label-xs px-2.5 pb-1">Procurement workflow</div>
+      <div className="label-xs px-2.5 pb-1">Marketplace</div>
       <NavItems items={PRIMARY_NAV} onNavigate={onNavigate} />
+      <div className="label-xs mt-4 px-2.5 pb-1">Details</div>
+      <NavItems items={DETAIL_NAV} onNavigate={onNavigate} />
       <details className="group/proto mt-4" open={isPrototypePath(pathname)}>
         <summary className="label-xs flex cursor-pointer list-none items-center gap-1 px-2.5 pb-1">
           <ChevronRight className="size-3 transition-transform group-open/proto:rotate-90" />
@@ -72,7 +84,9 @@ function NavItems({
   items,
   onNavigate,
 }: {
-  items: readonly ((typeof PRIMARY_NAV)[number] | (typeof PROTOTYPE_NAV)[number])[];
+  items: readonly (
+    (typeof PRIMARY_NAV)[number] | (typeof DETAIL_NAV)[number] | (typeof PROTOTYPE_NAV)[number]
+  )[];
   onNavigate?: (() => void) | undefined;
 }) {
   return (
@@ -84,6 +98,7 @@ function NavItems({
             key={item.to}
             to={item.to}
             onClick={onNavigate}
+            activeOptions={{ exact: item.to === "/" }}
             activeProps={{
               className:
                 "bg-sidebar-accent text-sidebar-accent-foreground border-l-primary shadow-[inset_1px_0_0_0_var(--color-primary)]",
@@ -130,14 +145,8 @@ function PrototypeBanner() {
 
 function Brand() {
   return (
-    <Link to="/" className="flex items-center gap-2.5 px-4 py-4">
-      <span className="grid size-8 place-items-center rounded-md border border-primary/40 bg-primary/10">
-        <span className="num text-sm font-bold text-primary">C</span>
-      </span>
-      <span className="leading-tight">
-        <span className="block text-sm font-semibold tracking-tight">Credence</span>
-        <span className="label-xs">Markets</span>
-      </span>
+    <Link to="/" className="flex items-center px-4 py-4" title={BRAND.display}>
+      <ClawStreetLockup />
     </Link>
   );
 }
@@ -170,7 +179,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Menu className="size-4" />
           </button>
           <div className="hidden items-center gap-6 text-[11px] text-muted-foreground lg:flex">
-            Inference procurement under spending, credit and evidence policies
+            {BRAND.display} · agents buy verified inference under spending, credit and evidence
+            policies
           </div>
           <div className="flex items-center gap-3">
             <StatusBadge />
@@ -183,11 +193,12 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
 
         <footer className="border-t border-border px-4 py-5 text-[11px] leading-relaxed text-muted-foreground lg:px-8">
-          Credence is a Kessai product. The procurement workflow pages read Credence's offline API:
-          Core policy dry runs, integrated offline purchases with mock providers, recorded offline
-          purchase runs and labelled fixtures. Amounts are in tRLUSD, a test token. Accounting
-          settlement is not XRPL settlement, and no XRPL transaction exists. Prototype pages show
-          seeded data only. Nothing here is production-ready.
+          Claw Street is a Kessai Labs marketplace, powered by Credence infrastructure (Credence is
+          a Kessai product). The marketplace pages read Credence's offline API: Core policy dry
+          runs, integrated offline purchases with mock providers, recorded offline purchase runs and
+          labelled fixtures. Amounts are in tRLUSD, a test token. Accounting settlement is not XRPL
+          settlement, and no XRPL transaction exists. Prototype pages show seeded data only. Nothing
+          here is production-ready.
         </footer>
       </div>
 

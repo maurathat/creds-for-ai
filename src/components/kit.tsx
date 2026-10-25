@@ -38,7 +38,7 @@ export function Chip({
     pass: "border-success/40 bg-success/10 text-success",
     reject: "border-destructive/40 bg-destructive/10 text-destructive",
     warn: "border-warn/40 bg-warn/10 text-warn",
-    info: "border-primary/40 bg-primary/10 text-primary",
+    info: "border-info/40 bg-info/10 text-info",
     roadmap: "border-roadmap/40 bg-roadmap/10 text-roadmap",
   };
   return (

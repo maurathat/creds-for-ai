@@ -11,7 +11,15 @@ import {
   SourceNote,
   TierBadge,
 } from "@/components/credence";
-import { useReceiptEvidence, useReceipts } from "@/lib/credence-api/hooks";
+import { useQueries } from "@tanstack/react-query";
+import { AgentSessionPanel, useAgentToken } from "@/components/agent-session";
+import { TruthStrip } from "@/components/claw";
+import {
+  credenceClient,
+  useLiveOperations,
+  useReceiptEvidence,
+  useReceipts,
+} from "@/lib/credence-api/hooks";
 import type { ReceiptEvidence } from "@/lib/credence-api/types";
 import { humanize } from "@/lib/credence-api/view";
 
@@ -22,7 +30,7 @@ export const Route = createFileRoute("/receipts")({
     typeof search["digest"] === "string" ? { digest: search["digest"] } : {},
   head: () => ({
     meta: [
-      { title: "Receipts — Credence Markets" },
+      { title: "Evidence — Claw Street" },
       {
         name: "description",
         content:
@@ -209,7 +217,154 @@ function Inspector({ e }: { e: ReceiptEvidence }) {
   );
 }
 
+const TIERS: { tier: string; name: string; means: string; status: string }[] = [
+  {
+    tier: "Tier 0",
+    name: "Requested",
+    means: "The purchase request names the execution profile; nothing about delivery is evidenced.",
+    status: "Implemented",
+  },
+  {
+    tier: "Tier 1",
+    name: "Witnessed",
+    means:
+      "Credence witnessed the provider's response and the gateway signed the receipt. The provider signs nothing.",
+    status: "Implemented",
+  },
+  {
+    tier: "Tier 2",
+    name: "Bound and signed",
+    means: "The provider signed what it says it served; the gateway also signs the receipt.",
+    status: "Implemented",
+  },
+  {
+    tier: "Tier 3",
+    name: "Measured",
+    means: "Measured execution evidence.",
+    status: "Roadmap",
+  },
+];
+
+function EvidenceTiers() {
+  return (
+    <div className="grid gap-5 xl:grid-cols-[1.3fr_1fr]">
+      <Panel title="Evidence tiers" subtitle="What each tier evidences">
+        <ul className="space-y-2 text-[11px]">
+          {TIERS.map((t) => (
+            <li key={t.tier} className="flex gap-3">
+              <Chip tone={t.status === "Roadmap" ? "roadmap" : "info"}>
+                {t.tier} · {t.name}
+              </Chip>
+              <span className="text-muted-foreground">
+                {t.means} <span className="text-foreground/70">({t.status})</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Panel>
+      <Panel title="Limitations" subtitle="What no receipt here proves">
+        <ul className="list-disc space-y-1.5 pl-4 text-[11px] text-muted-foreground">
+          <li>No tier proves that exact model weights ran.</li>
+          <li>Tier 1 does not mean the provider signed or attested anything.</li>
+          <li>
+            In this build both providers are offline mocks: responses are synthetic and the Tier 2
+            signature is made with a TEST key.
+          </li>
+          <li>Token counts are provider-reported; the gateway runs no tokenizer.</li>
+          <li>A verified receipt is accounting evidence, not an XRPL payment.</li>
+        </ul>
+      </Panel>
+    </div>
+  );
+}
+
+function IntegratedReceipts({ token }: { token: string }) {
+  const operations = useLiveOperations(token);
+  const withReceipts = (operations.data?.operations ?? []).filter((o) => o.receipt_digest);
+  const receipts = useQueries({
+    queries: withReceipts.map((o) => ({
+      queryKey: ["credence", "live", "receipt", o.receipt_digest],
+      queryFn: () => credenceClient().getLiveReceipt(o.receipt_digest as string),
+      staleTime: 0,
+    })),
+  });
+  return (
+    <QueryState isLoading={operations.isLoading} error={operations.error}>
+      <Panel
+        title="Integrated delivery receipts (this agent)"
+        subtitle="Checks recomputed now by Credence Core against the service's public key records"
+        right={<ProvenanceChip kind="integrated_offline" />}
+        bodyClassName="p-0"
+      >
+        {withReceipts.length === 0 ? (
+          <p className="px-5 py-4 text-xs text-muted-foreground">No integrated receipts yet.</p>
+        ) : (
+          <table className="w-full text-xs" aria-label="Integrated receipts">
+            <thead>
+              <tr className="border-b border-border text-left">
+                {[
+                  "Receipt",
+                  "Operation",
+                  "Provider",
+                  "Evidence",
+                  "Price",
+                  "Checks",
+                  "Accounting",
+                ].map((h) => (
+                  <th key={h} className="label-xs px-4 py-2.5 font-medium">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {withReceipts.map((o, i) => {
+                const r = receipts[i]?.data;
+                const failed = r?.checks.filter((c) => c.result === "fail").length ?? 0;
+                return (
+                  <tr key={o.operation_id} className="border-b border-border/60 last:border-0">
+                    <td className="px-4 py-2.5">
+                      <Digest value={o.receipt_digest} />
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <Link
+                        to="/live/$operationId"
+                        params={{ operationId: o.operation_id }}
+                        className="num text-primary hover:underline"
+                      >
+                        {o.operation_id.slice(0, 14)}…
+                      </Link>
+                    </td>
+                    <td className="num px-4 py-2.5">{o.provider_id}</td>
+                    <td className="px-4 py-2.5">{r ? <TierBadge evidence={r.evidence} /> : "…"}</td>
+                    <td className="px-4 py-2.5">
+                      {r ? <Money micro={r.price_micro_trlusd} /> : "…"}
+                    </td>
+                    <td className="px-4 py-2.5" data-checks-failed={r ? failed : ""}>
+                      {r ? (
+                        <Chip tone={failed ? "reject" : "pass"}>
+                          {failed ? `${failed} failed` : "all pass"}
+                        </Chip>
+                      ) : (
+                        "…"
+                      )}
+                    </td>
+                    <td className="px-4 py-2.5 text-[11px]">
+                      {r?.accounting.settled ? "accounting settled" : "not settled"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </Panel>
+    </QueryState>
+  );
+}
+
 function Page() {
+  const [token, setToken] = useAgentToken();
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/receipts" });
   const receipts = useReceipts();
@@ -220,9 +375,13 @@ function Page() {
     <AppShell>
       <PageHeader
         kicker="Evidence"
-        title="Receipts and evidence"
+        title="Evidence tiers and delivery receipts"
         description="Each receipt binds the purchase request, the execution profile, the provider and the response digest. Signatures and digests are re-checked by Credence Core's own functions when you open a receipt."
       />
+      <TruthStrip />
+      <EvidenceTiers />
+      <AgentSessionPanel token={token} setToken={setToken} />
+      {token && <IntegratedReceipts token={token} />}
       <QueryState isLoading={receipts.isLoading} error={receipts.error}>
         <ProvenanceLegend kinds={["live_evidence", "offline_test"]} />
         <Panel title="Receipts" bodyClassName="p-0">

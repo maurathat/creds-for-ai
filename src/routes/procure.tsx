@@ -26,7 +26,7 @@ import { LivePurchasePanel } from "@/components/live-purchase";
 export const Route = createFileRoute("/procure")({
   head: () => ({
     meta: [
-      { title: "Procurement — Credence Markets" },
+      { title: "Agent Purchase — Claw Street" },
       {
         name: "description",
         content: "Define an inference procurement and see which offers Credence Core accepts.",
@@ -428,9 +428,9 @@ function Page() {
   return (
     <AppShell>
       <PageHeader
-        kicker="Procurement"
-        title="Define a procurement"
-        description="State what the agent may buy: model, workload, price ceiling, evidence floor, providers and facility constraints. Credence Core decides which offers qualify in a real policy dry run, which reserves no funds and executes no inference."
+        kicker="Agent Purchase"
+        title="Buy inference as an agent"
+        description="State what the agent may buy: model, workload, price ceiling, evidence floor, providers and facility constraints. Credence Core decides which offers qualify in a real policy dry run; the agent then signs the prepared purchase with its own key, outside the browser."
       />
       <OfflineNotice />
       <QueryState

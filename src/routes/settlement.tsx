@@ -9,7 +9,7 @@ import { XRPL_STATE_LABEL, XRPL_STATE_TONE } from "@/lib/credence-api/view";
 export const Route = createFileRoute("/settlement")({
   head: () => ({
     meta: [
-      { title: "XRPL settlement — Credence Markets" },
+      { title: "XRPL settlement — Claw Street" },
       {
         name: "description",
         content:

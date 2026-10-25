@@ -10,13 +10,15 @@ import {
   SourceNote,
   TierBadge,
 } from "@/components/credence";
-import { useProviders } from "@/lib/credence-api/hooks";
+import { useQueries } from "@tanstack/react-query";
+import { TruthStrip } from "@/components/claw";
+import { credenceClient, usePresets, useProviders } from "@/lib/credence-api/hooks";
 import type { Provider } from "@/lib/credence-api/types";
 
 export const Route = createFileRoute("/market")({
   head: () => ({
     meta: [
-      { title: "Inference Market — Credence Markets" },
+      { title: "Marketplace — Claw Street" },
       {
         name: "description",
         content:
@@ -133,24 +135,103 @@ function ProviderCard({ provider }: { provider: Provider }) {
   );
 }
 
+/** Each scenario's real Core dry run, offer by offer: who is eligible and why not. */
+function EligibilityMatrix() {
+  const presets = usePresets();
+  const runs = useQueries({
+    queries: (presets.data ?? []).map((p) => ({
+      queryKey: ["credence", "market-dry-run", p.preset_id],
+      queryFn: () => credenceClient().evaluateProcurement(p.form),
+      staleTime: 60_000,
+    })),
+  });
+  const providerIds = [
+    ...new Set(runs.flatMap((r) => r.data?.offers.map((o) => o.provider_id) ?? [])),
+  ];
+  return (
+    <Panel
+      title="Offers and eligibility"
+      subtitle="Real Credence Core policy dry runs of each scenario · nothing reserved · no inference executed"
+      right={<Chip tone="info">Core dry run</Chip>}
+      bodyClassName="p-0"
+    >
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs" aria-label="Eligibility matrix">
+          <thead>
+            <tr className="border-b border-border text-left">
+              <th className="label-xs px-4 py-2.5 font-medium">Scenario</th>
+              {providerIds.map((id) => (
+                <th key={id} className="label-xs px-4 py-2.5 font-medium">
+                  {id}
+                </th>
+              ))}
+              <th className="label-xs px-4 py-2.5 font-medium">Routed to</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(presets.data ?? []).map((preset, i) => {
+              const run = runs[i]?.data;
+              return (
+                <tr key={preset.preset_id} className="border-b border-border/60 last:border-0">
+                  <td className="px-4 py-3 font-medium">{preset.title}</td>
+                  {providerIds.map((id) => {
+                    const offer = run?.offers.find((o) => o.provider_id === id);
+                    return (
+                      <td
+                        key={id}
+                        className="px-4 py-3"
+                        data-eligibility={`${preset.preset_id}:${id}`}
+                      >
+                        {!offer ? (
+                          "…"
+                        ) : offer.qualified ? (
+                          <span className="flex flex-wrap items-center gap-1.5">
+                            <Chip tone="pass">Eligible</Chip>
+                            <Money micro={offer.max_total_cost_micro_trlusd} />
+                          </span>
+                        ) : (
+                          <span title={offer.reason ?? ""}>
+                            <Chip tone="reject">{offer.reason_code}</Chip>
+                          </span>
+                        )}
+                      </td>
+                    );
+                  })}
+                  <td className="num px-4 py-3">{run?.chosen_provider_id ?? "—"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="border-t border-border px-5 py-3 text-[11px] text-muted-foreground">
+        {runs[0]?.data?.routing_rule ??
+          "Lowest maximum cost among offers Core accepted. Configured demo quotes; no auction or bidding."}
+      </p>
+    </Panel>
+  );
+}
+
 function Page() {
   const providers = useProviders();
   return (
     <AppShell>
       <PageHeader
         kicker="Marketplace"
-        title="Inference market"
-        description="The providers Credence can buy inference from today, with the execution profile each offer is checked against, its evidence tier and its configured price."
+        title="Providers, prices and offers"
+        description="The providers Claw Street agents can buy inference from today, with the execution profile each offer is checked against, its evidence tier, its configured price and whether Credence Core accepts it."
         actions={
           <Link
             to="/procure"
             className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90"
           >
-            Define a procurement <ArrowRight className="size-3.5" />
+            Start an agent purchase <ArrowRight className="size-3.5" />
           </Link>
         }
       />
+      <TruthStrip />
       <OfflineNotice />
+      <EligibilityMatrix />
       <QueryState isLoading={providers.isLoading} error={providers.error}>
         <div className="grid gap-5 2xl:grid-cols-2">
           {providers.data?.map((p) => (

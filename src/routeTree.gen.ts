@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ActivityRouteImport } from './routes/activity'
 import { Route as CreditRouteImport } from './routes/credit'
 import { Route as ForwardsRouteImport } from './routes/forwards'
 import { Route as MachineCreditRouteImport } from './routes/machine-credit'
@@ -32,6 +33,11 @@ import { Route as OperationsOperationIdRouteImport } from './routes/operations/$
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActivityRoute = ActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CreditRoute = CreditRouteImport.update({
@@ -127,6 +133,7 @@ const OperationsOperationIdRoute = OperationsOperationIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
   '/credit': typeof CreditRoute
   '/forwards': typeof ForwardsRoute
   '/machine-credit': typeof MachineCreditRoute
@@ -148,6 +155,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
   '/credit': typeof CreditRoute
   '/forwards': typeof ForwardsRoute
   '/machine-credit': typeof MachineCreditRoute
@@ -170,6 +178,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
   '/credit': typeof CreditRoute
   '/forwards': typeof ForwardsRoute
   '/machine-credit': typeof MachineCreditRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/activity'
     | '/credit'
     | '/forwards'
     | '/machine-credit'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/activity'
     | '/credit'
     | '/forwards'
     | '/machine-credit'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/activity'
     | '/credit'
     | '/forwards'
     | '/machine-credit'
@@ -257,6 +269,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActivityRoute: typeof ActivityRoute
   CreditRoute: typeof CreditRoute
   ForwardsRoute: typeof ForwardsRoute
   MachineCreditRoute: typeof MachineCreditRoute
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/activity': {
+      id: '/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof ActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/credit': {
@@ -417,6 +437,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActivityRoute: ActivityRoute,
   CreditRoute: CreditRoute,
   ForwardsRoute: ForwardsRoute,
   MachineCreditRoute: MachineCreditRoute,

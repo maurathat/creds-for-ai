@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { ConnectionBadges } from "../src/components/status";
 import { ProvenanceLegend } from "../src/components/credence";
 import {
+  DETAIL_NAV,
   isPrototypePath,
   PRIMARY_NAV,
   PROTOTYPE_BANNER,
@@ -14,15 +15,16 @@ import type { ProcurementEvaluation } from "../src/lib/credence-api/types";
 import { purchaseAction, XRPL_STATE_LABEL, XRPL_STATE_TONE } from "../src/lib/credence-api/view";
 
 describe("navigation", () => {
-  test("the primary journey holds only the workflow pages", () => {
-    expect(PRIMARY_NAV.map((n) => n.to)).toEqual([
-      "/market",
-      "/procure",
-      "/operations",
-      "/credit",
-      "/receipts",
-      "/settlement",
+  test("the primary journey holds the six Claw Street screens, in order", () => {
+    expect(PRIMARY_NAV.map((n) => [n.to, n.label])).toEqual([
+      ["/", "Overview"],
+      ["/market", "Marketplace"],
+      ["/procure", "Agent Purchase"],
+      ["/credit", "Credit & Payments"],
+      ["/receipts", "Evidence"],
+      ["/activity", "Activity"],
     ]);
+    expect(DETAIL_NAV.map((n) => n.to)).toEqual(["/operations", "/settlement"]);
   });
 
   test("seeded prototype pages are outside the primary journey and labelled", () => {

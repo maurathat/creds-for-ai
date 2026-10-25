@@ -11,9 +11,22 @@ import {
   TierBadge,
 } from "@/components/credence";
 import { AgentSessionPanel, useAgentToken } from "@/components/agent-session";
-import { useExposure, useLiveFacilities, useOperations } from "@/lib/credence-api/hooks";
+import { useQueries } from "@tanstack/react-query";
+import { NotLiveIntegrations, TruthStrip } from "@/components/claw";
+import {
+  credenceClient,
+  useExposure,
+  useLiveFacilities,
+  useLiveOperations,
+  useOperations,
+} from "@/lib/credence-api/hooks";
 import type { AccountingExposure, Exposure } from "@/lib/credence-api/types";
-import { formatMicro, STATE_LABEL } from "@/lib/credence-api/view";
+import {
+  formatMicro,
+  STATE_LABEL,
+  XRPL_STATE_LABEL,
+  XRPL_STATE_TONE,
+} from "@/lib/credence-api/view";
 import { ROOT_ACTIONS } from "@/lib/credence";
 
 type Search = { operation?: string };
@@ -23,7 +36,7 @@ export const Route = createFileRoute("/credit")({
     typeof search["operation"] === "string" ? { operation: search["operation"] } : {},
   head: () => ({
     meta: [
-      { title: "Credit — Credence Markets" },
+      { title: "Credit & Payments — Claw Street" },
       {
         name: "description",
         content:
@@ -195,6 +208,83 @@ function LiveFacilities({ token }: { token: string }) {
   );
 }
 
+/** Payments: each integrated purchase's accounting outcome beside its XRPL status (from the API). */
+function Payments({ token }: { token: string }) {
+  const operations = useLiveOperations(token);
+  const ops = operations.data?.operations ?? [];
+  const payments = useQueries({
+    queries: ops.map((o) => ({
+      queryKey: ["credence", "live", "payment", o.operation_id],
+      queryFn: () => credenceClient().getLivePayment(o.operation_id),
+      staleTime: 0,
+    })),
+  });
+  return (
+    <QueryState isLoading={operations.isLoading} error={operations.error}>
+      <Panel
+        title="Payments"
+        subtitle="Accounting settlement (Credence Core) and XRPL payment status, per integrated purchase"
+        bodyClassName="p-0"
+      >
+        {ops.length === 0 ? (
+          <p className="px-5 py-4 text-xs text-muted-foreground">No integrated purchases yet.</p>
+        ) : (
+          <table className="w-full text-xs" aria-label="Payments">
+            <thead>
+              <tr className="border-b border-border text-left">
+                {["Operation", "Facility", "Accounting", "XRPL payment", "Transaction"].map((h) => (
+                  <th key={h} className="label-xs px-4 py-2.5 font-medium">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {ops.map((o, i) => {
+                const xrpl = payments[i]?.data?.xrpl;
+                return (
+                  <tr key={o.operation_id} className="border-b border-border/60 last:border-0">
+                    <td className="px-4 py-2.5">
+                      <Link
+                        to="/live/$operationId"
+                        params={{ operationId: o.operation_id }}
+                        className="num text-primary hover:underline"
+                      >
+                        {o.operation_id.slice(0, 14)}…
+                      </Link>
+                    </td>
+                    <td className="num px-4 py-2.5">{o.facility_id}</td>
+                    <td className="px-4 py-2.5">
+                      <OutcomeChip outcome={o.outcome_class} />
+                    </td>
+                    <td className="px-4 py-2.5" data-xrpl-state={xrpl?.state ?? ""}>
+                      {xrpl ? (
+                        <Chip tone={XRPL_STATE_TONE[xrpl.state]}>
+                          {XRPL_STATE_LABEL[xrpl.state]}
+                        </Chip>
+                      ) : (
+                        "…"
+                      )}
+                    </td>
+                    <td className="num px-4 py-2.5 text-muted-foreground">
+                      {xrpl?.transaction_hash ?? "none"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+        <p className="border-t border-border px-5 py-3 text-[11px] text-muted-foreground">
+          Amounts are integer micro-tRLUSD; tRLUSD is a synthetic test token. Accounting settlement
+          is Credence&apos;s internal record and is not an XRPL payment. No XRPL adapter is
+          connected in this build, so every purchase&apos;s XRPL status is not submitted.
+        </p>
+      </Panel>
+    </QueryState>
+  );
+}
+
 function Credit() {
   const [token, setToken] = useAgentToken();
   const search = Route.useSearch();
@@ -207,14 +297,16 @@ function Credit() {
   return (
     <AppShell>
       <PageHeader
-        kicker="Credit"
-        title="Credit facility"
+        kicker="Credit & Payments"
+        title="Facilities, exposure and payments"
         description="Limit, headroom, held exposure and drawn accounting, read from Credence Core's accounting records. Drawn is Credence's record of verified spending; it is not confirmed XRPL loan principal."
         actions={<Chip tone="info">Accounting only · no XRPL loan</Chip>}
       />
+      <TruthStrip />
       <OfflineNotice />
       <AgentSessionPanel token={token} setToken={setToken} />
       {token && <LiveFacilities token={token} />}
+      {token && <Payments token={token} />}
       <QueryState isLoading={operations.isLoading} error={operations.error}>
         <Panel title="Recorded run" subtitle="Each recorded offline run has its own facility state">
           <div className="flex flex-wrap items-center gap-3">
@@ -277,6 +369,7 @@ function Credit() {
         accounting settlement replaces the hold with the verified charge, and a release or expiry
         frees it.
       </SourceNote>
+      <NotLiveIntegrations />
     </AppShell>
   );
 }
