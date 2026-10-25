@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DataPage } from "@/components/data-page";
+import { ConceptRibbon } from "@/components/kit";
 import { ORDER_BOOK } from "@/lib/credence";
 
 export const Route = createFileRoute("/secondary-market")({

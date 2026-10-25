@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DataPage } from "@/components/data-page";
+import { ConceptRibbon } from "@/components/kit";
 import { RESERVATIONS } from "@/lib/credence";
 
 export const Route = createFileRoute("/reservations")({

@@ -363,7 +363,8 @@ function Credit() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
           </Panel>
           <Panel title="XRPL role">
             <p className="text-[11px] leading-relaxed text-muted-foreground">
