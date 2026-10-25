@@ -82,7 +82,7 @@ function Overview() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
         <Metric label="Active credit facilities" value="1" hint="ResearchBot-17 · Active" />
         <Metric
           label="Verified inference purchased"
