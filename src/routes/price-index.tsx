@@ -6,9 +6,9 @@ export const Route = createFileRoute("/price-index")({
   head: () => ({
     meta: [
       { title: "Price Index — Claw Street" },
-      { name: "description", content: "Reference prices for verified inference units (VIU) in RLUSD." },
+      { name: "description", content: "Reference prices for verified inference units (VIU) in tRLUSD (test asset)." },
       { property: "og:title", content: "Price Index — Claw Street" },
-      { property: "og:description", content: "Reference prices for verified inference units (VIU) in RLUSD." },
+      { property: "og:description", content: "Reference prices for verified inference units (VIU) in tRLUSD (test asset)." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -21,7 +21,7 @@ function Page() {
     <DataPage
       kicker="Price Index"
       title="Credence price index"
-      description="Reference prices for verified inference units (VIU) in RLUSD."
+      description="Reference prices for verified inference units (VIU) in tRLUSD (test asset)."
       level="simulated"
       sections={[
         { title: "Indexes", rows: INDEXES },

@@ -22,7 +22,7 @@ function Page() {
       kicker="Reservations"
       title="Capacity reservations"
       description="Reserved VIU capacity by execution profile and delivery window."
-      level="simulated"
+      level="concept"
       sections={[
         { title: "Reservations", rows: RESERVATIONS },
       ]}

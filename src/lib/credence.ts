@@ -1,7 +1,7 @@
 // Seeded demo data for the Credence Markets prototype.
 // All values are fictional demo data unless explicitly noted as Live MVP state.
 
-export type Maturity = "live" | "simulated" | "roadmap";
+export type Maturity = "live" | "simulated" | "concept" | "roadmap";
 
 export const FACILITY = {
   id: "FAC-XRPL-0x7C41",
@@ -20,8 +20,8 @@ export const FACILITY = {
   evidenceTier: "Tier 2",
   rootAuthority: "Ledger hardware signer",
   opAuthority: "Agent delegate — ResearchBot-17",
-  ledger: "XRPL Mainnet (demo)",
-  settlement: "RLUSD",
+  ledger: "XRPL Testnet (planned)",
+  settlement: "tRLUSD (test asset)",
   status: "Active",
   apr: 9.4,
   openedAt: "2026-07-14",
@@ -36,7 +36,7 @@ export const CORE_FLOW = [
   { step: 3, title: "Kessai serialization", detail: "Request is canonically serialized and bound to the execution profile digest." },
   { step: 4, title: "Provider returns Tier-2 receipt", detail: "Northstar Compute signs a provider-declared and bound delivery receipt." },
   { step: 5, title: "Credence verifies binding", detail: "Request digest, response digest and declared profile must match the order." },
-  { step: 6, title: "Credence approves settlement", detail: "Policy engine co-signs; settlement is released in RLUSD." },
+  { step: 6, title: "Credence approves settlement", detail: "Policy engine co-signs; settlement is released in tRLUSD (test asset)." },
   { step: 7, title: "XRPL facility state updates", detail: "Available balance and facility references are written to the ledger." },
   { step: 8, title: "Reputation updates", detail: "Borrower repayment record and provider conformity score are updated." },
 ];
@@ -96,7 +96,7 @@ export const TRANSACTIONS: Txn[] = [
   { id: "REQ-4816", ts: "2026-09-27 12:11:03Z", viu: 18, rlusd: 7.85, provider: "Northstar Compute", profile: "Meridian-70B / FP8", tier: "Tier 2", outcome: "REJECT", reason: "Declared precision FP8 ≠ approved BF16" },
   { id: "REQ-4815", ts: "2026-09-27 09:07:38Z", viu: 32, rlusd: 13.95, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "11F8…3D9C" },
   { id: "REQ-4814", ts: "2026-09-26 23:52:14Z", viu: 32, rlusd: 13.95, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Replayed delivery receipt — request digest already settled" },
-  { id: "REQ-4813", ts: "2026-09-26 18:20:55Z", viu: 900, rlusd: 392.4, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Facility overspend — exceeds available 362.40 RLUSD" },
+  { id: "REQ-4813", ts: "2026-09-26 18:20:55Z", viu: 900, rlusd: 392.4, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Facility overspend — exceeds available 362.40 tRLUSD" },
   { id: "REQ-4812", ts: "2026-09-26 15:06:31Z", viu: 20, rlusd: 8.72, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Agent delegate authority expired at 2026-09-26 12:00Z" },
   { id: "REQ-4811", ts: "2026-09-26 11:41:02Z", viu: 48, rlusd: 20.93, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "7A0E…B412" },
 ];
@@ -111,12 +111,12 @@ export type AttackCase = {
 };
 
 export const ATTACK_CASES: AttackCase[] = [
-  { id: "V-0", name: "Valid conforming request", input: "Northstar Compute · Meridian-70B-Instruct · BF16 · 24 VIU", check: "Allowlist · profile digest · request/response binding · limit · authority", outcome: "PASS", note: "Settled 10.46 RLUSD; facility state written to XRPL." },
+  { id: "V-0", name: "Valid conforming request", input: "Northstar Compute · Meridian-70B-Instruct · BF16 · 24 VIU", check: "Allowlist · profile digest · request/response binding · limit · authority", outcome: "PASS", note: "Settled 10.46 tRLUSD; facility state written to XRPL." },
   { id: "V-1", name: "Wrong provider", input: "Helios Grid · Meridian-70B-Instruct · BF16 · 60 VIU", check: "Provider allowlist bound to facility", outcome: "REJECT", note: "Provider account not co-signed into facility terms." },
   { id: "V-2", name: "Wrong model declaration", input: "Northstar · OpenCoder-34B · BF16 · 40 VIU", check: "Artifact digest vs approved execution profile", outcome: "REJECT", note: "Receipt declares a different artifact digest than contracted." },
   { id: "V-3", name: "Wrong precision declaration", input: "Northstar · Meridian-70B · FP8 · 18 VIU", check: "Precision field of execution profile digest", outcome: "REJECT", note: "FP8 delivery cannot settle against a BF16 order." },
   { id: "V-4", name: "Replayed delivery receipt", input: "Receipt for REQ-4815 resubmitted", check: "Request digest uniqueness ledger", outcome: "REJECT", note: "Kessai request digest already consumed by a settled draw." },
-  { id: "V-5", name: "Facility overspend", input: "900 VIU · 392.40 RLUSD", check: "Available balance 362.40 RLUSD", outcome: "REJECT", note: "Draw exceeds available credit; no partial fill authorized." },
+  { id: "V-5", name: "Facility overspend", input: "900 VIU · 392.40 tRLUSD", check: "Available balance 362.40 tRLUSD", outcome: "REJECT", note: "Draw exceeds available credit; no partial fill authorized." },
   { id: "V-6", name: "Expired / unauthorized spend", input: "Delegate key past expiry window", check: "Operational authority validity + scope", outcome: "REJECT", note: "Requires root (Ledger hardware) re-delegation before spend." },
 ];
 
@@ -158,7 +158,7 @@ export const PROVIDERS: Provider[] = [
 ];
 
 export const ROUTING_STRATEGIES = [
-  { key: "cheapest", label: "Cheapest", detail: "Lowest RLUSD/VIU, ignores evidence tier." },
+  { key: "cheapest", label: "Cheapest", detail: "Lowest tRLUSD/VIU, ignores evidence tier." },
   { key: "fastest", label: "Fastest", detail: "Lowest p50 latency across eligible listings." },
   { key: "verified", label: "Verified", detail: "Tier 2+ receipts and ≥99% conformity only." },
   { key: "sovereign", label: "Sovereign EU", detail: "EU residency and EU-only jurisdictions." },

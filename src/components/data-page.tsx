@@ -13,7 +13,11 @@ function fmt(v: unknown): string {
   return String(v ?? "—");
 }
 
+const TIP = "Illustrative reference — not an on-chain transaction.";
+const SETTLEMENT_COLS = new Set(["xrpl_tx", "xrpl", "xrplTx"]);
+
 function label(k: string) {
+  if (SETTLEMENT_COLS.has(k)) return "Settlement ref (demo)";
   return k.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
 }
 
@@ -35,7 +39,11 @@ export function DataTable({ rows, columns }: { rows: readonly Row[]; columns?: s
           {rows.map((r, i) => (
             <tr key={i} className="border-b border-border/60 last:border-0">
               {cols.map((c) => (
-                <td key={c} className="whitespace-nowrap px-3 py-2 font-mono text-xs text-foreground">
+                <td
+                  key={c}
+                  title={SETTLEMENT_COLS.has(c) ? TIP : undefined}
+                  className="whitespace-nowrap px-3 py-2 font-mono text-xs text-foreground"
+                >
                   {fmt(r[c])}
                 </td>
               ))}
