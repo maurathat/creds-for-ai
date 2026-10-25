@@ -279,7 +279,7 @@ function Home() {
               ))}
             </ol>
             <div className="label-xs mt-5">XRPL&rsquo;s role</div>
-            <p className="mt-2 text-[12.5px] leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
               XRPL carries credit state, settlement, account identity and facility transaction
               references. XRPL does not natively enforce application-level provider, model or amount
               rules — Credence policy plus co-signing enforces those terms before settlement.
