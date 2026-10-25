@@ -40,6 +40,16 @@ const TAG_CLS: Record<string, string> = {
   RM: "text-roadmap",
 };
 
+const MOBILE_NAV = [
+  { to: "/overview", label: "Overview" },
+  { to: "/market", label: "Market" },
+  { to: "/credit", label: "Credit" },
+  { to: "/receipts", label: "Receipts" },
+  { to: "/reservations", label: "Reservations" },
+  { to: "/forwards", label: "Forwards" },
+  { to: "/secondary-market", label: "Secondary Market" },
+] as const;
+
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex flex-col gap-0.5 px-2">

@@ -242,3 +242,12 @@ export function RoadmapNote({ children }: { children: ReactNode }) {
     </p>
   );
 }
+
+export function ConceptRibbon() {
+  return (
+    <div className="flex items-center gap-2 rounded-md border border-roadmap/30 bg-roadmap/10 px-3.5 py-2 text-[11px] font-medium text-roadmap">
+      <span className="size-1.5 shrink-0 rounded-full bg-roadmap" />
+      Concept preview — not implemented functionality; all data simulated.
+    </div>
+  );
+}
