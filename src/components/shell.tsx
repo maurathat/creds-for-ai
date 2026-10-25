@@ -82,8 +82,8 @@ function Brand() {
     <Link to="/" className="flex items-center gap-2.5 px-4 py-4">
       <img src="/claw-street-icon-512.png" alt="" className="size-10 rounded-md" />
       <span className="leading-tight">
-        <span className="font-pixel block text-[12.5px] text-foreground">CLAW STREET</span>
-        <span className="mt-1 block text-[11px] text-muted-foreground">Powered by Credence</span>
+        <span className="font-pixel block text-[14px] text-foreground">CLAW STREET</span>
+        <span className="mt-1 block text-[12px] text-muted-foreground">Powered by Credence</span>
       </span>
     </Link>
   );
