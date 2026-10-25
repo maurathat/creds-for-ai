@@ -60,7 +60,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           activeProps={{
             className:
-              "bg-sidebar-accent text-sidebar-accent-foreground border-l-primary shadow-[inset_1px_0_0_0_var(--color-primary)]",
+              "bg-sidebar-accent text-primary! border-l-primary shadow-[inset_1px_0_0_0_var(--color-primary)]",
           }}
           className="group flex items-center gap-2.5 rounded-md border-l-2 border-l-transparent px-2.5 py-2 text-[13px] text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
         >
@@ -111,7 +111,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-col">
-        <div className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border bg-background/85 px-4 py-2.5 backdrop-blur lg:px-8">
+        <div className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background/85 px-4 py-2.5 backdrop-blur lg:px-8">
           <button
             onClick={() => setOpen(true)}
             className="grid size-9 place-items-center rounded-md border border-border lg:hidden"
@@ -142,6 +142,19 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </div>
         </div>
+
+        <nav className="flex gap-1 overflow-x-auto border-b border-border bg-background/85 px-3 py-2 backdrop-blur lg:hidden">
+          {MOBILE_NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              activeProps={{ className: "text-primary! border-primary/50 bg-surface-2" }}
+              className="shrink-0 whitespace-nowrap rounded-md border border-transparent px-2.5 py-1.5 text-xs text-muted-foreground"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
         <main className="mx-auto w-full max-w-[1400px] flex-1 space-y-7 px-4 py-7 lg:px-8">
           {children}

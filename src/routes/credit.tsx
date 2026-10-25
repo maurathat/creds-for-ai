@@ -339,7 +339,8 @@ function Credit() {
 
         <div className="space-y-5">
           <Panel title="Repayment schedule" bodyClassName="p-0">
-            <table className="w-full text-xs">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border text-left">
                   {["ID", "Due", "Principal", "Interest", "Status"].map((h) => (

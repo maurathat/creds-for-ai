@@ -84,7 +84,7 @@
   --muted-foreground: #8FA3B6;
   --accent: #13202B;
   --accent-foreground: #EAF2F8;
-  --destructive: oklch(0.63 0.2 22);
+  --destructive: oklch(0.7 0.19 22);
   --destructive-foreground: oklch(0.98 0.005 20);
   --success: #3DFF8F;
   --success-foreground: #000000;
