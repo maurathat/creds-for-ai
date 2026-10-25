@@ -24,13 +24,13 @@ import {
 export const Route = createFileRoute("/overview")({
   head: () => ({
     meta: [
-      { title: "Overview — Credence Markets terminal" },
+      { title: "Overview — Claw Street" },
       {
         name: "description",
         content:
           "Executive dashboard for Credence: active credit facilities, verified inference purchased, provider conformity and VIU spot reference price.",
       },
-      { property: "og:title", content: "Overview — Credence Markets terminal" },
+      { property: "og:title", content: "Overview — Claw Street" },
       {
         property: "og:description",
         content: "Credit, marketplace, reservations, forwards and secondary market at a glance.",

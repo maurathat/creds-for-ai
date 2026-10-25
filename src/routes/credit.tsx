@@ -16,13 +16,13 @@ import {
 export const Route = createFileRoute("/credit")({
   head: () => ({
     meta: [
-      { title: "Credence Credit — machine credit facility for verified inference" },
+      { title: "Credit — Claw Street" },
       {
         name: "description",
         content:
           "Live MVP: a purpose-bound 500 RLUSD facility letting ResearchBot-17 buy Tier-2 verified inference from an approved provider, settled on the XRP Ledger.",
       },
-      { property: "og:title", content: "Credence Credit — machine credit facility" },
+      { property: "og:title", content: "Credit — Claw Street" },
       {
         property: "og:description",
         content:

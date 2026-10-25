@@ -5,9 +5,9 @@ import { ORDER_BOOK } from "@/lib/credence";
 export const Route = createFileRoute("/secondary-market")({
   head: () => ({
     meta: [
-      { title: "Secondary Market — Credence Markets" },
+      { title: "Secondary Market — Claw Street" },
       { name: "description", content: "Order book for transferring reserved capacity and forwards." },
-      { property: "og:title", content: "Secondary Market — Credence Markets" },
+      { property: "og:title", content: "Secondary Market — Claw Street" },
       { property: "og:description", content: "Order book for transferring reserved capacity and forwards." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

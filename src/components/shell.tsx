@@ -70,12 +70,10 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 function Brand() {
   return (
     <Link to="/" className="flex items-center gap-2.5 px-4 py-4">
-      <span className="grid size-8 place-items-center rounded-md border border-primary/40 bg-primary/10">
-        <span className="num text-sm font-bold text-primary">C</span>
-      </span>
+      <img src="/claw-street-icon-512.png" alt="" className="size-10 rounded-md" />
       <span className="leading-tight">
-        <span className="block text-sm font-semibold tracking-tight">Credence</span>
-        <span className="label-xs">Markets</span>
+        <span className="font-pixel block text-[11px] text-foreground">CLAW STREET</span>
+        <span className="mt-1 block text-[10px] text-muted-foreground">Powered by Credence</span>
       </span>
     </Link>
   );
@@ -140,7 +138,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
 
         <footer className="border-t border-border px-4 py-5 text-[11px] leading-relaxed text-muted-foreground lg:px-8">
-          Credence Markets is a product-vision prototype. One flow (Credence Credit) is a live MVP;
+          <div className="mb-2 text-foreground/80">Claw Street · Powered by Credence · Built by Kessai Labs</div>
+          Claw Street is a product-vision prototype. One flow (Credence Credit) is a live MVP;
           all other surfaces are simulated or roadmap. Nothing here is a regulated exchange, a credit
           rating, an offer of credit, or production-ready. No regulatory approval is claimed.
         </footer>

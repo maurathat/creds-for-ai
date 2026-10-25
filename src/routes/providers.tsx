@@ -5,9 +5,9 @@ import { PROVIDERS } from "@/lib/credence";
 export const Route = createFileRoute("/providers")({
   head: () => ({
     meta: [
-      { title: "Providers — Credence Markets" },
+      { title: "Providers — Claw Street" },
       { name: "description", content: "Listed execution providers with models, artifacts, precision and credit eligibility." },
-      { property: "og:title", content: "Providers — Credence Markets" },
+      { property: "og:title", content: "Providers — Claw Street" },
       { property: "og:description", content: "Listed execution providers with models, artifacts, precision and credit eligibility." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

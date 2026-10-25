@@ -5,9 +5,9 @@ import { EVIDENCE_LADDER, RECEIPTS } from "@/lib/credence";
 export const Route = createFileRoute("/receipts")({
   head: () => ({
     meta: [
-      { title: "Receipts — Credence Markets" },
+      { title: "Receipts — Claw Street" },
       { name: "description", content: "Kessai-serialized receipts bound to requests. Tier 2 is provider-declared and bound, not proof of execution." },
-      { property: "og:title", content: "Receipts — Credence Markets" },
+      { property: "og:title", content: "Receipts — Claw Street" },
       { property: "og:description", content: "Kessai-serialized receipts bound to requests. Tier 2 is provider-declared and bound, not proof of execution." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

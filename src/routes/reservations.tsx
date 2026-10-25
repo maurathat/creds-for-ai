@@ -5,9 +5,9 @@ import { RESERVATIONS } from "@/lib/credence";
 export const Route = createFileRoute("/reservations")({
   head: () => ({
     meta: [
-      { title: "Reservations — Credence Markets" },
+      { title: "Reservations — Claw Street" },
       { name: "description", content: "Reserved VIU capacity by execution profile and delivery window." },
-      { property: "og:title", content: "Reservations — Credence Markets" },
+      { property: "og:title", content: "Reservations — Claw Street" },
       { property: "og:description", content: "Reserved VIU capacity by execution profile and delivery window." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
