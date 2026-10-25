@@ -149,7 +149,7 @@ function Overview() {
 
         <Panel
           title="VIU spot reference price"
-          subtitle="CVII composite · tRLUSD (test asset) per Verified Inference Unit"
+          subtitle="Illustrative · tRLUSD (synthetic test unit) per inference unit"
           right={<Chip tone="warn">Simulated</Chip>}
         >
           <div className="h-64">

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  ExternalLink,
   ArrowRight,
   Bot,
   BadgeCheck,
@@ -10,24 +11,24 @@ import {
   ShieldCheck,
   Boxes,
 } from "lucide-react";
-import { Chip, MaturityTag } from "@/components/kit";
+import { Chip, SimulationDisclosure } from "@/components/kit";
 import { FACILITY, VIU_SPOT } from "@/lib/credence";
 import logoGif from "@/assets/claw-street-logo.gif.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Claw Street — Financial Markets for Machine Intelligence" },
+      { title: "Claw Street — Powered by Credence · AI-agent procurement (browser simulation)" },
       {
         name: "description",
         content:
-          "Claw Street lets AI agents buy compute under explicit rules — compare providers, spend within limits, prove what was delivered, and keep an auditable economic record.",
+          "Browser simulation of AI-agent procurement: seeded data, no provider calls, no payments. Claw Street is powered by Credence and built by Kessai Labs.",
       },
-      { property: "og:title", content: "Claw Street — Financial Markets for Machine Intelligence" },
+      { property: "og:title", content: "Claw Street — Powered by Credence · AI-agent procurement (browser simulation)" },
       {
         property: "og:description",
         content:
-          "Claw Street lets AI agents buy compute under explicit rules — compare providers, spend within limits, prove what was delivered, and keep an auditable economic record.",
+          "Browser simulation of AI-agent procurement: seeded data, no provider calls, no payments. Claw Street is powered by Credence and built by Kessai Labs.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,11 +38,11 @@ export const Route = createFileRoute("/")({
 });
 
 const STACK = [
-  { k: "Credit", d: "Purpose-bound machine credit facilities" },
-  { k: "Marketplace", d: "Competing verified inference providers" },
-  { k: "Reservations", d: "Forward capacity commitments" },
-  { k: "Forwards", d: "Commercial forward delivery contracts" },
-  { k: "Secondary", d: "Transferable capacity claims (concept)" },
+  { k: "Credit", d: "Purpose-bound agent spending budget (in-browser accounting)" },
+  { k: "Procurement", d: "Routing an order across competing providers (simulated)" },
+  { k: "Reservations", d: "Reserving future capacity (inactive concept)" },
+  { k: "Forward procurement", d: "Pre-agreeing future capacity (inactive concept)" },
+  { k: "Capacity transfers", d: "Handing unused capacity to another buyer (inactive concept)" },
 ];
 
 const STEPS = [
@@ -53,42 +54,26 @@ const STEPS = [
   { i: Landmark, t: "Financial accounting", d: "The facility records the draw against the receipt." },
 ];
 
-const STATUS_COLUMNS = [
-  {
-    tag: "Works now",
-    tone: "pass" as const,
-    items: [
-      "Policy-based provider selection",
-      "Agent-signed purchases with replay protection",
-      "Signed receipts and evidence checks",
-      "Credit facility accounting (limits, reservations, drawn balances)",
-    ],
-  },
-  {
-    tag: "In integration",
-    tone: "warn" as const,
-    items: [
-      "XRPL Testnet settlement",
-      "Multisignature authorization",
-      "t54 x402 compatibility",
-      "QuickNode connectivity",
-    ],
-  },
-  {
-    tag: "Roadmap",
-    tone: "roadmap" as const,
-    items: [
-      "Ledger hardware-root signing",
-      "Forwards and reservations",
-      "Secondary market",
-      "On-ledger machine credit",
-    ],
-  },
+const SOURCE_URL = "https://github.com/maurathat/credence-xrpl/tree/maurathat/claw-street-release";
+
+const NOT_CONNECTED = [
+  "XRPL marketplace settlement",
+  "QuickNode",
+  "t54 / x402 payments",
+  "Ledger hardware signing",
+];
+
+const ROADMAP = [
+  "Reservations and forward procurement",
+  "Capacity transfers",
+  "Agent procurement budgets beyond inference",
+  "Tier 3 measured-artifact execution",
 ];
 
 function Home() {
   return (
     <div className="min-h-screen">
+      <SimulationDisclosure />
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-3.5">
           <div className="flex items-center gap-2.5">
@@ -99,7 +84,7 @@ function Home() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Chip tone="info">Target: RLUSD settlement on XRPL</Chip>
+            <Chip tone="neutral">Browser simulation</Chip>
             <Link
               to="/overview"
               className="inline-flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium transition-colors hover:bg-surface-2"
@@ -113,21 +98,22 @@ function Home() {
       <section className="grid-lines border-b border-border">
         <div className="mx-auto max-w-[1200px] px-5 py-20 md:py-28">
           <div className="flex flex-wrap items-center gap-2">
-            <MaturityTag level="live" />
-            <Chip tone="neutral">Credence Credit is the core demo</Chip>
-            <Chip tone="roadmap">Other modules simulated / roadmap</Chip>
+            <Chip tone="warn">Browser simulation · seeded data</Chip>
+            <Chip tone="neutral">No provider calls · no payments</Chip>
           </div>
           <h1 className="mt-7 flex justify-center">
             <img src={logoGif.url} alt="Claw Street — Powered by Credence" className="w-full max-w-[420px]" />
           </h1>
           <p className="mt-4 max-w-2xl text-xl text-foreground/90 md:text-2xl">
-            Financial markets for machine intelligence.
+            Rule-bound procurement for AI agents.
           </p>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            Claw Street lets AI agents buy compute under explicit rules — compare providers, spend
-            within limits, prove what was delivered, and keep an auditable economic record.
+            Claw Street explores how AI agents could buy inference under explicit rules — compare
+            providers, spend within limits, check delivery evidence, and keep an auditable record.
+            This public site is a browser simulation with seeded data.
           </p>
           <p className="num mt-6 text-[15px] text-primary">
+            <span className="mr-2 text-[12.5px] text-muted-foreground">Design ambition (Ledger not connected):</span>
             &ldquo;The hardware wallet is the constitution, not the cashier.&rdquo;
           </p>
 
@@ -148,10 +134,10 @@ function Home() {
 
           <dl className="mt-14 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["Active facility", `${FACILITY.limit.toFixed(2)} tRLUSD`],
-              ["Available", `${FACILITY.available.toFixed(2)} tRLUSD`],
-              ["VIU spot reference", `${VIU_SPOT.toFixed(3)} tRLUSD`],
-              ["Evidence tier settled", FACILITY.evidenceTier],
+              ["Simulated facility", `${FACILITY.limit.toFixed(2)} tRLUSD`],
+              ["Available (in-browser)", `${FACILITY.available.toFixed(2)} tRLUSD`],
+              ["Illustrative VIU price", `${VIU_SPOT.toFixed(3)} tRLUSD`],
+              ["Evidence tier (simulated)", FACILITY.evidenceTier],
             ].map(([k, v]) => (
               <div key={k} className="bg-surface px-5 py-4">
                 <dt className="label-xs">{k}</dt>
@@ -159,6 +145,10 @@ function Home() {
               </div>
             ))}
           </dl>
+          <p className="mt-3 text-[13px] text-muted-foreground">
+            tRLUSD is a synthetic test unit in this simulation. Credit changes are in-browser
+            accounting only — no funds are released and nothing is settled on XRPL.
+          </p>
         </div>
       </section>
 
@@ -180,6 +170,9 @@ function Home() {
         <div className="mx-auto max-w-[1200px] px-5 py-16">
           <div className="label-xs">How it works</div>
           <h2 className="mt-3 text-2xl font-semibold">Six steps from intent to accounting</h2>
+          <p className="mt-2 text-[15px] text-muted-foreground">
+            Shown here as a browser simulation. The separate local demo runs these steps with offline mock providers.
+          </p>
           <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:items-center">
             {STEPS.map((s, i) => (
               <div key={s.t} className="flex flex-col gap-2 lg:flex-row lg:items-center lg:flex-1">
@@ -203,37 +196,64 @@ function Home() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-[1200px] px-5 py-16">
           <div className="label-xs">What&rsquo;s real today</div>
-          <h2 className="mt-3 text-2xl font-semibold">Status of every claim on this site</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {STATUS_COLUMNS.map((col) => (
-              <div key={col.tag} className="panel p-5">
-                <Chip tone={col.tone}>{col.tag}</Chip>
-                <ul className="mt-4 space-y-2.5">
-                  {col.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-[15px] text-muted-foreground">
-                      <span className="mt-1.5 size-1 shrink-0 rounded-full bg-current" />
-                      <span className="leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-[1200px] px-5 py-10">
-          <div className="label-xs">Built with</div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {["XRPL", "Ledger", "QuickNode", "t54"].map((b) => (
-              <span
-                key={b}
-                className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm font-medium text-muted-foreground"
+          <h2 className="mt-3 text-2xl font-semibold">Local working demo vs. this public site</h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="panel p-5">
+              <Chip tone="pass">Local working demo</Chip>
+              <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+                Core policy, agent-signed purchases, verified receipt evidence and internal
+                accounting with offline mock providers. Runs locally, separate from this site.
+              </p>
+              <a
+                href={SOURCE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-primary underline-offset-4 hover:underline"
               >
-                {b}
-              </span>
-            ))}
+                Source and local demo instructions <ExternalLink className="size-3.5" />
+              </a>
+              <p className="mt-1.5 text-[12.5px] text-muted-foreground">Repository access is provided to judges separately.</p>
+            </div>
+            <div className="panel p-5">
+              <Chip tone="warn">This public site: browser simulation</Chip>
+              <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+                Seeded data only. It does not run Credence Core, verify agent signatures, call
+                providers or make payments. Buttons replay the flow and update in-browser
+                accounting.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="panel p-5">
+              <Chip tone="neutral">Not connected</Chip>
+              <ul className="mt-4 space-y-2.5">
+                {NOT_CONNECTED.map((item) => (
+                  <li key={item} className="flex items-start justify-between gap-2 text-[15px] text-muted-foreground">
+                    <span>{item}</span>
+                    <span className="text-[12.5px] text-roadmap">NOT CONNECTED</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="panel p-5">
+              <Chip tone="roadmap">Roadmap</Chip>
+              <ul className="mt-4 space-y-2.5">
+                {ROADMAP.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-[15px] text-muted-foreground">
+                    <span className="mt-2 size-1 shrink-0 rounded-full bg-current" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="panel mt-4 p-5">
+            <div className="label-xs">Evidence tiers</div>
+            <ul className="mt-3 space-y-1.5 text-[15px] text-muted-foreground">
+              <li><span className="text-foreground">Tier 1</span> — gateway witnessed the response (offline simulated here).</li>
+              <li><span className="text-foreground">Tier 2</span> — provider signed what it says it served (simulated here).</li>
+              <li>No tier proves the exact weights ran. Seeded receipts on this site are not cryptographically verified.</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -246,15 +266,15 @@ function Home() {
               Open models made model artifacts portable.
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-              Credence makes inference contractible, financeable, and auditable across providers. A
-              buyer states the execution profile it is paying for — artifact digest, precision,
-              context — and settlement only releases against a receipt bound to that profile.
+              Credence aims to make agent inference purchases rule-bound and auditable across providers.
+              A buyer states the execution profile it wants — artifact digest, precision, context —
+              and a purchase is only accounted for against a receipt bound to that profile.
             </p>
             <div className="mt-7 grid gap-4 sm:grid-cols-3">
               {[
                 { i: ShieldCheck, t: "Contractible", d: "Execution profile is the contract term." },
-                { i: Boxes, t: "Financeable", d: "Purpose-bound credit, not open-ended spend." },
-                { i: FileCheck2, t: "Auditable", d: "Every draw maps to a signed receipt." },
+                { i: Boxes, t: "Budgeted", d: "Purpose-bound spending, not open-ended spend." },
+                { i: FileCheck2, t: "Auditable", d: "Every draw maps to a receipt (seeded here)." },
               ].map((c) => (
                 <div key={c.t} className="panel p-4">
                   <c.i className="size-4 text-primary" />
@@ -278,11 +298,12 @@ function Home() {
                 </li>
               ))}
             </ol>
-            <div className="label-xs mt-5">XRPL&rsquo;s role</div>
+            <div className="label-xs mt-5">XRPL&rsquo;s role (roadmap · not connected)</div>
             <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-              XRPL carries credit state, settlement, account identity and facility transaction
-              references. XRPL does not natively enforce application-level provider, model or amount
-              rules — Credence policy plus co-signing enforces those terms before settlement.
+              XRPL could later carry facility state, settlement references and account identity. It is
+              not connected here: no funds are released and no settlement is enforced on XRPL. XRPL
+              would not natively enforce provider, model or amount rules — Credence policy does that,
+              in the separate local demo only.
             </p>
           </div>
         </div>
