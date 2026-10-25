@@ -1,5 +1,3 @@
-// ============= Full file contents =============
-
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -9,6 +7,8 @@ import {
   Cpu,
   FileCheck2,
   Landmark,
+  ShieldCheck,
+  Boxes,
 } from "lucide-react";
 import { Chip, MaturityTag } from "@/components/kit";
 import { FACILITY, VIU_SPOT } from "@/lib/credence";
