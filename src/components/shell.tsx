@@ -162,7 +162,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <footer className="border-t border-border px-4 py-5 text-[11px] leading-relaxed text-muted-foreground lg:px-8">
           <div className="mb-2 text-foreground/80">Claw Street · Powered by Credence · Built by Kessai Labs</div>
-          Claw Street is a product-vision prototype. One flow (Credence Credit) is a live MVP;
+          Claw Street is a product-vision prototype. One flow (Credence Credit) is a core demo;
           all other surfaces are simulated or roadmap. Nothing here is a regulated exchange, a credit
           rating, an offer of credit, or production-ready. No regulatory approval is claimed.
         </footer>

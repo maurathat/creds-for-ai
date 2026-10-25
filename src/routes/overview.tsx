@@ -73,7 +73,7 @@ function Overview() {
       <PageHeader
         kicker="Executive dashboard"
         title="Overview"
-        description="Credence finances verified inference for autonomous agents. Credit is the live MVP; market, reservations, forwards, index and secondary surfaces are simulated or roadmap."
+        description="Credence finances verified inference for autonomous agents. Credit is the core demo; market, reservations, forwards, index and secondary surfaces are simulated or roadmap."
         actions={
           <>
             <Chip tone="pass">1 live facility</Chip>
