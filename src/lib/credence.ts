@@ -226,7 +226,7 @@ export const RESERVATIONS = [
   { id: "RSV-1041", profile: "Meridian-70B / BF16 / EU", month: "November 2026", qty: 250, price: 0.462, provider: "Sorbonne Tensor", tier: "Tier 2+", window: "2026-11-01 → 2026-11-30", used: 0, status: "Confirmed" },
   { id: "RSV-1038", profile: "Meridian-70B / BF16 / EU", month: "October 2026", qty: 400, price: 0.455, provider: "Rheinwerk AI", tier: "Tier 2", window: "2026-10-01 → 2026-10-31", used: 118, status: "Delivering" },
   { id: "RSV-1033", profile: "OpenCoder-34B / FP8 / JP", month: "October 2026", qty: 150, price: 0.309, provider: "Kanto Inference KK", tier: "Tier 2", window: "2026-10-05 → 2026-10-25", used: 42, status: "Delivering" },
-  { id: "RSV-1029", profile: "Meridian-70B / BF16 / US", month: "September 2026", qty: 300, price: 0.428, provider: "Northstar Compute", tier: "Tier 2", window: "2026-09-01 → 2026-09-30", used: 287, status: "Settling" },
+  { id: "RSV-1029", profile: "Meridian-70B / BF16 / US", month: "September 2026", qty: 300, price: 0.428, provider: "Northstar Compute", tier: "Tier 2", window: "2026-09-01 → 2026-09-30", used: 287, status: "Closing (illustrative)" },
   { id: "RSV-1024", profile: "Meridian-70B / BF16 / EU", month: "December 2026", qty: 500, price: 0.471, provider: "Aurora Nord", tier: "Tier 2", window: "2026-12-01 → 2026-12-31", used: 0, status: "Confirmed" },
 ];
 
