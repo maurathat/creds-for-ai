@@ -79,7 +79,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
           Simulate inference purchase
         </button>
         <button
-          onClick={() => start({ kind: "attack", attack: ATTACKS[Math.floor(Math.random() * ATTACKS.length)] })}
+          onClick={() => start({ kind: "attack", attack: ATTACKS[Math.floor(Math.random() * ATTACKS.length)]! })}
           disabled={busy}
           className="inline-flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-3.5 py-2 text-xs font-semibold text-destructive transition-opacity hover:opacity-90 disabled:opacity-50"
         >

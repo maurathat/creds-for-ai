@@ -3,7 +3,7 @@ import { FACILITY_ALLOWLIST, type Bid } from "@/lib/credence";
 export const STRATEGIES = ["Cheapest", "Fastest", "Verified", "Sovereign EU", "Credit-eligible"] as const;
 export type Strategy = (typeof STRATEGIES)[number];
 
-export type RankedBid = Bid & { eligible: boolean; ineligibleReason?: string };
+export type RankedBid = Bid & { eligible: boolean; ineligibleReason?: string | undefined };
 export type RoutingResult = { bids: RankedBid[]; best: RankedBid | null; reason: string };
 
 function eligibility(s: Strategy, b: Bid): string | undefined {
