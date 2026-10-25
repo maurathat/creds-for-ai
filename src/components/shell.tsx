@@ -82,8 +82,8 @@ function Brand() {
     <Link to="/" className="flex items-center gap-2.5 px-4 py-4">
       <img src="/claw-street-icon-512.png" alt="" className="size-10 rounded-md" />
       <span className="leading-tight">
-        <span className="font-pixel block text-[12.5px] text-foreground">CLAW STREET</span>
-        <span className="mt-1 block text-[11px] text-muted-foreground">Powered by Credence</span>
+        <span className="font-pixel block text-[14px] text-foreground">CLAW STREET</span>
+        <span className="mt-1 block text-[12px] text-muted-foreground">Powered by Credence</span>
       </span>
     </Link>
   );
@@ -119,7 +119,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             <Menu className="size-4" />
           </button>
-          <div className="hidden items-center gap-6 text-[12.5px] text-muted-foreground lg:flex">
+          <div className="hidden items-center gap-6 text-[14px] text-muted-foreground lg:flex">
             <span>
               Borrower <span className="num text-foreground">{FACILITY.borrower}</span>
             </span>
@@ -133,10 +133,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden text-[12.5px] text-muted-foreground sm:inline">
+            <span className="hidden text-[14px] text-muted-foreground sm:inline">
               Concept preview · illustrative data
             </span>
-            <span className="flex items-center gap-1.5 rounded-md border border-border-strong bg-muted px-2 py-1 text-[12.5px] text-muted-foreground">
+            <span className="flex items-center gap-1.5 rounded-md border border-border-strong bg-muted px-2.5 py-1 text-[14px] text-muted-foreground">
               <span className="size-1.5 rounded-full bg-muted-foreground" />
               XRPL Testnet · in integration
             </span>
