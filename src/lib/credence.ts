@@ -199,11 +199,27 @@ export const ORDER_REQUIREMENT = {
   window: "2026-10-02 → 2026-10-09",
 };
 
-export const BIDS = [
-  { id: "BID-01", provider: "Sorbonne Tensor", price: 0.478, sla: "p50 388ms / 99.5% avail", tier: "Tier 2+", capacity: "420 VIU free", reputation: 94, best: true },
-  { id: "BID-02", provider: "Rheinwerk AI", price: 0.469, sla: "p50 402ms / 99.0% avail", tier: "Tier 2", capacity: "260 VIU free", reputation: 92, best: false },
-  { id: "BID-03", provider: "Lisbon Vector", price: 0.502, sla: "p50 355ms / 99.6% avail", tier: "Tier 2+", capacity: "180 VIU free", reputation: 93, best: false },
-  { id: "BID-04", provider: "Aurora Nord", price: 0.441, sla: "p50 465ms / 98.5% avail", tier: "Tier 2", capacity: "600 VIU free", reputation: 90, best: false },
+/** Providers the active facility may settle with (co-signed into facility terms). */
+export const FACILITY_ALLOWLIST = ["Northstar Compute"];
+
+export type Bid = {
+  id: string;
+  provider: string;
+  region: "US" | "EU" | "APAC";
+  price: number;
+  p50: number;
+  availability: number;
+  tier: "Tier 1" | "Tier 2" | "Tier 2+";
+  capacity: number;
+  reputation: number;
+};
+
+export const BIDS: Bid[] = [
+  { id: "BID-01", provider: "Sorbonne Tensor", region: "EU", price: 0.478, p50: 388, availability: 99.5, tier: "Tier 2+", capacity: 420, reputation: 94 },
+  { id: "BID-02", provider: "Rheinwerk AI", region: "EU", price: 0.469, p50: 402, availability: 99.0, tier: "Tier 2", capacity: 260, reputation: 92 },
+  { id: "BID-03", provider: "Lisbon Vector", region: "EU", price: 0.502, p50: 355, availability: 99.6, tier: "Tier 2+", capacity: 180, reputation: 93 },
+  { id: "BID-04", provider: "Aurora Nord", region: "EU", price: 0.441, p50: 465, availability: 98.5, tier: "Tier 2", capacity: 600, reputation: 90 },
+  { id: "BID-05", provider: "Northstar Compute", region: "US", price: 0.436, p50: 412, availability: 99.9, tier: "Tier 2", capacity: 350, reputation: 96 },
 ];
 
 export const RESERVATIONS = [
