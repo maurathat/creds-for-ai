@@ -115,6 +115,14 @@ export const useLiveOperations = (token: string | null) =>
     ...LIVE,
   });
 
+export const useLiveFacilities = (token: string | null) =>
+  useQuery({
+    queryKey: ["credence", "live", "facilities", token],
+    queryFn: () => credenceClient().liveFacilities(),
+    enabled: !!token,
+    ...LIVE,
+  });
+
 export const useLiveOperation = (operationId: string) =>
   useQuery({
     queryKey: ["credence", "live", "operation", operationId],

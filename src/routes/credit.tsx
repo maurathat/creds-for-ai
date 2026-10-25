@@ -10,7 +10,8 @@ import {
   SourceNote,
   TierBadge,
 } from "@/components/credence";
-import { useExposure, useOperations } from "@/lib/credence-api/hooks";
+import { AgentSessionPanel, useAgentToken } from "@/components/agent-session";
+import { useExposure, useLiveFacilities, useOperations } from "@/lib/credence-api/hooks";
 import type { AccountingExposure, Exposure } from "@/lib/credence-api/types";
 import { formatMicro, STATE_LABEL } from "@/lib/credence-api/view";
 import { ROOT_ACTIONS } from "@/lib/credence";
@@ -157,7 +158,45 @@ function Dashboard({ exposure }: { exposure: AccountingExposure }) {
   );
 }
 
+/** The signed-in agent's facilities, read now from Core through the integrated offline service. */
+function LiveFacilities({ token }: { token: string }) {
+  const facilities = useLiveFacilities(token);
+  return (
+    <QueryState isLoading={facilities.isLoading} error={facilities.error}>
+      <Panel
+        title="Live facilities (integrated offline service)"
+        subtitle="Core accounting read now for this agent's facilities; offline mock providers"
+        right={<Chip tone="warn">Integrated offline</Chip>}
+      >
+        <div className="space-y-4">
+          {facilities.data?.map((f) => (
+            <div key={f.facility_id} data-facility={f.facility_id} className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <span className="num font-medium">{f.facility_id}</span>
+                <TierBadge evidence={f.minimum_evidence_tier} />
+                <span className="text-muted-foreground">{f.title}</span>
+              </div>
+              <ExposureBar exposure={f.exposure} />
+              <div className="grid gap-x-6 text-[11px] sm:grid-cols-4">
+                <KV k="Limit" v={<Money micro={f.exposure.limit_micro_trlusd} />} />
+                <KV k="Drawn" v={<Money micro={f.exposure.drawn_micro_trlusd} emphasis />} />
+                <KV k="Held" v={<Money micro={f.exposure.held_micro_trlusd} />} />
+                <KV k="Headroom" v={<Money micro={f.exposure.headroom_micro_trlusd} />} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          {facilities.data?.[0]?.history_note} Drawn is Credence&apos;s record of verified spending,
+          not confirmed XRPL loan principal. No XRPL loan or payment exists.
+        </p>
+      </Panel>
+    </QueryState>
+  );
+}
+
 function Credit() {
+  const [token, setToken] = useAgentToken();
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/credit" });
   const operations = useOperations();
@@ -174,6 +213,8 @@ function Credit() {
         actions={<Chip tone="info">Accounting only · no XRPL loan</Chip>}
       />
       <OfflineNotice />
+      <AgentSessionPanel token={token} setToken={setToken} />
+      {token && <LiveFacilities token={token} />}
       <QueryState isLoading={operations.isLoading} error={operations.error}>
         <Panel title="Recorded run" subtitle="Each recorded offline run has its own facility state">
           <div className="flex flex-wrap items-center gap-3">
