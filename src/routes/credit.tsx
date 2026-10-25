@@ -20,7 +20,7 @@ export const Route = createFileRoute("/credit")({
       {
         name: "description",
         content:
-          "Live MVP: a purpose-bound 500 RLUSD facility letting ResearchBot-17 buy Tier-2 verified inference from an approved provider, settled on the XRP Ledger.",
+          "Core demo: a purpose-bound 500 tRLUSD (test asset) facility letting ResearchBot-17 buy Tier-2 verified inference from an approved provider, settled on the XRP Ledger.",
       },
       { property: "og:title", content: "Credit — Claw Street" },
       {
@@ -55,10 +55,10 @@ function Simulator() {
   };
 
   const detail = [
-    "Facility check: provider allowlist ✓ · profile digest ✓ · available 362.40 RLUSD ✓",
+    "Facility check: provider allowlist ✓ · profile digest ✓ · available 362.40 tRLUSD ✓",
     "Northstar Compute returns a Tier-2 signed delivery receipt for 24 VIU.",
     "Kessai serialization re-derived; request/response/profile binding matches.",
-    "Policy co-signs. 10.46 RLUSD settled; XRPL facility state updated.",
+    "Policy co-signs. 10.46 tRLUSD settled; XRPL facility state updated.",
   ];
 
   return (
@@ -130,7 +130,7 @@ function Credit() {
         title="Credence Credit"
         level="live"
         description="A machine credit facility that lets an autonomous agent purchase verified inference. Purpose-bound, provider-bound and profile-bound: the agent spends operationally, while facility terms change only under hardware-root authority."
-        actions={<Chip tone="info">XRPL settlement · RLUSD</Chip>}
+        actions={<Chip tone="info">Target: RLUSD settlement on XRPL</Chip>}
       />
 
       <div className="grid gap-5 xl:grid-cols-[1.4fr_1fr]">
@@ -139,10 +139,10 @@ function Credit() {
             <div>
               <KV k="Facility ID" v={FACILITY.id} mono />
               <KV k="Borrower" v={FACILITY.borrower} mono />
-              <KV k="Borrower account" v={FACILITY.borrowerAccount} mono />
-              <KV k="Facility limit" v={`${FACILITY.limit.toFixed(2)} RLUSD`} mono />
-              <KV k="Available" v={`${FACILITY.available.toFixed(2)} RLUSD`} mono />
-              <KV k="Outstanding" v={`${FACILITY.outstanding.toFixed(2)} RLUSD`} mono />
+              <KV k="Example address" v={FACILITY.borrowerAccount} mono />
+              <KV k="Facility limit" v={`${FACILITY.limit.toFixed(2)} tRLUSD`} mono />
+              <KV k="Available" v={`${FACILITY.available.toFixed(2)} tRLUSD`} mono />
+              <KV k="Outstanding" v={`${FACILITY.outstanding.toFixed(2)} tRLUSD`} mono />
               <KV k="Purpose" v={FACILITY.purpose} />
             </div>
             <div>
@@ -159,7 +159,7 @@ function Credit() {
 
         <div className="grid gap-5">
           <Panel title="Utilization">
-            <Gauge value={UTILIZATION} label="of 500 RLUSD drawn" />
+            <Gauge value={UTILIZATION} label="of 500 tRLUSD drawn" />
             <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
               <div className="rounded-md bg-surface-2 px-3 py-2.5">
                 <div className="label-xs">Available</div>
@@ -236,7 +236,7 @@ function Credit() {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border text-left">
-                {["Request", "Timestamp", "Provider", "Profile", "VIU", "RLUSD", "Outcome", "Detail"].map(
+                {["Request", "Timestamp", "Provider", "Profile", "VIU", "tRLUSD", "Outcome", "Settlement ref (demo) / reason"].map(
                   (h) => (
                     <th key={h} className="label-xs px-4 py-2.5 font-medium">
                       {h}
@@ -258,7 +258,13 @@ function Credit() {
                     <Chip tone={t.outcome === "PASS" ? "pass" : "reject"}>{t.outcome}</Chip>
                   </td>
                   <td className="px-4 py-2.5 text-[11px] text-muted-foreground">
-                    {t.outcome === "PASS" ? `XRPL ${t.xrpl}` : t.reason}
+                    {t.outcome === "PASS" ? (
+                      <span title="Illustrative reference — not an on-chain transaction." className="cursor-help underline decoration-dotted">
+                        {t.xrpl}
+                      </span>
+                    ) : (
+                      t.reason
+                    )}
                   </td>
                 </tr>
               ))}

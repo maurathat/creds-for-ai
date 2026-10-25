@@ -41,11 +41,11 @@ export const Route = createFileRoute("/overview")({
 });
 
 const STACK = [
-  { k: "Credit", s: "Live MVP", tone: "pass" as const, to: "/credit" as const },
-  { k: "Marketplace", s: "Simulated", tone: "warn" as const, to: "/market" as const },
-  { k: "Reservations", s: "Roadmap", tone: "roadmap" as const, to: "/reservations" as const },
-  { k: "Forwards", s: "Roadmap", tone: "roadmap" as const, to: "/forwards" as const },
-  { k: "Secondary", s: "Roadmap", tone: "roadmap" as const, to: "/secondary-market" as const },
+  { k: "Credit", s: "Core demo", tone: "pass" as const, to: "/credit" as const },
+  { k: "Marketplace", s: "Core demo", tone: "pass" as const, to: "/market" as const },
+  { k: "Reservations", s: "Concept", tone: "roadmap" as const, to: "/reservations" as const },
+  { k: "Forwards", s: "Concept", tone: "roadmap" as const, to: "/forwards" as const },
+  { k: "Secondary Market", s: "Concept", tone: "roadmap" as const, to: "/secondary-market" as const },
 ];
 
 const chartAxis = {
@@ -77,7 +77,7 @@ function Overview() {
         actions={
           <>
             <Chip tone="pass">1 live facility</Chip>
-            <Chip tone="info">XRPL · RLUSD</Chip>
+            <Chip tone="info">Target: RLUSD settlement on XRPL</Chip>
           </>
         }
       />
@@ -94,14 +94,14 @@ function Overview() {
         <Metric
           label="Outstanding balance"
           value={FACILITY.outstanding.toFixed(2)}
-          unit="RLUSD"
+          unit="tRLUSD"
           hint={`${UTILIZATION}% utilization`}
         />
         <Metric label="Provider conformity score" value="99.7%" hint="Northstar Compute" />
         <Metric
           label="VIU spot reference"
           value={VIU_SPOT.toFixed(3)}
-          unit="RLUSD / VIU"
+          unit="tRLUSD / VIU"
           delta="+1.87%"
           tone="primary"
         />
@@ -111,7 +111,7 @@ function Overview() {
         <Panel
           title="Facility utilization & cumulative verified spend"
           subtitle="Facility FAC-XRPL-0x7C41 · since 2026-07-14"
-          right={<Chip tone="pass">Live MVP</Chip>}
+          right={<Chip tone="pass">Core demo</Chip>}
         >
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -137,7 +137,7 @@ function Overview() {
                 <Line
                   type="monotone"
                   dataKey="spend"
-                  name="Drawn RLUSD"
+                  name="Drawn tRLUSD"
                   stroke="var(--color-success)"
                   strokeWidth={1.6}
                   dot={false}
@@ -149,7 +149,7 @@ function Overview() {
 
         <Panel
           title="VIU spot reference price"
-          subtitle="CVII composite · RLUSD per Verified Inference Unit"
+          subtitle="CVII composite · tRLUSD (test asset) per Verified Inference Unit"
           right={<Chip tone="warn">Simulated</Chip>}
         >
           <div className="h-64">
@@ -212,12 +212,12 @@ function Overview() {
       </Panel>
 
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <Panel title="Recent receipt activity" right={<Chip tone="pass">Live MVP</Chip>} bodyClassName="p-0">
+        <Panel title="Recent receipt activity" right={<Chip tone="pass">Core demo</Chip>} bodyClassName="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border text-left">
-                  {["Request", "Time", "VIU", "RLUSD", "Profile", "Outcome"].map((h) => (
+                  {["Request", "Time", "VIU", "tRLUSD", "Profile", "Outcome"].map((h) => (
                     <th key={h} className="label-xs px-5 py-2.5 font-medium">
                       {h}
                     </th>
@@ -264,7 +264,7 @@ function Overview() {
               <div className="mt-4 flex items-end justify-between">
                 <div>
                   <div className="label-xs">14-day draw trend</div>
-                  <div className="num mt-1 text-lg">{FACILITY.outstanding.toFixed(2)} RLUSD</div>
+                  <div className="num mt-1 text-lg">{FACILITY.outstanding.toFixed(2)} tRLUSD</div>
                 </div>
                 <Sparkline points={UTIL_SERIES.map((u) => u.spend)} />
               </div>

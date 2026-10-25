@@ -47,7 +47,7 @@ function Home() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Chip tone="info">XRPL · RLUSD</Chip>
+            <Chip tone="info">Target: RLUSD settlement on XRPL</Chip>
             <Link
               to="/overview"
               className="inline-flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-xs font-medium transition-colors hover:bg-surface-2"
@@ -102,9 +102,9 @@ function Home() {
 
           <dl className="mt-14 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["Active facility", `${FACILITY.limit.toFixed(2)} RLUSD`],
-              ["Available", `${FACILITY.available.toFixed(2)} RLUSD`],
-              ["VIU spot reference", `${VIU_SPOT.toFixed(3)} RLUSD`],
+              ["Active facility", `${FACILITY.limit.toFixed(2)} tRLUSD`],
+              ["Available", `${FACILITY.available.toFixed(2)} tRLUSD`],
+              ["VIU spot reference", `${VIU_SPOT.toFixed(3)} tRLUSD`],
               ["Evidence tier settled", FACILITY.evidenceTier],
             ].map(([k, v]) => (
               <div key={k} className="bg-surface px-5 py-4">

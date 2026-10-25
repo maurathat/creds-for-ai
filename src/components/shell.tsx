@@ -21,7 +21,7 @@ import { FACILITY, VIU_SPOT } from "@/lib/credence";
 
 const NAV = [
   { to: "/overview", label: "Overview", icon: LayoutDashboard, tag: "" },
-  { to: "/credit", label: "Credit", icon: Landmark, tag: "LIVE" },
+  { to: "/credit", label: "Credit", icon: Landmark, tag: "DEMO" },
   { to: "/market", label: "Inference Market", icon: Store, tag: "SIM" },
   { to: "/providers", label: "Providers", icon: Server, tag: "SIM" },
   { to: "/reputation", label: "Reputation", icon: BadgeCheck, tag: "SIM" },
@@ -30,12 +30,12 @@ const NAV = [
   { to: "/secondary-market", label: "Secondary Market", icon: ArrowLeftRight, tag: "RM" },
   { to: "/price-index", label: "Price Index", icon: GaugeIcon, tag: "RM" },
   { to: "/machine-credit", label: "Machine Credit", icon: Wallet, tag: "RM" },
-  { to: "/receipts", label: "Receipts", icon: ReceiptText, tag: "LIVE" },
+  { to: "/receipts", label: "Receipts", icon: ReceiptText, tag: "DEMO" },
   { to: "/settings", label: "Settings", icon: Settings2, tag: "" },
 ] as const;
 
 const TAG_CLS: Record<string, string> = {
-  LIVE: "text-success",
+  DEMO: "text-success",
   SIM: "text-warn",
   RM: "text-roadmap",
 };
@@ -92,7 +92,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <div className="border-t border-sidebar-border px-4 py-3.5">
           <div className="label-xs">Settlement asset</div>
-          <div className="num mt-1 text-xs text-foreground">RLUSD · XRPL</div>
+          <div className="num mt-1 text-xs text-foreground">tRLUSD (test asset) · XRPL Testnet</div>
           <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
             <span>VIU spot</span>
             <span className="num text-primary">{VIU_SPOT.toFixed(3)}</span>
@@ -115,20 +115,20 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
             <span>
               Facility{" "}
-              <span className="num text-foreground">{FACILITY.limit.toFixed(2)} RLUSD</span>
+              <span className="num text-foreground">{FACILITY.limit.toFixed(2)} tRLUSD</span>
             </span>
             <span>
               Available{" "}
-              <span className="num text-primary">{FACILITY.available.toFixed(2)} RLUSD</span>
+              <span className="num text-primary">{FACILITY.available.toFixed(2)} tRLUSD</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden text-[11px] text-muted-foreground sm:inline">
-              Prototype — demo data
+              Concept preview · illustrative data
             </span>
-            <span className="flex items-center gap-1.5 rounded-md border border-success/40 bg-success/10 px-2 py-1 text-[11px] text-success">
-              <span className="size-1.5 rounded-full bg-success" />
-              XRPL connected
+            <span className="flex items-center gap-1.5 rounded-md border border-border-strong bg-muted px-2 py-1 text-[11px] text-muted-foreground">
+              <span className="size-1.5 rounded-full bg-muted-foreground" />
+              XRPL Testnet · in integration
             </span>
           </div>
         </div>
