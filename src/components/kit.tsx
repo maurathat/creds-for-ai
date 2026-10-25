@@ -113,7 +113,7 @@ export function Panel({
           {right}
         </div>
       )}
-      <div className={cn("flex-1 p-5", bodyClassName)}>{children}</div>
+      <div className={cn("min-w-0 flex-1 p-5", bodyClassName)}>{children}</div>
     </section>
   );
 }
