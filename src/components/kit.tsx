@@ -105,7 +105,7 @@ export function Panel({
   return (
     <section className={cn("panel flex flex-col", className)}>
       {(title || right) && (
-        <div className="flex items-start justify-between gap-3 border-b border-border px-5 py-3.5">
+        <div className="flex min-w-0 items-start justify-between gap-3 border-b border-border px-5 py-3.5">
           <div>
             {title && <h2 className="text-sm font-semibold text-foreground">{title}</h2>}
             {subtitle && <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>}
@@ -113,7 +113,7 @@ export function Panel({
           {right}
         </div>
       )}
-      <div className={cn("flex-1 p-5", bodyClassName)}>{children}</div>
+      <div className={cn("min-w-0 flex-1 p-5", bodyClassName)}>{children}</div>
     </section>
   );
 }
@@ -240,5 +240,14 @@ export function RoadmapNote({ children }: { children: ReactNode }) {
     <p className="rounded-md border border-roadmap/25 bg-roadmap/5 px-3 py-2 text-[11px] leading-relaxed text-roadmap">
       {children}
     </p>
+  );
+}
+
+export function ConceptRibbon() {
+  return (
+    <div className="flex items-center gap-2 rounded-md border border-roadmap/30 bg-roadmap/10 px-3.5 py-2 text-[11px] font-medium text-roadmap">
+      <span className="size-1.5 shrink-0 rounded-full bg-roadmap" />
+      Concept preview — not implemented functionality; all data simulated.
+    </div>
   );
 }

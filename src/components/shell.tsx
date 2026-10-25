@@ -40,6 +40,16 @@ const TAG_CLS: Record<string, string> = {
   RM: "text-roadmap",
 };
 
+const MOBILE_NAV = [
+  { to: "/overview", label: "Overview" },
+  { to: "/market", label: "Market" },
+  { to: "/credit", label: "Credit" },
+  { to: "/receipts", label: "Receipts" },
+  { to: "/reservations", label: "Reservations" },
+  { to: "/forwards", label: "Forwards" },
+  { to: "/secondary-market", label: "Secondary Market" },
+] as const;
+
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex flex-col gap-0.5 px-2">
@@ -50,7 +60,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           activeProps={{
             className:
-              "bg-sidebar-accent text-sidebar-accent-foreground border-l-primary shadow-[inset_1px_0_0_0_var(--color-primary)]",
+              "bg-sidebar-accent text-primary! border-l-primary shadow-[inset_1px_0_0_0_var(--color-primary)]",
           }}
           className="group flex items-center gap-2.5 rounded-md border-l-2 border-l-transparent px-2.5 py-2 text-[13px] text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
         >
@@ -101,7 +111,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-col">
-        <div className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border bg-background/85 px-4 py-2.5 backdrop-blur lg:px-8">
+        <div className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-border bg-background/85 px-4 py-2.5 backdrop-blur lg:px-8">
           <button
             onClick={() => setOpen(true)}
             className="grid size-9 place-items-center rounded-md border border-border lg:hidden"
@@ -133,13 +143,26 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
+        <nav className="flex gap-1 overflow-x-auto border-b border-border bg-background/85 px-3 py-2 backdrop-blur lg:hidden">
+          {MOBILE_NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              activeProps={{ className: "text-primary! border-primary/50 bg-surface-2" }}
+              className="shrink-0 whitespace-nowrap rounded-md border border-transparent px-2.5 py-1.5 text-xs text-muted-foreground"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
         <main className="mx-auto w-full max-w-[1400px] flex-1 space-y-7 px-4 py-7 lg:px-8">
           {children}
         </main>
 
         <footer className="border-t border-border px-4 py-5 text-[11px] leading-relaxed text-muted-foreground lg:px-8">
           <div className="mb-2 text-foreground/80">Claw Street · Powered by Credence · Built by Kessai Labs</div>
-          Claw Street is a product-vision prototype. One flow (Credence Credit) is a live MVP;
+          Claw Street is a product-vision prototype. One flow (Credence Credit) is a core demo;
           all other surfaces are simulated or roadmap. Nothing here is a regulated exchange, a credit
           rating, an offer of credit, or production-ready. No regulatory approval is claimed.
         </footer>

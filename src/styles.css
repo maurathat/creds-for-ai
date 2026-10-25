@@ -84,7 +84,7 @@
   --muted-foreground: #8FA3B6;
   --accent: #13202B;
   --accent-foreground: #EAF2F8;
-  --destructive: oklch(0.63 0.2 22);
+  --destructive: oklch(0.7 0.19 22);
   --destructive-foreground: oklch(0.98 0.005 20);
   --success: #3DFF8F;
   --success-foreground: #000000;
@@ -127,6 +127,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    overflow-wrap: anywhere;
     background-image: radial-gradient(
       circle at 15% -10%,
       rgb(61 255 143 / 5%),
@@ -161,6 +162,7 @@
 }
 
 @utility panel {
+  min-width: 0;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);

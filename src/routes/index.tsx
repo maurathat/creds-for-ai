@@ -1,5 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Boxes, FileCheck2 } from "lucide-react";
+import {
+  ArrowRight,
+  Bot,
+  BadgeCheck,
+  KeyRound,
+  Cpu,
+  FileCheck2,
+  Landmark,
+  ShieldCheck,
+  Boxes,
+} from "lucide-react";
 import { Chip, MaturityTag } from "@/components/kit";
 import { FACILITY, VIU_SPOT } from "@/lib/credence";
 import logoGif from "@/assets/claw-street-logo.gif.asset.json";
@@ -11,13 +21,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Credence finances verified inference for autonomous agents. Buy it. Finance it. Hedge it. Verify it.",
+          "Claw Street lets AI agents buy compute under explicit rules — compare providers, spend within limits, prove what was delivered, and keep an auditable economic record.",
       },
       { property: "og:title", content: "Claw Street — Financial Markets for Machine Intelligence" },
       {
         property: "og:description",
         content:
-          "A machine credit facility for autonomous agents purchasing verified inference, settled in tRLUSD (test token) on the XRP Ledger.",
+          "Claw Street lets AI agents buy compute under explicit rules — compare providers, spend within limits, prove what was delivered, and keep an auditable economic record.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,6 +42,48 @@ const STACK = [
   { k: "Reservations", d: "Forward capacity commitments" },
   { k: "Forwards", d: "Commercial forward delivery contracts" },
   { k: "Secondary", d: "Transferable capacity claims (concept)" },
+];
+
+const STEPS = [
+  { i: Bot, t: "Agent intent", d: "The buyer agent states what it needs to buy." },
+  { i: BadgeCheck, t: "Provider eligibility", d: "Policy filters providers, artifacts and profiles." },
+  { i: KeyRound, t: "Bounded authorization", d: "Spend stays inside facility limits and allowlists." },
+  { i: Cpu, t: "Execution", d: "An approved provider runs the declared artifact." },
+  { i: FileCheck2, t: "Delivery evidence", d: "A signed receipt binds the delivery to the request." },
+  { i: Landmark, t: "Financial accounting", d: "The facility records the draw against the receipt." },
+];
+
+const STATUS_COLUMNS = [
+  {
+    tag: "Works now",
+    tone: "pass" as const,
+    items: [
+      "Policy-based provider selection",
+      "Agent-signed purchases with replay protection",
+      "Signed receipts and evidence checks",
+      "Credit facility accounting (limits, reservations, drawn balances)",
+    ],
+  },
+  {
+    tag: "In integration",
+    tone: "warn" as const,
+    items: [
+      "XRPL Testnet settlement",
+      "Multisignature authorization",
+      "t54 x402 compatibility",
+      "QuickNode connectivity",
+    ],
+  },
+  {
+    tag: "Roadmap",
+    tone: "roadmap" as const,
+    items: [
+      "Ledger hardware-root signing",
+      "Forwards and reservations",
+      "Secondary market",
+      "On-ledger machine credit",
+    ],
+  },
 ];
 
 function Home() {
@@ -62,7 +114,7 @@ function Home() {
         <div className="mx-auto max-w-[1200px] px-5 py-20 md:py-28">
           <div className="flex flex-wrap items-center gap-2">
             <MaturityTag level="live" />
-            <Chip tone="neutral">Credence Credit is the live MVP</Chip>
+            <Chip tone="neutral">Credence Credit is the core demo</Chip>
             <Chip tone="roadmap">Other modules simulated / roadmap</Chip>
           </div>
           <h1 className="mt-7 flex justify-center">
@@ -72,32 +124,26 @@ function Home() {
             Financial markets for machine intelligence.
           </p>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            Finance verified inference for autonomous agents.
+            Claw Street lets AI agents buy compute under explicit rules — compare providers, spend
+            within limits, prove what was delivered, and keep an auditable economic record.
           </p>
           <p className="num mt-6 text-sm text-primary">
             &ldquo;The hardware wallet is the constitution, not the cashier.&rdquo;
           </p>
-          <p className="label-xs mt-2">Buy it. Finance it. Hedge it. Verify it.</p>
 
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
-              to="/market"
+              to="/overview"
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
-              Explore Market <ArrowRight className="size-4" />
+              Open terminal <ArrowRight className="size-4" />
             </Link>
-            <Link
-              to="/credit"
+            <a
+              href="#how-it-works"
               className="inline-flex items-center gap-2 rounded-md border border-border-strong bg-surface px-4 py-2.5 text-sm font-medium transition-colors hover:bg-surface-2"
             >
-              View Credit Facility
-            </Link>
-            <Link
-              to="/receipts"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground"
-            >
-              Inspect Receipt
-            </Link>
+              How it works
+            </a>
           </div>
 
           <dl className="mt-14 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
@@ -113,6 +159,82 @@ function Home() {
               </div>
             ))}
           </dl>
+        </div>
+      </section>
+
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-[1200px] px-5 py-16">
+          <div className="label-xs">Differentiator</div>
+          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-foreground/90">
+            Most agent payment tools answer: <span className="text-muted-foreground">how does an agent pay?</span>{" "}
+            Claw Street answers:{" "}
+            <span className="font-medium">
+              what should an agent buy, under whose authority, on what terms — and how do we prove
+              it was delivered?
+            </span>
+          </p>
+        </div>
+      </section>
+
+      <section id="how-it-works" className="border-b border-border">
+        <div className="mx-auto max-w-[1200px] px-5 py-16">
+          <div className="label-xs">How it works</div>
+          <h2 className="mt-3 text-2xl font-semibold">Six steps from intent to accounting</h2>
+          <div className="mt-8 flex flex-col gap-2 lg:flex-row lg:items-center">
+            {STEPS.map((s, i) => (
+              <div key={s.t} className="flex flex-col gap-2 lg:flex-row lg:items-center lg:flex-1">
+                <div className="panel flex-1 p-4">
+                  <span className="num text-[11px] text-primary">0{i + 1}</span>
+                  <div className="mt-1.5 flex items-center gap-2">
+                    <s.i className="size-4 shrink-0 text-primary" />
+                    <span className="text-sm font-medium">{s.t}</span>
+                  </div>
+                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{s.d}</p>
+                </div>
+                {i < STEPS.length - 1 && (
+                  <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground lg:block" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-[1200px] px-5 py-16">
+          <div className="label-xs">What&rsquo;s real today</div>
+          <h2 className="mt-3 text-2xl font-semibold">Status of every claim on this site</h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {STATUS_COLUMNS.map((col) => (
+              <div key={col.tag} className="panel p-5">
+                <Chip tone={col.tone}>{col.tag}</Chip>
+                <ul className="mt-4 space-y-2.5">
+                  {col.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="mt-1.5 size-1 shrink-0 rounded-full bg-current" />
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-[1200px] px-5 py-10">
+          <div className="label-xs">Built with</div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {["XRPL", "Ledger", "QuickNode", "t54"].map((b) => (
+              <span
+                key={b}
+                className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground"
+              >
+                {b}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -156,7 +278,8 @@ function Home() {
                 </li>
               ))}
             </ol>
-            <p className="mt-5 text-[11px] leading-relaxed text-muted-foreground">
+            <div className="label-xs mt-5">XRPL&rsquo;s role</div>
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
               XRPL carries credit state, settlement, account identity and facility transaction
               references. XRPL does not natively enforce application-level provider, model or amount
               rules — Credence policy plus co-signing enforces those terms before settlement.

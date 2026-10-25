@@ -62,6 +62,7 @@ export function DataPage({
   description,
   level,
   sections,
+  banner,
   children,
 }: {
   kicker: string;
@@ -69,11 +70,13 @@ export function DataPage({
   description: string;
   level: Maturity;
   sections: { title: string; rows: readonly Row[]; columns?: string[] }[];
+  banner?: ReactNode;
   children?: ReactNode;
 }) {
   return (
     <AppShell>
       <div className="space-y-6">
+        {banner}
         <PageHeader kicker={kicker} title={title} description={description} level={level} />
         {children}
         {sections.map((s) => (

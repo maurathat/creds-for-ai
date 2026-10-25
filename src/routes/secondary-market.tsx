@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DataPage } from "@/components/data-page";
+import { ConceptRibbon } from "@/components/kit";
 import { ORDER_BOOK } from "@/lib/credence";
 
 export const Route = createFileRoute("/secondary-market")({
@@ -23,6 +24,7 @@ function Page() {
       title="Secondary market"
       description="Order book for transferring reserved capacity and forwards."
       level="roadmap"
+      banner={<ConceptRibbon />}
       sections={[
         { title: "Bids", rows: ORDER_BOOK.bids },
         { title: "Asks", rows: ORDER_BOOK.asks },
