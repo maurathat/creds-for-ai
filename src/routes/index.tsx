@@ -205,6 +205,32 @@ function Overview() {
           <TruthStrip />
         </div>
       </div>
+      <Panel title="Hackathon demo" subtitle="Working local purchase flow · offline mock providers">
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Follow an agent from Core policy evaluation through its own purchase signature, verified
+          delivery evidence, response retrieval and facility accounting. The agent signs outside the
+          browser. All provider execution in this demo uses offline mocks.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3 text-sm">
+          <Link to="/procure" className="text-primary hover:underline">
+            Start the signed purchase demo →
+          </Link>
+          <a
+            href="https://github.com/maurathat/credence-xrpl/tree/maurathat/claw-street-release/release/claw-street"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary hover:underline"
+          >
+            Source and judge walkthrough ↗
+          </a>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          The public Lovable website is a separate browser simulation. This local demo uses the
+          Credence backend. Receipt verification supports internal accounting; XRPL marketplace
+          settlement, QuickNode, t54/x402 payments and Ledger hardware are not connected. No
+          evidence tier proves that exact model weights ran. Repository access may be required.
+        </p>
+      </Panel>
       <MarketKpis />
       <AgentSessionPanel token={token} setToken={setToken} />
       {token && <AgentActivity token={token} />}
