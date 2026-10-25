@@ -119,7 +119,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             <Menu className="size-4" />
           </button>
-          <div className="hidden items-center gap-6 text-[12.5px] text-muted-foreground lg:flex">
+          <div className="hidden items-center gap-6 text-[14px] text-muted-foreground lg:flex">
             <span>
               Borrower <span className="num text-foreground">{FACILITY.borrower}</span>
             </span>
@@ -133,10 +133,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden text-[12.5px] text-muted-foreground sm:inline">
+            <span className="hidden text-[14px] text-muted-foreground sm:inline">
               Concept preview · illustrative data
             </span>
-            <span className="flex items-center gap-1.5 rounded-md border border-border-strong bg-muted px-2 py-1 text-[12.5px] text-muted-foreground">
+            <span className="flex items-center gap-1.5 rounded-md border border-border-strong bg-muted px-2.5 py-1 text-[14px] text-muted-foreground">
               <span className="size-1.5 rounded-full bg-muted-foreground" />
               XRPL Testnet · in integration
             </span>

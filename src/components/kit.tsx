@@ -73,7 +73,7 @@ export function PageHeader({
       <div className="min-w-0">
         {kicker && <div className="label-xs mb-2">{kicker}</div>}
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-pixel text-base leading-relaxed text-foreground md:text-xl">{title}</h1>
+          <h1 className="font-pixel text-lg leading-relaxed text-foreground md:text-2xl">{title}</h1>
           {level && <MaturityTag level={level} />}
         </div>
         {description && (
