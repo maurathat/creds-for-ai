@@ -158,7 +158,7 @@
   line-height: 1rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-muted-foreground);
+  color: var(--color-cyan);
 }
 
 @utility panel {

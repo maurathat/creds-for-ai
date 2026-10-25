@@ -140,8 +140,7 @@ export function Metric({
         <span
           className={cn(
             "num text-2xl font-semibold",
-            tone === "primary" && "text-primary",
-            tone === "warn" && "text-warn",
+            tone === "warn" ? "text-warn" : "text-primary",
           )}
         >
           {value}
@@ -160,7 +159,7 @@ export function KV({ k, v, mono = false }: { k: string; v: ReactNode; mono?: boo
   return (
     <div className="flex items-start justify-between gap-6 border-b border-border py-2.5 last:border-0">
       <span className="text-sm text-muted-foreground">{k}</span>
-      <span className={cn("text-right text-sm text-foreground", mono && "num")}>{v}</span>
+      <span className={cn("text-right text-sm", mono ? "num text-cyan" : "text-foreground")}>{v}</span>
     </div>
   );
 }
