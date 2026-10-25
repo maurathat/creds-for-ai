@@ -6,18 +6,20 @@ import { FACILITY, VIU_SPOT } from "@/lib/credence";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Credence — Financial markets for machine intelligence" },
+      { title: "Claw Street — Financial Markets for Machine Intelligence" },
       {
         name: "description",
         content:
           "Credence finances verified inference for autonomous agents. Buy it. Finance it. Hedge it. Verify it.",
       },
-      { property: "og:title", content: "Credence — Financial markets for machine intelligence" },
+      { property: "og:title", content: "Claw Street — Financial Markets for Machine Intelligence" },
       {
         property: "og:description",
         content:
-          "A machine credit facility for autonomous agents purchasing verified inference, settled in RLUSD on the XRP Ledger.",
+          "A machine credit facility for autonomous agents purchasing verified inference, settled in tRLUSD (test token) on the XRP Ledger.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Home,
@@ -37,11 +39,13 @@ function Home() {
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-3.5">
           <div className="flex items-center gap-2.5">
-            <span className="grid size-8 place-items-center rounded-md border border-primary/40 bg-primary/10">
-              <span className="num text-sm font-bold text-primary">C</span>
+            <span className="grid size-10 place-items-center rounded-md border border-primary/40 bg-primary/10">
+              <span className="font-pixel text-xs text-primary">CS</span>
             </span>
-            <span className="text-sm font-semibold tracking-tight">Credence</span>
-            <span className="label-xs hidden sm:inline">Markets</span>
+            <span className="leading-tight">
+              <span className="font-pixel block text-[11px] text-foreground">CLAW STREET</span>
+              <span className="mt-1 block text-[10px] text-muted-foreground">Powered by Credence</span>
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <Chip tone="info">XRPL · RLUSD</Chip>
@@ -62,7 +66,7 @@ function Home() {
             <Chip tone="neutral">Credence Credit is the live MVP</Chip>
             <Chip tone="roadmap">Other modules simulated / roadmap</Chip>
           </div>
-          <h1 className="mt-7 text-5xl font-semibold tracking-tight md:text-7xl">Credence</h1>
+          <h1 className="font-pixel mt-7 text-center text-3xl leading-tight text-primary md:text-6xl">CLAW STREET</h1>
           <p className="mt-4 max-w-2xl text-xl text-foreground/90 md:text-2xl">
             Financial markets for machine intelligence.
           </p>

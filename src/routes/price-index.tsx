@@ -5,9 +5,9 @@ import { INDEXES, INDEX_SERIES } from "@/lib/credence";
 export const Route = createFileRoute("/price-index")({
   head: () => ({
     meta: [
-      { title: "Price Index — Credence Markets" },
+      { title: "Price Index — Claw Street" },
       { name: "description", content: "Reference prices for verified inference units (VIU) in RLUSD." },
-      { property: "og:title", content: "Price Index — Credence Markets" },
+      { property: "og:title", content: "Price Index — Claw Street" },
       { property: "og:description", content: "Reference prices for verified inference units (VIU) in RLUSD." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

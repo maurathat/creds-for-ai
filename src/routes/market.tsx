@@ -5,9 +5,9 @@ import { BIDS, ROUTING_STRATEGIES } from "@/lib/credence";
 export const Route = createFileRoute("/market")({
   head: () => ({
     meta: [
-      { title: "Inference Market — Credence Markets" },
+      { title: "Inference Market — Claw Street" },
       { name: "description", content: "Route orders across providers by price, latency, evidence tier and residency." },
-      { property: "og:title", content: "Inference Market — Credence Markets" },
+      { property: "og:title", content: "Inference Market — Claw Street" },
       { property: "og:description", content: "Route orders across providers by price, latency, evidence tier and residency." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

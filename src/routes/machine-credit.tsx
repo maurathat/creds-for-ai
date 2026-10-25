@@ -5,9 +5,9 @@ import { FACILITY_CLASSES, MERCHANT_CATEGORIES, REVENUE_SERIES } from "@/lib/cre
 export const Route = createFileRoute("/machine-credit")({
   head: () => ({
     meta: [
-      { title: "Machine Credit — Credence Markets" },
+      { title: "Machine Credit — Claw Street" },
       { name: "description", content: "Facility classes beyond inference, and approved merchant categories." },
-      { property: "og:title", content: "Machine Credit — Credence Markets" },
+      { property: "og:title", content: "Machine Credit — Claw Street" },
       { property: "og:description", content: "Facility classes beyond inference, and approved merchant categories." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
