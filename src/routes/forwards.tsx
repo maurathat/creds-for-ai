@@ -5,15 +5,17 @@ import { FORWARDS, FORWARD_CURVE } from "@/lib/credence";
 export const Route = createFileRoute("/forwards")({
   head: () => ({
     meta: [
-      { title: "Forwards — Credence Markets" },
+      { title: "Delivery reservations — Credence Markets" },
       {
         name: "description",
-        content: "Forward contracts to hedge future verified inference prices.",
+        content:
+          "Inference reservations, physically delivered (preview). Seeded prototype data; nothing is priced, held or delivered.",
       },
-      { property: "og:title", content: "Forwards — Credence Markets" },
+      { property: "og:title", content: "Delivery reservations — Credence Markets" },
       {
         property: "og:description",
-        content: "Forward contracts to hedge future verified inference prices.",
+        content:
+          "Inference reservations, physically delivered (preview). Seeded prototype data; nothing is priced, held or delivered.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -25,13 +27,13 @@ export const Route = createFileRoute("/forwards")({
 function Page() {
   return (
     <DataPage
-      kicker="Forwards"
-      title="Inference forwards"
-      description="Forward contracts to hedge future verified inference prices."
+      kicker="Delivery reservations"
+      title="Inference reservations, physically delivered (preview)"
+      description="Inference reservations, physically delivered (preview). Seeded prototype data; nothing is priced, held or delivered."
       level="roadmap"
       sections={[
-        { title: "Forward contracts", rows: FORWARDS },
-        { title: "Forward curve", rows: FORWARD_CURVE },
+        { title: "Dated reservations (seeded)", rows: FORWARDS },
+        { title: "Reservation price schedule (illustrative)", rows: FORWARD_CURVE },
       ]}
     />
   );

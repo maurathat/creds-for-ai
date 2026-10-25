@@ -1,6 +1,8 @@
 // Claw Street UI checkpoint: brand lockup, unavailable integrations, purchase progression and
 // the activity feed. Run: bun test
 import { describe, expect, test } from "bun:test";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { BRAND, ClawStreetBot, ClawStreetHero, ClawStreetLockup } from "../src/components/brand";
 import { NOT_LIVE_INTEGRATIONS, PRIMARY_NAV } from "../src/lib/navigation";
@@ -144,5 +146,40 @@ describe("activity feed", () => {
       "op-a:accounting_settled",
       "op-a:intent_journaled",
     ]);
+  });
+});
+
+describe("claims discipline across the whole app", () => {
+  const files = (dir: string): string[] =>
+    readdirSync(dir).flatMap((name) => {
+      const path = join(dir, name);
+      if (statSync(path).isDirectory()) return name === "ui" ? [] : files(path);
+      return /\.(ts|tsx)$/.test(name) && name !== "routeTree.gen.ts" ? [path] : [];
+    });
+  const sources = files(join(import.meta.dir, "..", "src")).map((path) => ({
+    path,
+    text: readFileSync(path, "utf8"),
+  }));
+
+  test("the test token is tRLUSD everywhere, never RLUSD", () => {
+    const bare = sources.flatMap(({ path, text }) =>
+      text
+        .split("\n")
+        .flatMap((line, i) => (/(^|[^tT])RLUSD/.test(line) ? [`${path}:${i + 1}`] : [])),
+    );
+    expect(bare).toEqual([]);
+  });
+
+  test("no derivatives, exchange or unvalidated ledger-write wording", () => {
+    const banned =
+      /\b(hedge|futures|derivatives?|trading|order book|forward contracts?|forward curve)\b|written to XRPL|XRPL Mainnet \(demo\)/i;
+    const hits = sources.flatMap(({ path, text }) =>
+      text
+        .split("\n")
+        .flatMap((line, i) =>
+          banned.test(line) && !/nothing is written to XRPL/.test(line) ? [`${path}:${i + 1}`] : [],
+        ),
+    );
+    expect(hits).toEqual([]);
   });
 });

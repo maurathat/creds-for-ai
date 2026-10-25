@@ -11,13 +11,13 @@ export const Route = createFileRoute("/prototype-home")({
       {
         name: "description",
         content:
-          "Credence finances verified inference for autonomous agents. Buy it. Finance it. Hedge it. Verify it.",
+          "Credence finances verified inference for autonomous agents. Buy it. Finance it. Reserve it. Verify it.",
       },
       { property: "og:title", content: "Credence — Financial markets for machine intelligence" },
       {
         property: "og:description",
         content:
-          "A machine credit facility for autonomous agents purchasing verified inference, settled in RLUSD on the XRP Ledger.",
+          "A machine credit facility for autonomous agents purchasing verified inference, with amounts in tRLUSD, a test token; no XRPL payment is made.",
       },
     ],
   }),
@@ -28,7 +28,7 @@ const STACK = [
   { k: "Credit", d: "Purpose-bound machine credit facilities" },
   { k: "Marketplace", d: "Competing verified inference providers" },
   { k: "Reservations", d: "Forward capacity commitments" },
-  { k: "Forwards", d: "Commercial forward delivery contracts" },
+  { k: "Delivery reservations", d: "Inference reservations, physically delivered (preview)" },
   { k: "Secondary", d: "Transferable capacity claims (concept)" },
 ];
 
@@ -54,7 +54,7 @@ function Home() {
             <span className="label-xs hidden sm:inline">Markets</span>
           </div>
           <div className="flex items-center gap-2">
-            <Chip tone="info">XRPL · RLUSD</Chip>
+            <Chip tone="info">XRPL · tRLUSD</Chip>
             <Link
               to="/overview"
               className="inline-flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-xs font-medium transition-colors hover:bg-surface-2"
@@ -82,7 +82,7 @@ function Home() {
           <p className="num mt-6 text-sm text-primary">
             &ldquo;The hardware wallet is the constitution, not the cashier.&rdquo;
           </p>
-          <p className="label-xs mt-2">Buy it. Finance it. Hedge it. Verify it.</p>
+          <p className="label-xs mt-2">Buy it. Finance it. Reserve it. Verify it.</p>
 
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
@@ -107,9 +107,9 @@ function Home() {
 
           <dl className="mt-14 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["Active facility", `${FACILITY.limit.toFixed(2)} RLUSD`],
-              ["Available", `${FACILITY.available.toFixed(2)} RLUSD`],
-              ["VIU spot reference", `${VIU_SPOT.toFixed(3)} RLUSD`],
+              ["Active facility", `${FACILITY.limit.toFixed(2)} tRLUSD`],
+              ["Available", `${FACILITY.available.toFixed(2)} tRLUSD`],
+              ["VIU index (illustrative)", `${VIU_SPOT.toFixed(3)} tRLUSD`],
               ["Evidence tier settled", FACILITY.evidenceTier],
             ].map(([k, v]) => (
               <div key={k} className="bg-surface px-5 py-4">

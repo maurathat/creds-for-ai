@@ -5,15 +5,17 @@ import { ORDER_BOOK } from "@/lib/credence";
 export const Route = createFileRoute("/secondary-market")({
   head: () => ({
     meta: [
-      { title: "Secondary Market — Credence Markets" },
+      { title: "Capacity transfer — Credence Markets" },
       {
         name: "description",
-        content: "Order book for transferring reserved capacity and forwards.",
+        content:
+          "Transfer of reserved inference capacity (concept). Seeded prototype data; no market, no matching.",
       },
-      { property: "og:title", content: "Secondary Market — Credence Markets" },
+      { property: "og:title", content: "Capacity transfer — Credence Markets" },
       {
         property: "og:description",
-        content: "Order book for transferring reserved capacity and forwards.",
+        content:
+          "Transfer of reserved inference capacity (concept). Seeded prototype data; no market, no matching.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -25,13 +27,13 @@ export const Route = createFileRoute("/secondary-market")({
 function Page() {
   return (
     <DataPage
-      kicker="Secondary Market"
-      title="Secondary market"
-      description="Order book for transferring reserved capacity and forwards."
+      kicker="Capacity transfer"
+      title="Reserved-capacity transfer (concept)"
+      description="Transfer of reserved inference capacity (concept). Seeded prototype data; no market, no matching."
       level="roadmap"
       sections={[
-        { title: "Bids", rows: ORDER_BOOK.bids },
-        { title: "Asks", rows: ORDER_BOOK.asks },
+        { title: "Transfer requests (seeded)", rows: ORDER_BOOK.bids },
+        { title: "Transfer offers (seeded)", rows: ORDER_BOOK.asks },
       ]}
     />
   );

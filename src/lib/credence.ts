@@ -1,5 +1,5 @@
 // Seeded demo data for the Credence Markets prototype.
-// All values are fictional seeded prototype data. None is live state.
+// All values are fictional seeded prototype data. None is live state. Amounts are tRLUSD, a test token.
 
 export type Maturity = "live" | "simulated" | "roadmap";
 
@@ -20,8 +20,8 @@ export const FACILITY = {
   evidenceTier: "Tier 2",
   rootAuthority: "Ledger hardware signer",
   opAuthority: "Agent delegate — ResearchBot-17",
-  ledger: "XRPL Mainnet (demo)",
-  settlement: "RLUSD",
+  ledger: "Local XRPL ledger (not connected)",
+  settlement: "tRLUSD",
   status: "Active",
   apr: 9.4,
   openedAt: "2026-07-14",
@@ -59,7 +59,8 @@ export const CORE_FLOW = [
   {
     step: 6,
     title: "Credence approves settlement",
-    detail: "Policy engine co-signs; settlement is released in RLUSD.",
+    detail:
+      "Policy engine co-signs; accounting settlement is recorded in tRLUSD (no XRPL payment).",
   },
   {
     step: 7,
@@ -217,7 +218,7 @@ export const TRANSACTIONS: Txn[] = [
     profile: "Meridian-70B / BF16",
     tier: "Tier 2",
     outcome: "REJECT",
-    reason: "Facility overspend — exceeds available 362.40 RLUSD",
+    reason: "Facility overspend — exceeds available 362.40 tRLUSD",
   },
   {
     id: "REQ-4812",
@@ -259,7 +260,7 @@ export const ATTACK_CASES: AttackCase[] = [
     input: "Northstar Compute · Meridian-70B-Instruct · BF16 · 24 VIU",
     check: "Allowlist · profile digest · request/response binding · limit · authority",
     outcome: "PASS",
-    note: "Settled 10.46 RLUSD; facility state written to XRPL.",
+    note: "Accounting settled 10.46 tRLUSD (seeded); nothing is written to XRPL.",
   },
   {
     id: "V-1",
@@ -296,8 +297,8 @@ export const ATTACK_CASES: AttackCase[] = [
   {
     id: "V-5",
     name: "Facility overspend",
-    input: "900 VIU · 392.40 RLUSD",
-    check: "Available balance 362.40 RLUSD",
+    input: "900 VIU · 392.40 tRLUSD",
+    check: "Available balance 362.40 tRLUSD",
     outcome: "REJECT",
     note: "Draw exceeds available credit; no partial fill authorized.",
   },
@@ -541,7 +542,7 @@ export const PROVIDERS: Provider[] = [
 ];
 
 export const ROUTING_STRATEGIES = [
-  { key: "cheapest", label: "Cheapest", detail: "Lowest RLUSD/VIU, ignores evidence tier." },
+  { key: "cheapest", label: "Cheapest", detail: "Lowest tRLUSD/VIU, ignores evidence tier." },
   { key: "fastest", label: "Fastest", detail: "Lowest p50 latency across eligible listings." },
   { key: "verified", label: "Verified", detail: "Tier 2+ receipts and ≥99% conformity only." },
   { key: "sovereign", label: "Sovereign EU", detail: "EU residency and EU-only jurisdictions." },

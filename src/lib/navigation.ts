@@ -32,8 +32,8 @@ export const PROTOTYPE_NAV = [
   { to: "/providers", label: "Providers", tag: "PROTO" },
   { to: "/reputation", label: "Reputation", tag: "PROTO" },
   { to: "/reservations", label: "Reservations", tag: "PROTO" },
-  { to: "/forwards", label: "Forwards", tag: "PROTO" },
-  { to: "/secondary-market", label: "Secondary Market", tag: "PROTO" },
+  { to: "/forwards", label: "Delivery reservations", tag: "PROTO" },
+  { to: "/secondary-market", label: "Capacity transfer", tag: "PROTO" },
   { to: "/price-index", label: "Price Index", tag: "PROTO" },
   { to: "/machine-credit", label: "Machine Credit", tag: "PROTO" },
   { to: "/settings", label: "Settings", tag: "PROTO" },
@@ -41,8 +41,8 @@ export const PROTOTYPE_NAV = [
 
 export const PROTOTYPE_BANNER =
   "Prototype page with seeded data from the original design. Nothing here is live: there is no " +
-  "XRPL Mainnet settlement, no live lending and no active marketplace. Amounts labelled RLUSD on " +
-  "this page are illustrative seeded values; Credence uses tRLUSD, a test token.";
+  "XRPL Mainnet settlement, no live lending and no active marketplace. Amounts on this page are " +
+  "illustrative seeded values in tRLUSD, a test token.";
 
 export function isPrototypePath(pathname: string): boolean {
   const path = pathname.replace(/\/+$/, "") || "/";

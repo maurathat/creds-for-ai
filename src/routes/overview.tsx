@@ -28,12 +28,12 @@ export const Route = createFileRoute("/overview")({
       {
         name: "description",
         content:
-          "Executive dashboard for Credence: active credit facilities, verified inference purchased, provider conformity and VIU spot reference price.",
+          "Executive dashboard for Credence: active credit facilities, verified inference purchased, provider conformity and illustrative VIU price index.",
       },
       { property: "og:title", content: "Overview — Credence Markets terminal" },
       {
         property: "og:description",
-        content: "Credit, marketplace, reservations, forwards and secondary market at a glance.",
+        content: "Credit, marketplace, reservations and capacity-transfer concepts at a glance.",
       },
     ],
   }),
@@ -44,7 +44,7 @@ const STACK = [
   { k: "Credit", s: "Seeded prototype", tone: "warn" as const, to: "/credit" as const },
   { k: "Marketplace", s: "Simulated", tone: "warn" as const, to: "/market" as const },
   { k: "Reservations", s: "Roadmap", tone: "roadmap" as const, to: "/reservations" as const },
-  { k: "Forwards", s: "Roadmap", tone: "roadmap" as const, to: "/forwards" as const },
+  { k: "Delivery reservations", s: "Roadmap", tone: "roadmap" as const, to: "/forwards" as const },
   { k: "Secondary", s: "Roadmap", tone: "roadmap" as const, to: "/secondary-market" as const },
 ];
 
@@ -73,11 +73,11 @@ function Overview() {
       <PageHeader
         kicker="Executive dashboard"
         title="Overview"
-        description="Credence finances verified inference for autonomous agents. Every figure on this page is seeded prototype data; market, reservations, forwards, index and secondary surfaces are simulated or roadmap."
+        description="Credence finances verified inference for autonomous agents. Every figure on this page is seeded prototype data; market, reservations, delivery reservations, index and capacity-transfer surfaces are simulated or roadmap."
         actions={
           <>
             <Chip tone="warn">Seeded facility</Chip>
-            <Chip tone="info">XRPL · RLUSD</Chip>
+            <Chip tone="info">XRPL · tRLUSD</Chip>
           </>
         }
       />
@@ -94,14 +94,14 @@ function Overview() {
         <Metric
           label="Outstanding balance"
           value={FACILITY.outstanding.toFixed(2)}
-          unit="RLUSD"
+          unit="tRLUSD"
           hint={`${UTILIZATION}% utilization`}
         />
         <Metric label="Provider conformity score" value="99.7%" hint="Northstar Compute" />
         <Metric
-          label="VIU spot reference"
+          label="VIU index (illustrative)"
           value={VIU_SPOT.toFixed(3)}
-          unit="RLUSD / VIU"
+          unit="tRLUSD / VIU"
           delta="+1.87%"
           tone="primary"
         />
@@ -137,7 +137,7 @@ function Overview() {
                 <Line
                   type="monotone"
                   dataKey="spend"
-                  name="Drawn RLUSD"
+                  name="Drawn tRLUSD"
                   stroke="var(--color-success)"
                   strokeWidth={1.6}
                   dot={false}
@@ -148,8 +148,8 @@ function Overview() {
         </Panel>
 
         <Panel
-          title="VIU spot reference price"
-          subtitle="CVII composite · RLUSD per Verified Inference Unit"
+          title="VIU price index (illustrative)"
+          subtitle="CVII composite · tRLUSD per Verified Inference Unit"
           right={<Chip tone="warn">Simulated</Chip>}
         >
           <div className="h-64">
@@ -191,7 +191,7 @@ function Overview() {
 
       <Panel
         title="Market stack"
-        subtitle="Credit → Marketplace → Reservations → Forwards → Secondary Markets"
+        subtitle="Credit → Marketplace → Reservations → Delivery reservations → Capacity transfer (concept)"
       >
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
           {STACK.map((s, i) => (
@@ -224,7 +224,7 @@ function Overview() {
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-border text-left">
-                  {["Request", "Time", "VIU", "RLUSD", "Profile", "Outcome"].map((h) => (
+                  {["Request", "Time", "VIU", "tRLUSD", "Profile", "Outcome"].map((h) => (
                     <th key={h} className="label-xs px-5 py-2.5 font-medium">
                       {h}
                     </th>
@@ -271,7 +271,7 @@ function Overview() {
               <div className="mt-4 flex items-end justify-between">
                 <div>
                   <div className="label-xs">14-day draw trend</div>
-                  <div className="num mt-1 text-lg">{FACILITY.outstanding.toFixed(2)} RLUSD</div>
+                  <div className="num mt-1 text-lg">{FACILITY.outstanding.toFixed(2)} tRLUSD</div>
                 </div>
                 <Sparkline points={UTIL_SERIES.map((u) => u.spend)} />
               </div>

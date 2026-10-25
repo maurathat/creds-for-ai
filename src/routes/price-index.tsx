@@ -8,12 +8,12 @@ export const Route = createFileRoute("/price-index")({
       { title: "Price Index — Credence Markets" },
       {
         name: "description",
-        content: "Reference prices for verified inference units (VIU) in RLUSD.",
+        content: "Reference prices for verified inference units (VIU) in tRLUSD.",
       },
       { property: "og:title", content: "Price Index — Credence Markets" },
       {
         property: "og:description",
-        content: "Reference prices for verified inference units (VIU) in RLUSD.",
+        content: "Reference prices for verified inference units (VIU) in tRLUSD.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -27,7 +27,7 @@ function Page() {
     <DataPage
       kicker="Price Index"
       title="Credence price index"
-      description="Reference prices for verified inference units (VIU) in RLUSD."
+      description="Reference prices for verified inference units (VIU) in tRLUSD."
       level="simulated"
       sections={[
         { title: "Indexes", rows: INDEXES },
