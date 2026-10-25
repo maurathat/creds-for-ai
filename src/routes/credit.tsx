@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { KeyRound, PlayCircle, ShieldAlert } from "lucide-react";
+import { CheckCircle2, KeyRound, PlayCircle, RotateCcw, ShieldAlert, XCircle } from "lucide-react";
+import { ATTACKS, PASS_DETAILS, SIM_DRAW, SIM_STAGES, SIM_STEP_MS, type Attack } from "@/lib/simulation";
 import { AppShell } from "@/components/shell";
 import { Chip, Gauge, KV, MaturityTag, PageHeader, Panel } from "@/components/kit";
 import {
@@ -10,7 +11,6 @@ import {
   REPAYMENTS,
   ROOT_ACTIONS,
   TRANSACTIONS,
-  UTILIZATION,
 } from "@/lib/credence";
 
 export const Route = createFileRoute("/credit")({
@@ -33,60 +33,87 @@ export const Route = createFileRoute("/credit")({
   component: Credit,
 });
 
-const STAGES = ["Authorization", "Receipt", "Verification", "Settlement"] as const;
+type Run = { kind: "purchase" } | { kind: "attack"; attack: Attack };
 
-function Simulator() {
-  const [running, setRunning] = useState(false);
-  const [stage, setStage] = useState(-1);
+function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void; onReset: () => void }) {
+  const [run, setRun] = useState<Run | null>(null);
+  const [step, setStep] = useState(-1); // number of steps resolved so far - 1
+  const failAt = run?.kind === "attack" ? run.attack.failAt : -1;
+  const finished = run !== null && (failAt >= 0 ? step >= failAt : step >= SIM_STAGES.length - 1);
 
   useEffect(() => {
-    if (!running) return;
-    if (stage >= STAGES.length - 1) {
-      const done = setTimeout(() => setRunning(false), 600);
-      return () => clearTimeout(done);
-    }
-    const t = setTimeout(() => setStage((s) => s + 1), 850);
+    if (!run || finished) return;
+    const t = setTimeout(() => setStep((s) => s + 1), SIM_STEP_MS);
     return () => clearTimeout(t);
-  }, [running, stage]);
+  }, [run, step, finished]);
 
-  const start = () => {
-    setStage(0);
-    setRunning(true);
+  useEffect(() => {
+    if (run?.kind === "purchase" && finished) onSettled(SIM_DRAW);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished]);
+
+  const start = (r: Run) => {
+    setStep(-1);
+    setRun(r);
   };
-
-  const detail = [
-    "Facility check: provider allowlist ✓ · profile digest ✓ · available 362.40 tRLUSD ✓",
-    "Northstar Compute returns a Tier-2 signed delivery receipt for 24 VIU.",
-    "Kessai serialization re-derived; request/response/profile binding matches.",
-    "Policy co-signs. 10.46 tRLUSD settled; XRPL facility state updated.",
-  ];
+  const reset = () => {
+    setRun(null);
+    setStep(-1);
+    onReset();
+  };
+  const busy = run !== null && !finished;
 
   return (
     <Panel
       title="Simulate inference purchase"
-      subtitle="Walks one conforming draw through the live settlement path"
+      subtitle="Step-by-step walkthrough using demo data"
       right={<MaturityTag level="live" />}
     >
-      <button
-        onClick={start}
-        disabled={running}
-        className="inline-flex items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-      >
-        <PlayCircle className="size-4" />
-        {running ? "Running…" : "Simulate inference purchase"}
-      </button>
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => start({ kind: "purchase" })}
+          disabled={busy}
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+        >
+          <PlayCircle className="size-4" />
+          Simulate inference purchase
+        </button>
+        <button
+          onClick={() => start({ kind: "attack", attack: ATTACKS[Math.floor(Math.random() * ATTACKS.length)]! })}
+          disabled={busy}
+          className="inline-flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-3.5 py-2 text-xs font-semibold text-destructive transition-opacity hover:opacity-90 disabled:opacity-50"
+        >
+          <ShieldAlert className="size-4" />
+          Simulate attack
+        </button>
+        <button
+          onClick={reset}
+          disabled={busy}
+          className="inline-flex items-center gap-2 rounded-md border border-border-strong px-3.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground disabled:opacity-50"
+        >
+          <RotateCcw className="size-4" />
+          Reset
+        </button>
+      </div>
 
-      <ol className="mt-5 space-y-2">
-        {STAGES.map((s, i) => {
-          const active = stage === i;
-          const done = stage > i;
+      {run?.kind === "attack" && (
+        <p className="mt-4 text-[11px] text-muted-foreground">
+          Attack case: <span className="text-destructive">{run.attack.name}</span>
+        </p>
+      )}
+
+      <ol className="mt-4 space-y-2">
+        {SIM_STAGES.map((s, i) => {
+          const resolved = step >= i;
+          const failed = resolved && i === failAt;
+          const skipped = failAt >= 0 && i > failAt;
           return (
             <li
               key={s}
-              className={`rounded-md border px-3.5 py-3 transition-all duration-500 ${
-                active
-                  ? "border-primary/50 bg-primary/10"
-                  : done
+              className={`rounded-md border px-3.5 py-3 transition-all duration-300 ${
+                failed
+                  ? "border-destructive/50 bg-destructive/10"
+                  : resolved
                     ? "border-success/40 bg-success/5"
                     : "border-border bg-surface-2 opacity-60"
               }`}
@@ -96,33 +123,44 @@ function Simulator() {
                   <span className="num text-[11px] text-muted-foreground">0{i + 1}</span>
                   {s}
                 </span>
-                {done ? (
-                  <Chip tone="pass">Complete</Chip>
-                ) : active ? (
-                  <Chip tone="info">In progress</Chip>
+                {failed ? (
+                  <span className="flex items-center gap-1 text-[11px] text-destructive">
+                    <XCircle className="size-4" /> Rejected
+                  </span>
+                ) : resolved ? (
+                  <span className="flex items-center gap-1 text-[11px] text-success">
+                    <CheckCircle2 className="size-4" /> Passed
+                  </span>
                 ) : (
-                  <Chip tone="neutral">Pending</Chip>
+                  <Chip tone="neutral">{skipped && finished ? "Not reached" : "Pending"}</Chip>
                 )}
               </div>
-              {(active || done) && (
-                <p className="animate-fade-in mt-2 text-[11px] leading-relaxed text-muted-foreground">
-                  {detail[i]}
+              {resolved && (
+                <p className={`mt-2 text-[11px] leading-relaxed ${failed ? "text-destructive" : "text-muted-foreground"}`}>
+                  {failed && run?.kind === "attack" ? run.attack.reason : PASS_DETAILS[i]}
                 </p>
               )}
             </li>
           );
         })}
       </ol>
-      {stage === STAGES.length - 1 && !running && (
-        <p className="animate-fade-in mt-4 text-[11px] text-success">
-          Settled. No hardware confirmation required — this purchase was in policy.
+      {finished && run?.kind === "purchase" && (
+        <p className="mt-4 text-[11px] text-success">
+          Settled in policy — no hardware confirmation required. Balances above are updated.
         </p>
+      )}
+      {finished && run?.kind === "attack" && (
+        <p className="mt-4 text-[11px] text-destructive">Rejected — no draw, balances unchanged.</p>
       )}
     </Panel>
   );
 }
 
 function Credit() {
+  const [simDrawn, setSimDrawn] = useState(0);
+  const outstanding = Math.round((FACILITY.outstanding + simDrawn) * 100) / 100;
+  const available = Math.round((FACILITY.limit - outstanding) * 100) / 100;
+  const utilization = +((outstanding / FACILITY.limit) * 100).toFixed(1);
   return (
     <AppShell>
       <PageHeader
@@ -141,8 +179,8 @@ function Credit() {
               <KV k="Borrower" v={FACILITY.borrower} mono />
               <KV k="Example address" v={FACILITY.borrowerAccount} mono />
               <KV k="Facility limit" v={`${FACILITY.limit.toFixed(2)} tRLUSD`} mono />
-              <KV k="Available" v={`${FACILITY.available.toFixed(2)} tRLUSD`} mono />
-              <KV k="Outstanding" v={`${FACILITY.outstanding.toFixed(2)} tRLUSD`} mono />
+              <KV k="Available" v={`${available.toFixed(2)} tRLUSD`} mono />
+              <KV k="Outstanding" v={`${outstanding.toFixed(2)} tRLUSD`} mono />
               <KV k="Purpose" v={FACILITY.purpose} />
             </div>
             <div>
@@ -159,11 +197,11 @@ function Credit() {
 
         <div className="grid gap-5">
           <Panel title="Utilization">
-            <Gauge value={UTILIZATION} label="of 500 tRLUSD drawn" />
+            <Gauge value={utilization} label={`of ${FACILITY.limit} tRLUSD drawn`} />
             <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
               <div className="rounded-md bg-surface-2 px-3 py-2.5">
                 <div className="label-xs">Available</div>
-                <div className="num mt-1 text-primary">{FACILITY.available.toFixed(2)}</div>
+                <div className="num mt-1 text-primary">{available.toFixed(2)}</div>
               </div>
               <div className="rounded-md bg-surface-2 px-3 py-2.5">
                 <div className="label-xs">APR</div>
@@ -216,7 +254,7 @@ function Credit() {
           </ul>
         </Panel>
 
-        <Simulator />
+        <Simulator onSettled={(amt) => setSimDrawn((d) => d + amt)} onReset={() => setSimDrawn(0)} />
       </div>
 
       <Panel title="Core flow" subtitle="Request → verification → settlement → reputation">
