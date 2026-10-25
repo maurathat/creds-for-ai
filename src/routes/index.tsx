@@ -51,7 +51,7 @@ const STEPS = [
   { i: KeyRound, t: "Bounded authorization", d: "Spend stays inside facility limits and allowlists." },
   { i: Cpu, t: "Execution", d: "An approved provider runs the declared artifact." },
   { i: FileCheck2, t: "Delivery evidence", d: "A signed receipt binds the delivery to the request." },
-  { i: Landmark, t: "Financial accounting", d: "The facility records the draw against the receipt." },
+  { i: Landmark, t: "Internal accounting", d: "The facility records the draw against the receipt (in-browser here)." },
 ];
 
 const SOURCE_URL = "https://github.com/maurathat/credence-xrpl/tree/maurathat/claw-street-release";
@@ -159,7 +159,7 @@ function Home() {
             Most agent payment tools answer: <span className="text-muted-foreground">how does an agent pay?</span>{" "}
             Claw Street answers:{" "}
             <span className="font-medium">
-              what should an agent buy, under whose authority, on what terms — and how do we prove
+              what should an agent buy, under whose authority, on what terms — and what evidence shows
               it was delivered?
             </span>
           </p>
