@@ -73,7 +73,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
         <button
           onClick={() => start({ kind: "purchase" })}
           disabled={busy}
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           <PlayCircle className="size-4" />
           Simulate inference purchase
@@ -81,7 +81,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
         <button
           onClick={() => start({ kind: "attack", attack: ATTACKS[Math.floor(Math.random() * ATTACKS.length)]! })}
           disabled={busy}
-          className="inline-flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-3.5 py-2 text-xs font-semibold text-destructive transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-3.5 py-2 text-sm font-semibold text-destructive transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           <ShieldAlert className="size-4" />
           Simulate attack
@@ -89,7 +89,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
         <button
           onClick={reset}
           disabled={busy}
-          className="inline-flex items-center gap-2 rounded-md border border-border-strong px-3.5 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-md border border-border-strong px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground disabled:opacity-50"
         >
           <RotateCcw className="size-4" />
           Reset
@@ -97,7 +97,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
       </div>
 
       {run?.kind === "attack" && (
-        <p className="mt-4 text-[11px] text-muted-foreground">
+        <p className="mt-4 text-[12.5px] text-muted-foreground">
           Attack case: <span className="text-destructive">{run.attack.name}</span>
         </p>
       )}
@@ -119,16 +119,16 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
               }`}
             >
               <div className="flex items-center justify-between gap-3">
-                <span className="flex items-center gap-2.5 text-xs font-medium">
-                  <span className="num text-[11px] text-muted-foreground">0{i + 1}</span>
+                <span className="flex items-center gap-2.5 text-sm font-medium">
+                  <span className="num text-[12.5px] text-muted-foreground">0{i + 1}</span>
                   {s}
                 </span>
                 {failed ? (
-                  <span className="flex items-center gap-1 text-[11px] text-destructive">
+                  <span className="flex items-center gap-1 text-[12.5px] text-destructive">
                     <XCircle className="size-4" /> Rejected
                   </span>
                 ) : resolved ? (
-                  <span className="flex items-center gap-1 text-[11px] text-success">
+                  <span className="flex items-center gap-1 text-[12.5px] text-success">
                     <CheckCircle2 className="size-4" /> Passed
                   </span>
                 ) : (
@@ -136,7 +136,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
                 )}
               </div>
               {resolved && (
-                <p className={`mt-2 text-[11px] leading-relaxed ${failed ? "text-destructive" : "text-muted-foreground"}`}>
+                <p className={`mt-2 text-[12.5px] leading-relaxed ${failed ? "text-destructive" : "text-muted-foreground"}`}>
                   {failed && run?.kind === "attack" ? run.attack.reason : PASS_DETAILS[i]}
                 </p>
               )}
@@ -145,12 +145,12 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
         })}
       </ol>
       {finished && run?.kind === "purchase" && (
-        <p className="mt-4 text-[11px] text-success">
+        <p className="mt-4 text-[12.5px] text-success">
           Settled in policy — no hardware confirmation required. Balances above are updated.
         </p>
       )}
       {finished && run?.kind === "attack" && (
-        <p className="mt-4 text-[11px] text-destructive">Rejected — no draw, balances unchanged.</p>
+        <p className="mt-4 text-[12.5px] text-destructive">Rejected — no draw, balances unchanged.</p>
       )}
     </Panel>
   );
@@ -198,7 +198,7 @@ function Credit() {
         <div className="grid gap-5">
           <Panel title="Utilization">
             <Gauge value={utilization} label={`of ${FACILITY.limit} tRLUSD drawn`} />
-            <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div className="rounded-md bg-surface-2 px-3 py-2.5">
                 <div className="label-xs">Available</div>
                 <div className="num mt-1 text-primary">{available.toFixed(2)}</div>
@@ -210,7 +210,7 @@ function Credit() {
             </div>
           </Panel>
           <Panel title="Approved execution profile">
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2 text-sm">
               <KV k="Profile digest" v={FACILITY.profileDigest} mono />
               <KV k="Artifact" v="Meridian-70B-Instruct (open weights)" />
               <KV k="Precision / quantization" v="BF16" mono />
@@ -229,11 +229,11 @@ function Credit() {
           <div className="mb-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2.5">
               <div className="label-xs">Root authority</div>
-              <div className="num mt-1 text-xs">{FACILITY.rootAuthority}</div>
+              <div className="num mt-1 text-sm">{FACILITY.rootAuthority}</div>
             </div>
             <div className="rounded-md border border-border bg-surface-2 px-3 py-2.5">
               <div className="label-xs">Operational authority</div>
-              <div className="num mt-1 text-xs">{FACILITY.opAuthority}</div>
+              <div className="num mt-1 text-sm">{FACILITY.opAuthority}</div>
             </div>
           </div>
           <ul className="space-y-1.5">
@@ -243,8 +243,8 @@ function Credit() {
                 className="flex items-start justify-between gap-3 rounded-md bg-surface-2 px-3 py-2"
               >
                 <span>
-                  <span className="block text-xs">{a.action}</span>
-                  <span className="text-[11px] text-muted-foreground">{a.detail}</span>
+                  <span className="block text-sm">{a.action}</span>
+                  <span className="text-[12.5px] text-muted-foreground">{a.detail}</span>
                 </span>
                 <Chip tone={a.root ? "warn" : "pass"}>
                   {a.root ? "Ledger approval required" : "In policy"}
@@ -261,9 +261,9 @@ function Credit() {
         <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
           {CORE_FLOW.map((s) => (
             <div key={s.step} className="rounded-md border border-border bg-surface-2 px-3.5 py-3">
-              <div className="num text-[11px] text-primary">0{s.step}</div>
-              <div className="mt-1 text-xs font-medium">{s.title}</div>
-              <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">{s.detail}</p>
+              <div className="num text-[12.5px] text-primary">0{s.step}</div>
+              <div className="mt-1 text-sm font-medium">{s.title}</div>
+              <p className="mt-1 text-[12.5px] leading-relaxed text-muted-foreground">{s.detail}</p>
             </div>
           ))}
         </div>
@@ -271,7 +271,7 @@ function Credit() {
 
       <Panel title="Facility requests" subtitle="Draw attempts against FAC-XRPL-0x7C41" bodyClassName="p-0">
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-left">
                 {["Request", "Timestamp", "Provider", "Profile", "VIU", "tRLUSD", "Outcome", "Settlement ref (demo) / reason"].map(
@@ -295,7 +295,7 @@ function Credit() {
                   <td className="px-4 py-2.5">
                     <Chip tone={t.outcome === "PASS" ? "pass" : "reject"}>{t.outcome}</Chip>
                   </td>
-                  <td className="px-4 py-2.5 text-[11px] text-muted-foreground">
+                  <td className="px-4 py-2.5 text-[12.5px] text-muted-foreground">
                     {t.outcome === "PASS" ? (
                       <span title="Illustrative reference — not an on-chain transaction." className="cursor-help underline decoration-dotted">
                         {t.xrpl}
@@ -323,13 +323,13 @@ function Credit() {
               <li key={c.id} className="px-5 py-3.5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="flex items-center gap-2.5">
-                    <span className="num text-[11px] text-muted-foreground">{c.id}</span>
-                    <span className="text-xs font-medium">{c.name}</span>
+                    <span className="num text-[12.5px] text-muted-foreground">{c.id}</span>
+                    <span className="text-sm font-medium">{c.name}</span>
                   </span>
                   <Chip tone={c.outcome === "PASS" ? "pass" : "reject"}>{c.outcome}</Chip>
                 </div>
-                <div className="num mt-1.5 break-all text-[11px] text-muted-foreground">{c.input}</div>
-                <div className="mt-1 text-[11px] text-muted-foreground">
+                <div className="num mt-1.5 break-all text-[12.5px] text-muted-foreground">{c.input}</div>
+                <div className="mt-1 text-[12.5px] text-muted-foreground">
                   <span className="text-foreground/70">Check:</span> {c.check} · {c.note}
                 </div>
               </li>
@@ -340,7 +340,7 @@ function Credit() {
         <div className="space-y-5">
           <Panel title="Repayment schedule" bodyClassName="p-0">
             <div className="overflow-x-auto">
-              <table className="w-full text-xs">
+              <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left">
                   {["ID", "Due", "Principal", "Interest", "Status"].map((h) => (
@@ -367,7 +367,7 @@ function Credit() {
             </div>
           </Panel>
           <Panel title="XRPL role">
-            <p className="text-[11px] leading-relaxed text-muted-foreground">
+            <p className="text-[12.5px] leading-relaxed text-muted-foreground">
               XRPL carries credit and facility state, settlement in RLUSD, account identity and
               facility transaction references. XRPL does not natively enforce application-level
               provider, model, precision or amount rules. Credence policy plus co-signing enforces

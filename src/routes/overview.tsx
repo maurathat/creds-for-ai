@@ -197,8 +197,8 @@ function Overview() {
                 to={s.to}
                 className="flex-1 rounded-lg border border-border bg-surface-2 px-4 py-4 transition-colors hover:border-border-strong"
               >
-                <div className="num text-[11px] text-muted-foreground">0{i + 1}</div>
-                <div className="mt-1.5 text-sm font-semibold">{s.k}</div>
+                <div className="num text-[12.5px] text-muted-foreground">0{i + 1}</div>
+                <div className="mt-1.5 text-[15px] font-semibold">{s.k}</div>
                 <Chip tone={s.tone} className="mt-2">
                   {s.s}
                 </Chip>
@@ -214,7 +214,7 @@ function Overview() {
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
         <Panel title="Recent receipt activity" right={<Chip tone="pass">Core demo</Chip>} bodyClassName="p-0">
           <div className="overflow-x-auto">
-            <table className="w-full text-xs">
+            <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left">
                   {["Request", "Time", "VIU", "tRLUSD", "Profile", "Outcome"].map((h) => (
@@ -244,7 +244,7 @@ function Overview() {
 
         <div className="space-y-5">
           <Panel title="Facility snapshot">
-            <div className="space-y-3 text-xs">
+            <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Borrower</span>
                 <span className="num">{FACILITY.borrower}</span>

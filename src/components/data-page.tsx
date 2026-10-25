@@ -26,7 +26,7 @@ export function DataTable({ rows, columns }: { rows: readonly Row[]; columns?: s
   const cols = columns ?? (rows[0] ? Object.keys(rows[0]) : []);
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+      <table className="w-full text-[15px]">
         <thead>
           <tr className="border-b border-border text-left">
             {cols.map((c) => (
@@ -43,7 +43,7 @@ export function DataTable({ rows, columns }: { rows: readonly Row[]; columns?: s
                 <td
                   key={c}
                   title={SETTLEMENT_COLS.has(c) ? TIP : undefined}
-                  className="whitespace-nowrap px-3 py-2 font-mono text-xs text-foreground"
+                  className="whitespace-nowrap px-3 py-2 font-mono text-sm text-foreground"
                 >
                   {fmt(r[c])}
                 </td>

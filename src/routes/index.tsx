@@ -94,15 +94,15 @@ function Home() {
           <div className="flex items-center gap-2.5">
             <img src="/claw-street-icon-512.png" alt="" className="size-10 rounded-md" />
             <span className="leading-tight">
-              <span className="font-pixel block text-[11px] text-foreground">CLAW STREET</span>
-              <span className="mt-1 block text-[10px] text-muted-foreground">Powered by Credence</span>
+              <span className="font-pixel block text-[12.5px] text-foreground">CLAW STREET</span>
+              <span className="mt-1 block text-[11px] text-muted-foreground">Powered by Credence</span>
             </span>
           </div>
           <div className="flex items-center gap-2">
             <Chip tone="info">Target: RLUSD settlement on XRPL</Chip>
             <Link
               to="/overview"
-              className="inline-flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-xs font-medium transition-colors hover:bg-surface-2"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium transition-colors hover:bg-surface-2"
             >
               Open terminal <ArrowRight className="size-3.5" />
             </Link>
@@ -127,20 +127,20 @@ function Home() {
             Claw Street lets AI agents buy compute under explicit rules — compare providers, spend
             within limits, prove what was delivered, and keep an auditable economic record.
           </p>
-          <p className="num mt-6 text-sm text-primary">
+          <p className="num mt-6 text-[15px] text-primary">
             &ldquo;The hardware wallet is the constitution, not the cashier.&rdquo;
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
               to="/overview"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-[15px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               Open terminal <ArrowRight className="size-4" />
             </Link>
             <a
               href="#how-it-works"
-              className="inline-flex items-center gap-2 rounded-md border border-border-strong bg-surface px-4 py-2.5 text-sm font-medium transition-colors hover:bg-surface-2"
+              className="inline-flex items-center gap-2 rounded-md border border-border-strong bg-surface px-4 py-2.5 text-[15px] font-medium transition-colors hover:bg-surface-2"
             >
               How it works
             </a>
@@ -184,12 +184,12 @@ function Home() {
             {STEPS.map((s, i) => (
               <div key={s.t} className="flex flex-col gap-2 lg:flex-row lg:items-center lg:flex-1">
                 <div className="panel flex-1 p-4">
-                  <span className="num text-[11px] text-primary">0{i + 1}</span>
+                  <span className="num text-[12.5px] text-primary">0{i + 1}</span>
                   <div className="mt-1.5 flex items-center gap-2">
                     <s.i className="size-4 shrink-0 text-primary" />
-                    <span className="text-sm font-medium">{s.t}</span>
+                    <span className="text-[15px] font-medium">{s.t}</span>
                   </div>
-                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{s.d}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{s.d}</p>
                 </div>
                 {i < STEPS.length - 1 && (
                   <ArrowRight className="hidden size-4 shrink-0 text-muted-foreground lg:block" />
@@ -210,7 +210,7 @@ function Home() {
                 <Chip tone={col.tone}>{col.tag}</Chip>
                 <ul className="mt-4 space-y-2.5">
                   {col.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <li key={item} className="flex items-start gap-2 text-[15px] text-muted-foreground">
                       <span className="mt-1.5 size-1 shrink-0 rounded-full bg-current" />
                       <span className="leading-relaxed">{item}</span>
                     </li>
@@ -229,7 +229,7 @@ function Home() {
             {["XRPL", "Ledger", "QuickNode", "t54"].map((b) => (
               <span
                 key={b}
-                className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground"
+                className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm font-medium text-muted-foreground"
               >
                 {b}
               </span>
@@ -245,7 +245,7 @@ function Home() {
             <h2 className="mt-3 text-2xl font-semibold">
               Open models made model artifacts portable.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
               Credence makes inference contractible, financeable, and auditable across providers. A
               buyer states the execution profile it is paying for — artifact digest, precision,
               context — and settlement only releases against a receipt bound to that profile.
@@ -258,8 +258,8 @@ function Home() {
               ].map((c) => (
                 <div key={c.t} className="panel p-4">
                   <c.i className="size-4 text-primary" />
-                  <div className="mt-2.5 text-sm font-semibold">{c.t}</div>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{c.d}</p>
+                  <div className="mt-2.5 text-[15px] font-semibold">{c.t}</div>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{c.d}</p>
                 </div>
               ))}
             </div>
@@ -270,16 +270,16 @@ function Home() {
             <ol className="mt-4 space-y-2.5">
               {STACK.map((s, i) => (
                 <li key={s.k} className="flex items-start gap-3 rounded-md bg-surface-2 px-3 py-2.5">
-                  <span className="num mt-0.5 text-[11px] text-primary">0{i + 1}</span>
+                  <span className="num mt-0.5 text-[12.5px] text-primary">0{i + 1}</span>
                   <span>
-                    <span className="block text-sm font-medium">{s.k}</span>
-                    <span className="text-xs text-muted-foreground">{s.d}</span>
+                    <span className="block text-[15px] font-medium">{s.k}</span>
+                    <span className="text-sm text-muted-foreground">{s.d}</span>
                   </span>
                 </li>
               ))}
             </ol>
             <div className="label-xs mt-5">XRPL&rsquo;s role</div>
-            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[12.5px] leading-relaxed text-muted-foreground">
               XRPL carries credit state, settlement, account identity and facility transaction
               references. XRPL does not natively enforce application-level provider, model or amount
               rules — Credence policy plus co-signing enforces those terms before settlement.
