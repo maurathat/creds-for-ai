@@ -140,7 +140,7 @@ export const ATTACK_CASES: AttackCase[] = [
   { id: "V-2", name: "Wrong model declaration", input: "Northstar · OpenCoder-34B · BF16 · 40 VIU", check: "Artifact digest vs approved execution profile", outcome: "REJECT", note: "Receipt declares a different artifact digest than contracted." },
   { id: "V-3", name: "Wrong precision declaration", input: "Northstar · Meridian-70B · FP8 · 18 VIU", check: "Precision field of execution profile digest", outcome: "REJECT", note: "FP8 delivery cannot settle against a BF16 order." },
   { id: "V-4", name: "Replayed delivery receipt", input: "Receipt for REQ-4815 resubmitted", check: "Request digest uniqueness ledger", outcome: "REJECT", note: "Kessai request digest already consumed by a settled draw." },
-  { id: "V-5", name: "Facility overspend", input: "900 VIU · 392.40 tRLUSD", check: "Available balance 362.40 tRLUSD", outcome: "REJECT", note: "Draw exceeds available credit; no partial fill authorized." },
+  { id: "V-5", name: "Facility overspend", input: "900 VIU · 392.40 tRLUSD", check: `Available balance ${FACILITY.available.toFixed(2)} tRLUSD`, outcome: "REJECT", note: "Draw exceeds available credit; no partial fill authorized." },
   { id: "V-6", name: "Expired / unauthorized spend", input: "Delegate key past expiry window", check: "Operational authority validity + scope", outcome: "REJECT", note: "Requires root (Ledger hardware) re-delegation before spend." },
 ];
 
