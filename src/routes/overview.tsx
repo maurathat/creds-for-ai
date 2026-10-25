@@ -41,7 +41,7 @@ export const Route = createFileRoute("/overview")({
 });
 
 const STACK = [
-  { k: "Credit", s: "Core demo", tone: "pass" as const, to: "/credit" as const },
+  { k: "Credit", s: "Simulated", tone: "pass" as const, to: "/credit" as const },
   { k: "Procurement", s: "Simulated", tone: "pass" as const, to: "/market" as const },
   { k: "Reservations", s: "Concept", tone: "roadmap" as const, to: "/reservations" as const },
   { k: "Forward procurement", s: "Concept", tone: "roadmap" as const, to: "/forwards" as const },
@@ -85,7 +85,7 @@ function Overview() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
         <Metric label="Active credit facilities" value="1" hint="ResearchBot-17 · Active" />
         <Metric
-          label="Verified inference purchased"
+          label="Inference purchased (simulated)"
           value="1,284"
           unit="VIU"
           delta="+18.2% MoM"
@@ -111,7 +111,7 @@ function Overview() {
         <Panel
           title="Facility utilization & cumulative verified spend"
           subtitle="Facility FAC-XRPL-0x7C41 · since 2026-07-14"
-          right={<Chip tone="pass">Core demo</Chip>}
+          right={<Chip tone="pass">Simulated · seeded</Chip>}
         >
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -212,7 +212,7 @@ function Overview() {
       </Panel>
 
       <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <Panel title="Recent receipt activity" right={<Chip tone="pass">Core demo</Chip>} bodyClassName="p-0">
+        <Panel title="Recent receipt activity" right={<Chip tone="pass">Simulated · seeded</Chip>} bodyClassName="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
