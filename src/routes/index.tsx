@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ShieldCheck, Boxes, FileCheck2 } from "lucide-react";
 import { Chip, MaturityTag } from "@/components/kit";
 import { FACILITY, VIU_SPOT } from "@/lib/credence";
+import logoGif from "@/assets/claw-street-logo.gif.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,9 +40,7 @@ function Home() {
       <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-3.5">
           <div className="flex items-center gap-2.5">
-            <span className="grid size-10 place-items-center rounded-md border border-primary/40 bg-primary/10">
-              <span className="font-pixel text-xs text-primary">CS</span>
-            </span>
+            <img src="/claw-street-icon-512.png" alt="" className="size-10 rounded-md" />
             <span className="leading-tight">
               <span className="font-pixel block text-[11px] text-foreground">CLAW STREET</span>
               <span className="mt-1 block text-[10px] text-muted-foreground">Powered by Credence</span>
@@ -66,7 +65,9 @@ function Home() {
             <Chip tone="neutral">Credence Credit is the live MVP</Chip>
             <Chip tone="roadmap">Other modules simulated / roadmap</Chip>
           </div>
-          <h1 className="font-pixel mt-7 text-center text-3xl leading-tight text-primary md:text-6xl">CLAW STREET</h1>
+          <h1 className="mt-7 flex justify-center">
+            <img src={logoGif.url} alt="Claw Street — Powered by Credence" className="w-full max-w-[420px]" />
+          </h1>
           <p className="mt-4 max-w-2xl text-xl text-foreground/90 md:text-2xl">
             Financial markets for machine intelligence.
           </p>
