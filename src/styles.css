@@ -127,6 +127,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    overflow-wrap: anywhere;
     background-image: radial-gradient(
       circle at 15% -10%,
       rgb(61 255 143 / 5%),

@@ -328,7 +328,7 @@ function Credit() {
                   </span>
                   <Chip tone={c.outcome === "PASS" ? "pass" : "reject"}>{c.outcome}</Chip>
                 </div>
-                <div className="num mt-1.5 text-[11px] text-muted-foreground">{c.input}</div>
+                <div className="num mt-1.5 break-all text-[11px] text-muted-foreground">{c.input}</div>
                 <div className="mt-1 text-[11px] text-muted-foreground">
                   <span className="text-foreground/70">Check:</span> {c.check} · {c.note}
                 </div>
