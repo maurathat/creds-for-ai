@@ -6,10 +6,10 @@ import { ORDER_BOOK } from "@/lib/credence";
 export const Route = createFileRoute("/secondary-market")({
   head: () => ({
     meta: [
-      { title: "Secondary Market — Claw Street" },
-      { name: "description", content: "Order book for transferring reserved capacity and forwards." },
+      { title: "Capacity Transfers (concept) — Claw Street" },
+      { name: "description", content: "Agent procurement concept: handing unused reserved capacity to another buyer. Not an exchange; transfer is not implemented. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:title", content: "Secondary Market — Claw Street" },
-      { property: "og:description", content: "Order book for transferring reserved capacity and forwards." },
+      { property: "og:description", content: "Agent procurement concept: handing unused reserved capacity to another buyer. Not an exchange; transfer is not implemented. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -20,14 +20,14 @@ export const Route = createFileRoute("/secondary-market")({
 function Page() {
   return (
     <DataPage
-      kicker="Secondary Market"
-      title="Secondary market"
-      description="Order book for transferring reserved capacity and forwards."
+      kicker="Capacity transfers"
+      title="Capacity transfers (concept)"
+      description="Agent procurement concept: handing unused reserved capacity to another buyer. Not an exchange; transfer is not implemented. Inactive concept preview — browser simulation, seeded data."
       level="roadmap"
       banner={<ConceptRibbon />}
       sections={[
-        { title: "Bids", rows: ORDER_BOOK.bids },
-        { title: "Asks", rows: ORDER_BOOK.asks },
+        { title: "Buyer requests (illustrative)", rows: ORDER_BOOK.bids },
+        { title: "Unused capacity offered (illustrative)", rows: ORDER_BOOK.asks },
       ]}
     />
   );

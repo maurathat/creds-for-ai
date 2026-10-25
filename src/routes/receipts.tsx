@@ -6,9 +6,9 @@ export const Route = createFileRoute("/receipts")({
   head: () => ({
     meta: [
       { title: "Receipts — Claw Street" },
-      { name: "description", content: "Kessai-serialized receipts bound to requests. Tier 2 is provider-declared and bound, not proof of execution." },
+      { name: "description", content: "Seeded example receipts. Tier 1 = gateway witnessed response (offline simulated here); Tier 2 = provider signed what it says it served (simulated here). No tier proves exact weights ran, and these hosted receipts are not cryptographically verified." },
       { property: "og:title", content: "Receipts — Claw Street" },
-      { property: "og:description", content: "Kessai-serialized receipts bound to requests. Tier 2 is provider-declared and bound, not proof of execution." },
+      { property: "og:description", content: "Seeded example receipts. Tier 1 = gateway witnessed response (offline simulated here); Tier 2 = provider signed what it says it served (simulated here). No tier proves exact weights ran, and these hosted receipts are not cryptographically verified." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -21,8 +21,8 @@ function Page() {
     <DataPage
       kicker="Receipts"
       title="Inference receipts"
-      description="Kessai-serialized receipts bound to requests. Tier 2 is provider-declared and bound, not proof of execution."
-      level="live"
+      description="Seeded example receipts. Tier 1 = gateway witnessed response (offline simulated here); Tier 2 = provider signed what it says it served (simulated here). No tier proves exact weights ran, and these hosted receipts are not cryptographically verified."
+      level="simulated"
       sections={[
         { title: "Receipts", rows: RECEIPTS },
         { title: "Evidence ladder", rows: EVIDENCE_LADDER },

@@ -20,13 +20,13 @@ export const Route = createFileRoute("/credit")({
       {
         name: "description",
         content:
-          "Core demo: a purpose-bound 500 tRLUSD (test asset) facility letting ResearchBot-17 buy Tier-2 verified inference from an approved provider, settled on the XRP Ledger.",
+          "Browser simulation: a purpose-bound 500 tRLUSD (synthetic test unit) facility for ResearchBot-17. In-browser accounting only — no payments, nothing settled on XRPL.",
       },
       { property: "og:title", content: "Credit — Claw Street" },
       {
         property: "og:description",
         content:
-          "Utilization, repayment schedule, hardware-root signing policy and an attack-case verifier with PASS/REJECT outcomes.",
+          "Simulated utilization, repayment schedule and attack-case checks with PASS/REJECT outcomes, using seeded data in the browser.",
       },
     ],
   }),
@@ -66,7 +66,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
   return (
     <Panel
       title="Simulate inference purchase"
-      subtitle="Step-by-step walkthrough using demo data"
+      subtitle="In-browser walkthrough using seeded data — no provider calls, no payments"
       right={<MaturityTag level="live" />}
     >
       <div className="flex flex-wrap gap-2">
@@ -146,7 +146,7 @@ function Simulator({ onSettled, onReset }: { onSettled: (amount: number) => void
       </ol>
       {finished && run?.kind === "purchase" && (
         <p className="mt-4 text-[12.5px] text-success">
-          Settled in policy — no hardware confirmation required. Balances above are updated.
+          Simulated draw recorded in in-browser accounting only. No funds moved and nothing was settled on XRPL.
         </p>
       )}
       {finished && run?.kind === "attack" && (
@@ -167,8 +167,8 @@ function Credit() {
         kicker="Core flow"
         title="Credence Credit"
         level="live"
-        description="A machine credit facility that lets an autonomous agent purchase verified inference. Purpose-bound, provider-bound and profile-bound: the agent spends operationally, while facility terms change only under hardware-root authority."
-        actions={<Chip tone="info">Target: RLUSD settlement on XRPL</Chip>}
+        description="A simulated credit facility for an AI agent buying inference. Purpose-bound, provider-bound and profile-bound. All balance changes here are in-browser accounting simulations; hardware-root authority is a design ambition, not connected."
+        actions={<Chip tone="neutral">XRPL settlement · not connected</Chip>}
       />
 
       <div className="grid gap-5 xl:grid-cols-[1.4fr_1fr]">
@@ -222,8 +222,8 @@ function Credit() {
 
       <div className="grid gap-5 xl:grid-cols-[1fr_1.1fr]">
         <Panel
-          title="Hardware-root signing policy"
-          subtitle="The hardware wallet is the constitution, not the cashier"
+          title="Hardware-root signing policy (design ambition)"
+          subtitle="Design ambition: “the hardware wallet is the constitution, not the cashier.” Ledger hardware is not connected."
           right={<KeyRound className="size-4 text-primary" />}
         >
           <div className="mb-4 grid gap-3 sm:grid-cols-2">
@@ -247,7 +247,7 @@ function Credit() {
                   <span className="text-[12.5px] text-muted-foreground">{a.detail}</span>
                 </span>
                 <Chip tone={a.root ? "warn" : "pass"}>
-                  {a.root ? "Ledger approval required" : "In policy"}
+                  {a.root ? "Ledger approval (roadmap)" : "In policy (simulated)"}
                 </Chip>
               </li>
             ))}
@@ -257,7 +257,7 @@ function Credit() {
         <Simulator onSettled={(amt) => setSimDrawn((d) => d + amt)} onReset={() => setSimDrawn(0)} />
       </div>
 
-      <Panel title="Core flow" subtitle="Request → verification → settlement → reputation">
+      <Panel title="Core flow" subtitle="Request → simulated checks → in-browser accounting → reputation">
         <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
           {CORE_FLOW.map((s) => (
             <div key={s.step} className="rounded-md border border-border bg-surface-2 px-3.5 py-3">
@@ -366,12 +366,13 @@ function Credit() {
               </table>
             </div>
           </Panel>
-          <Panel title="XRPL role">
+          <Panel title="XRPL role (not connected)">
             <p className="text-[12.5px] leading-relaxed text-muted-foreground">
-              XRPL carries credit and facility state, settlement in RLUSD, account identity and
-              facility transaction references. XRPL does not natively enforce application-level
-              provider, model, precision or amount rules. Credence policy plus co-signing enforces
-              those terms before settlement is released.
+              Roadmap: XRPL could carry facility state, tRLUSD-denominated settlement references and
+              account identity. XRPL is not connected in this browser simulation; no funds are
+              released and no settlement is enforced on XRPL. XRPL would not natively enforce
+              application-level provider, model, precision or amount rules — that is Credence
+              policy&rsquo;s job, which runs only in the separate local demo.
             </p>
           </Panel>
         </div>

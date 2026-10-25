@@ -6,9 +6,9 @@ export const Route = createFileRoute("/machine-credit")({
   head: () => ({
     meta: [
       { title: "Machine Credit — Claw Street" },
-      { name: "description", content: "Facility classes beyond inference, and approved merchant categories." },
+      { name: "description", content: "Roadmap concept: agent procurement budgets beyond inference and approved purchase categories. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:title", content: "Machine Credit — Claw Street" },
-      { property: "og:description", content: "Facility classes beyond inference, and approved merchant categories." },
+      { property: "og:description", content: "Roadmap concept: agent procurement budgets beyond inference and approved purchase categories. Inactive concept preview — browser simulation, seeded data." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -21,7 +21,7 @@ function Page() {
     <DataPage
       kicker="Machine Credit"
       title="Machine credit classes"
-      description="Facility classes beyond inference, and approved merchant categories."
+      description="Roadmap concept: agent procurement budgets beyond inference and approved purchase categories. Inactive concept preview — browser simulation, seeded data."
       level="roadmap"
       sections={[
         { title: "Facility classes", rows: FACILITY_CLASSES },

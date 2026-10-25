@@ -9,10 +9,10 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/market")({
   head: () => ({
     meta: [
-      { title: "Inference Market — Claw Street" },
-      { name: "description", content: "Route orders across providers by price, latency, evidence tier and residency." },
+      { title: "Agent Procurement — Claw Street" },
+      { name: "description", content: "Simulated AI-agent procurement: route an order across fictional providers by price, latency, evidence tier and residency. No provider calls." },
       { property: "og:title", content: "Inference Market — Claw Street" },
-      { property: "og:description", content: "Route orders across providers by price, latency, evidence tier and residency." },
+      { property: "og:description", content: "Simulated AI-agent procurement: route an order across fictional providers by price, latency, evidence tier and residency. No provider calls." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -99,9 +99,9 @@ function BidRouter() {
 function Page() {
   return (
     <DataPage
-      kicker="Inference Market"
-      title="Verified inference market"
-      description="Route orders across providers by price, latency, evidence tier and residency."
+      kicker="Agent procurement"
+      title="Inference procurement"
+      description="Simulated AI-agent procurement: route an order across fictional providers by price, latency, evidence tier and residency. No provider calls."
       level="simulated"
       sections={[{ title: "Routing strategies", rows: ROUTING_STRATEGIES }]}
     >
