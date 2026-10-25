@@ -33,7 +33,7 @@ function BidRouter() {
             aria-checked={s === strategy}
             onClick={() => setStrategy(s)}
             className={cn(
-              "rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
+              "rounded-md border px-3 py-1.5 text-sm font-medium transition-colors",
               s === strategy
                 ? "border-primary/50 bg-primary/15 text-primary"
                 : "border-border text-muted-foreground hover:bg-surface-2 hover:text-foreground",
@@ -44,7 +44,7 @@ function BidRouter() {
         ))}
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-[15px]">
           <thead>
             <tr className="border-b border-border text-left">
               {["Bid", "Provider", "Region", "tRLUSD / VIU", "p50", "Avail.", "Tier", "Capacity", "Reputation", "Status"].map((h) => (
@@ -59,7 +59,7 @@ function BidRouter() {
                 <tr
                   key={b.id}
                   className={cn(
-                    "border-b border-border/60 text-xs last:border-0",
+                    "border-b border-border/60 text-sm last:border-0",
                     !b.eligible && "opacity-40",
                     isBest && "bg-primary/5",
                   )}
@@ -88,7 +88,7 @@ function BidRouter() {
           </tbody>
         </table>
       </div>
-      <div className="border-t border-border px-4 py-3 text-xs text-muted-foreground">
+      <div className="border-t border-border px-4 py-3 text-sm text-muted-foreground">
         Best under <span className="text-foreground">{strategy}</span>:{" "}
         <span className="text-primary">{best ? best.provider : "none"}</span> — {reason}
       </div>

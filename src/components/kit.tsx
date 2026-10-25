@@ -14,7 +14,7 @@ export function MaturityTag({ level, className }: { level: Maturity; className?:
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-wide",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[12.5px] font-medium tracking-wide",
         m.cls,
         className,
       )}
@@ -45,7 +45,7 @@ export function Chip({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium whitespace-nowrap",
+        "inline-flex items-center rounded-md border px-2 py-0.5 text-[12.5px] font-medium whitespace-nowrap",
         tones[tone],
         className,
       )}
@@ -77,7 +77,7 @@ export function PageHeader({
           {level && <MaturityTag level={level} />}
         </div>
         {description && (
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
             {description}
           </p>
         )}
@@ -107,8 +107,8 @@ export function Panel({
       {(title || right) && (
         <div className="flex min-w-0 items-start justify-between gap-3 border-b border-border px-5 py-3.5">
           <div>
-            {title && <h2 className="text-sm font-semibold text-foreground">{title}</h2>}
-            {subtitle && <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>}
+            {title && <h2 className="text-[15px] font-semibold text-foreground">{title}</h2>}
+            {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
           </div>
           {right}
         </div>
@@ -140,17 +140,16 @@ export function Metric({
         <span
           className={cn(
             "num text-2xl font-semibold",
-            tone === "primary" && "text-primary",
-            tone === "warn" && "text-warn",
+            tone === "warn" ? "text-warn" : "text-primary",
           )}
         >
           {value}
         </span>
-        {unit && <span className="text-xs text-muted-foreground">{unit}</span>}
+        {unit && <span className="text-sm text-muted-foreground">{unit}</span>}
       </div>
       <div className="mt-1.5 flex items-center gap-2">
-        {delta && <span className="num text-[11px] text-success">{delta}</span>}
-        {hint && <span className="text-[11px] text-muted-foreground">{hint}</span>}
+        {delta && <span className="num text-[12.5px] text-success">{delta}</span>}
+        {hint && <span className="text-[12.5px] text-muted-foreground">{hint}</span>}
       </div>
     </div>
   );
@@ -159,8 +158,8 @@ export function Metric({
 export function KV({ k, v, mono = false }: { k: string; v: ReactNode; mono?: boolean }) {
   return (
     <div className="flex items-start justify-between gap-6 border-b border-border py-2.5 last:border-0">
-      <span className="text-xs text-muted-foreground">{k}</span>
-      <span className={cn("text-right text-xs text-foreground", mono && "num")}>{v}</span>
+      <span className="text-sm text-muted-foreground">{k}</span>
+      <span className={cn("text-right text-sm", mono ? "num text-cyan" : "text-foreground")}>{v}</span>
     </div>
   );
 }
@@ -229,7 +228,7 @@ export function Gauge({ value, label }: { value: number; label?: string }) {
 
 export function DemoNote({ children }: { children: ReactNode }) {
   return (
-    <p className="rounded-md border border-warn/25 bg-warn/5 px-3 py-2 text-[11px] leading-relaxed text-warn">
+    <p className="rounded-md border border-warn/25 bg-warn/5 px-3 py-2 text-[12.5px] leading-relaxed text-warn">
       {children}
     </p>
   );
@@ -237,7 +236,7 @@ export function DemoNote({ children }: { children: ReactNode }) {
 
 export function RoadmapNote({ children }: { children: ReactNode }) {
   return (
-    <p className="rounded-md border border-roadmap/25 bg-roadmap/5 px-3 py-2 text-[11px] leading-relaxed text-roadmap">
+    <p className="rounded-md border border-roadmap/25 bg-roadmap/5 px-3 py-2 text-[12.5px] leading-relaxed text-roadmap">
       {children}
     </p>
   );
@@ -245,7 +244,7 @@ export function RoadmapNote({ children }: { children: ReactNode }) {
 
 export function ConceptRibbon() {
   return (
-    <div className="flex items-center gap-2 rounded-md border border-roadmap/30 bg-roadmap/10 px-3.5 py-2 text-[11px] font-medium text-roadmap">
+    <div className="flex items-center gap-2 rounded-md border border-roadmap/30 bg-roadmap/10 px-3.5 py-2 text-[12.5px] font-medium text-roadmap">
       <span className="size-1.5 shrink-0 rounded-full bg-roadmap" />
       Concept preview — not implemented functionality; all data simulated.
     </div>
