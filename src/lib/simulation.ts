@@ -7,9 +7,9 @@ export const SIM_DRAW = priceFor(SIM_DRAW_VIU); // 10.46 tRLUSD
 
 export const PASS_DETAILS = [
   "Agent signature valid · within limit · provider + profile allowed",
-  "Provider-signed Tier 2 receipt received",
-  "Request, response and declared profile match",
-  `Facility drawn +${SIM_DRAW.toFixed(2)} tRLUSD (Credence accounting — not an on-chain payment)`,
+  "Seeded Tier 2 receipt (simulated — no provider call)",
+  "Request, response and declared profile match (simulated check)",
+  `Facility drawn +${SIM_DRAW.toFixed(2)} tRLUSD (in-browser accounting simulation — no payment, nothing settled on XRPL)`,
 ];
 
 export type Attack = { key: string; name: string; failAt: number; reason: string };

@@ -1,5 +1,5 @@
-// Seeded demo data for the Credence Markets prototype.
-// All values are fictional demo data unless explicitly noted as Live MVP state.
+// Seeded demo data for the Claw Street browser simulation.
+// All values are fictional; nothing here is fetched, signed or settled.
 
 export type Maturity = "live" | "simulated" | "concept" | "roadmap";
 
@@ -28,10 +28,10 @@ export const FACILITY = {
   profileDigest: "sha256:41b90e6c…7ac215",
   precision: "BF16",
   evidenceTier: "Tier 2",
-  rootAuthority: "Ledger hardware signer",
+  rootAuthority: "Ledger hardware signer (roadmap · not connected)",
   opAuthority: "Agent delegate — ResearchBot-17",
-  ledger: "XRPL Testnet (planned)",
-  settlement: "tRLUSD (test asset)",
+  ledger: "XRPL · not connected (roadmap)",
+  settlement: "tRLUSD (synthetic test unit)",
   status: "Active",
   apr: 9.4,
   openedAt: "2026-07-14",
@@ -43,10 +43,10 @@ export const CORE_FLOW = [
   { step: 1, title: "Agent requests inference", detail: "ResearchBot-17 submits a scoped inference order against its facility." },
   { step: 2, title: "Credence checks facility", detail: "Limit, purpose, approved provider and execution profile are evaluated." },
   { step: 3, title: "Kessai serialization", detail: "Request is canonically serialized and bound to the execution profile digest." },
-  { step: 4, title: "Provider returns Tier-2 receipt", detail: "Northstar Compute signs a provider-declared and bound delivery receipt." },
+  { step: 4, title: "Provider returns Tier-2 receipt", detail: "Simulated: a seeded Tier-2 receipt where the provider signs what it says it served." },
   { step: 5, title: "Credence verifies binding", detail: "Request digest, response digest and declared profile must match the order." },
-  { step: 6, title: "Credence approves settlement", detail: "Policy engine co-signs; settlement is released in tRLUSD (test asset)." },
-  { step: 7, title: "XRPL facility state updates", detail: "Available balance and facility references are written to the ledger." },
+  { step: 6, title: "Credence approves the draw", detail: "Simulated policy approval; recorded as in-browser tRLUSD accounting. No funds are released." },
+  { step: 7, title: "Facility accounting updates", detail: "Available balance updates in this browser only. Nothing is written to XRPL (not connected)." },
   { step: 8, title: "Reputation updates", detail: "Borrower repayment record and provider conformity score are updated." },
 ];
 
@@ -135,11 +135,11 @@ export type AttackCase = {
 };
 
 export const ATTACK_CASES: AttackCase[] = [
-  { id: "V-0", name: "Valid conforming request", input: "Northstar Compute · Meridian-70B-Instruct · BF16 · 24 VIU", check: "Allowlist · profile digest · request/response binding · limit · authority", outcome: "PASS", note: "Settled 10.46 tRLUSD; facility state written to XRPL." },
+  { id: "V-0", name: "Valid conforming request", input: "Northstar Compute · Meridian-70B-Instruct · BF16 · 24 VIU", check: "Allowlist · profile digest · request/response binding · limit · authority", outcome: "PASS", note: "Simulated draw of 10.46 tRLUSD in in-browser accounting; nothing written to XRPL." },
   { id: "V-1", name: "Wrong provider", input: "Helios Grid · Meridian-70B-Instruct · BF16 · 60 VIU", check: "Provider allowlist bound to facility", outcome: "REJECT", note: "Provider account not co-signed into facility terms." },
   { id: "V-2", name: "Wrong model declaration", input: "Northstar · OpenCoder-34B · BF16 · 40 VIU", check: "Artifact digest vs approved execution profile", outcome: "REJECT", note: "Receipt declares a different artifact digest than contracted." },
   { id: "V-3", name: "Wrong precision declaration", input: "Northstar · Meridian-70B · FP8 · 18 VIU", check: "Precision field of execution profile digest", outcome: "REJECT", note: "FP8 delivery cannot settle against a BF16 order." },
-  { id: "V-4", name: "Replayed delivery receipt", input: "Receipt for REQ-4815 resubmitted", check: "Request digest uniqueness ledger", outcome: "REJECT", note: "Kessai request digest already consumed by a settled draw." },
+  { id: "V-4", name: "Replayed delivery receipt", input: "Receipt for REQ-4815 resubmitted", check: "Request digest uniqueness ledger", outcome: "REJECT", note: "Kessai request digest already consumed by an earlier simulated draw." },
   { id: "V-5", name: "Facility overspend", input: "900 VIU · 392.40 tRLUSD", check: `Available balance ${FACILITY.available.toFixed(2)} tRLUSD`, outcome: "REJECT", note: "Draw exceeds available credit; no partial fill authorized." },
   { id: "V-6", name: "Expired / unauthorized spend", input: "Delegate key past expiry window", check: "Operational authority validity + scope", outcome: "REJECT", note: "Requires root (Ledger hardware) re-delegation before spend." },
 ];
@@ -186,7 +186,7 @@ export const ROUTING_STRATEGIES = [
   { key: "fastest", label: "Fastest", detail: "Lowest p50 latency across eligible listings." },
   { key: "verified", label: "Verified", detail: "Tier 2+ receipts and ≥99% conformity only." },
   { key: "sovereign", label: "Sovereign EU", detail: "EU residency and EU-only jurisdictions." },
-  { key: "credit", label: "Credit Eligible", detail: "Providers settleable from a Credence facility." },
+  { key: "credit", label: "Credit Eligible", detail: "Providers on the facility allowlist (simulated)." },
 ];
 
 export const ORDER_REQUIREMENT = {
@@ -290,7 +290,7 @@ export const FACILITY_CLASSES = [
 ];
 
 export const MERCHANT_CATEGORIES = [
-  "Verified inference (Tier 2+)",
+  "Inference with Tier 2+ receipts",
   "Data APIs — market & filings",
   "Vector storage & retrieval",
   "Tool-call execution",
@@ -326,7 +326,7 @@ export const RECEIPTS = [
     response_digest: "sha256:ba5711d9…08f7e2",
     output_token_count: 48_120,
     declared_execution_profile: "Meridian-70B-Instruct · BF16 · ctx 32k",
-    evidence_tier: "Tier 2 — provider-declared and bound",
+    evidence_tier: "Tier 2 — provider signed what it says it served (simulated; not cryptographically verified)",
     provider_signature: "ed25519:4a17…ce09",
     completion_timestamp: "2026-09-28T04:51:12Z",
     xrpl_tx: "E91C7A4B20DF8813C5A6…7F2A",
@@ -343,7 +343,7 @@ export const RECEIPTS = [
     response_digest: "sha256:2f60cd83…b19a45",
     output_token_count: 23_640,
     declared_execution_profile: "Meridian-70B-Instruct · BF16 · ctx 32k",
-    evidence_tier: "Tier 2 — provider-declared and bound",
+    evidence_tier: "Tier 2 — provider signed what it says it served (simulated; not cryptographically verified)",
     provider_signature: "ed25519:8c02…11fa",
     completion_timestamp: "2026-09-28T03:18:44Z",
     xrpl_tx: "A44D1093FE22B70C48D1…10B7",
@@ -360,7 +360,7 @@ export const RECEIPTS = [
     response_digest: "sha256:77e1ab08…931cf4",
     output_token_count: 79_900,
     declared_execution_profile: "Meridian-70B-Instruct · BF16 · ctx 32k",
-    evidence_tier: "Tier 2 — provider-declared and bound",
+    evidence_tier: "Tier 2 — provider signed what it says it served (simulated; not cryptographically verified)",
     provider_signature: "ed25519:e77b…9a41",
     completion_timestamp: "2026-09-27T19:44:51Z",
     xrpl_tx: "C7B29E41008AC3D1F702…9E41",

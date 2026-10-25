@@ -3,7 +3,7 @@ import type { Maturity } from "@/lib/credence";
 import type { ReactNode } from "react";
 
 const MATURITY_COPY: Record<Maturity, { label: string; cls: string }> = {
-  live: { label: "Core demo", cls: "border-success/40 bg-success/10 text-success" },
+  live: { label: "Core demo · browser simulation", cls: "border-success/40 bg-success/10 text-success" },
   simulated: { label: "Simulated", cls: "border-warn/40 bg-warn/10 text-warn" },
   concept: { label: "Concept", cls: "border-roadmap/40 bg-roadmap/10 text-roadmap" },
   roadmap: { label: "Roadmap", cls: "border-roadmap/40 bg-roadmap/10 text-roadmap" },
@@ -247,6 +247,21 @@ export function ConceptRibbon() {
     <div className="flex items-center gap-2 rounded-md border border-roadmap/30 bg-roadmap/10 px-3.5 py-2 text-[12.5px] font-medium text-roadmap">
       <span className="size-1.5 shrink-0 rounded-full bg-roadmap" />
       Concept preview — not implemented functionality; all data simulated.
+    </div>
+  );
+}
+
+export const DISCLOSURE_TEXT = "Browser simulation · seeded data · no provider calls · no payments";
+
+/** Persistent disclosure shown on every route. */
+export function SimulationDisclosure() {
+  return (
+    <div
+      role="note"
+      aria-label="Simulation disclosure"
+      className="border-b border-warn/40 bg-warn/10 px-4 py-2 text-center text-[13px] font-medium text-warn"
+    >
+      {DISCLOSURE_TEXT}
     </div>
   );
 }
