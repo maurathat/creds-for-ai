@@ -3,13 +3,23 @@
 
 export type Maturity = "live" | "simulated" | "concept" | "roadmap";
 
+/** VIU spot reference price, tRLUSD per Verified Inference Unit. Every draw is priced at this rate. */
+export const VIU_SPOT = 0.436;
+
+/** Unpaid balance carried from draws before the requests shown in the Facility requests table. */
+export const PRIOR_BALANCE = 69.59;
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+export const priceFor = (viu: number) => round2(viu * VIU_SPOT);
+
 export const FACILITY = {
   id: "FAC-XRPL-0x7C41",
   borrower: "ResearchBot-17",
   borrowerAccount: "rG7bK2Qm9xDq4Yv3Lp8ZnWc5Ht6Fs1Ab2",
   limit: 500,
-  available: 362.4,
-  outstanding: 137.6,
+  // available / outstanding are derived below from TRANSACTIONS + PRIOR_BALANCE.
+  available: 0,
+  outstanding: 0,
   purpose: "Verified inference only",
   provider: "Northstar Compute",
   providerAccount: "rN9sTq4Lm2Kd7Yb1Xv8Zc3Hp5Ws6Fg2Aq",
@@ -28,7 +38,6 @@ export const FACILITY = {
   nextReview: "2026-10-31",
 };
 
-export const UTILIZATION = +((FACILITY.outstanding / FACILITY.limit) * 100).toFixed(1);
 
 export const CORE_FLOW = [
   { step: 1, title: "Agent requests inference", detail: "ResearchBot-17 submits a scoped inference order against its facility." },
@@ -41,16 +50,6 @@ export const CORE_FLOW = [
   { step: 8, title: "Reputation updates", detail: "Borrower repayment record and provider conformity score are updated." },
 ];
 
-export const UTIL_SERIES = [
-  { d: "Jul 14", util: 0, spend: 0 },
-  { d: "Jul 28", util: 6.2, spend: 31 },
-  { d: "Aug 11", util: 11.8, spend: 59 },
-  { d: "Aug 25", util: 17.4, spend: 87 },
-  { d: "Sep 08", util: 22.1, spend: 110.5 },
-  { d: "Sep 15", util: 24.9, spend: 124.5 },
-  { d: "Sep 22", util: 26.4, spend: 132 },
-  { d: "Sep 28", util: UTILIZATION, spend: FACILITY.outstanding },
-];
 
 export const VIU_SPOT_SERIES = [
   { d: "Aug 01", global: 0.412, eu: 0.451, us: 0.298 },
@@ -64,11 +63,11 @@ export const VIU_SPOT_SERIES = [
   { d: "Sep 26", global: 0.436, eu: 0.477, us: 0.314 },
 ];
 
-export const VIU_SPOT = 0.436;
 
 export const REPAYMENTS = [
-  { id: "RP-014", due: "2026-10-05", principal: 40.0, interest: 0.31, status: "Scheduled" },
-  { id: "RP-013", due: "2026-09-21", principal: 40.0, interest: 0.34, status: "Scheduled" },
+  { id: "RP-015", due: "2026-11-02", principal: 40.0, interest: 0.29, status: "Scheduled" },
+  { id: "RP-014", due: "2026-10-05", principal: 40.0, interest: 0.31, status: "Paid" },
+  { id: "RP-013", due: "2026-09-21", principal: 40.0, interest: 0.34, status: "Paid" },
   { id: "RP-012", due: "2026-09-07", principal: 35.0, interest: 0.29, status: "Paid" },
   { id: "RP-011", due: "2026-08-24", principal: 30.0, interest: 0.24, status: "Paid" },
   { id: "RP-010", due: "2026-08-10", principal: 25.0, interest: 0.19, status: "Paid" },
@@ -87,19 +86,44 @@ export type Txn = {
   xrpl?: string;
 };
 
-export const TRANSACTIONS: Txn[] = [
-  { id: "REQ-4821", ts: "2026-09-28 04:51:12Z", viu: 24, rlusd: 10.46, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "E91C…7F2A" },
-  { id: "REQ-4820", ts: "2026-09-28 03:18:44Z", viu: 12, rlusd: 5.23, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "A44D…10B7" },
-  { id: "REQ-4819", ts: "2026-09-27 22:02:09Z", viu: 60, rlusd: 26.16, provider: "Helios Grid", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Provider not on facility allowlist" },
-  { id: "REQ-4818", ts: "2026-09-27 19:44:51Z", viu: 40, rlusd: 17.44, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "C7B2…9E41" },
-  { id: "REQ-4817", ts: "2026-09-27 16:30:27Z", viu: 40, rlusd: 17.44, provider: "Northstar Compute", profile: "OpenCoder-34B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Declared model differs from approved execution profile" },
-  { id: "REQ-4816", ts: "2026-09-27 12:11:03Z", viu: 18, rlusd: 7.85, provider: "Northstar Compute", profile: "Meridian-70B / FP8", tier: "Tier 2", outcome: "REJECT", reason: "Declared precision FP8 ≠ approved BF16" },
-  { id: "REQ-4815", ts: "2026-09-27 09:07:38Z", viu: 32, rlusd: 13.95, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "11F8…3D9C" },
-  { id: "REQ-4814", ts: "2026-09-26 23:52:14Z", viu: 32, rlusd: 13.95, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Replayed delivery receipt — request digest already settled" },
-  { id: "REQ-4813", ts: "2026-09-26 18:20:55Z", viu: 900, rlusd: 392.4, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Facility overspend — exceeds available 362.40 tRLUSD" },
-  { id: "REQ-4812", ts: "2026-09-26 15:06:31Z", viu: 20, rlusd: 8.72, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Agent delegate authority expired at 2026-09-26 12:00Z" },
-  { id: "REQ-4811", ts: "2026-09-26 11:41:02Z", viu: 48, rlusd: 20.93, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "7A0E…B412" },
+const RAW_TRANSACTIONS: Omit<Txn, "rlusd">[] = [
+  { id: "REQ-4821", ts: "2026-09-28 04:51:12Z", viu: 24, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "E91C…7F2A" },
+  { id: "REQ-4820", ts: "2026-09-28 03:18:44Z", viu: 12, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "A44D…10B7" },
+  { id: "REQ-4819", ts: "2026-09-27 22:02:09Z", viu: 60, provider: "Helios Grid", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Provider not on facility allowlist" },
+  { id: "REQ-4818", ts: "2026-09-27 19:44:51Z", viu: 40, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "C7B2…9E41" },
+  { id: "REQ-4817", ts: "2026-09-27 16:30:27Z", viu: 40, provider: "Northstar Compute", profile: "OpenCoder-34B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Declared model differs from approved execution profile" },
+  { id: "REQ-4816", ts: "2026-09-27 12:11:03Z", viu: 18, provider: "Northstar Compute", profile: "Meridian-70B / FP8", tier: "Tier 2", outcome: "REJECT", reason: "Declared precision FP8 ≠ approved BF16" },
+  { id: "REQ-4815", ts: "2026-09-27 09:07:38Z", viu: 32, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "11F8…3D9C" },
+  { id: "REQ-4814", ts: "2026-09-26 23:52:14Z", viu: 32, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Replayed delivery receipt — request digest already settled" },
+  { id: "REQ-4813", ts: "2026-09-26 18:20:55Z", viu: 900, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Facility overspend — exceeds available 362.40 tRLUSD" },
+  { id: "REQ-4812", ts: "2026-09-26 15:06:31Z", viu: 20, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "REJECT", reason: "Agent delegate authority expired at 2026-09-26 12:00Z" },
+  { id: "REQ-4811", ts: "2026-09-26 11:41:02Z", viu: 48, provider: "Northstar Compute", profile: "Meridian-70B / BF16", tier: "Tier 2", outcome: "PASS", xrpl: "7A0E…B412" },
 ];
+
+/** Facility requests, newest first, each priced at VIU_SPOT. */
+export const TRANSACTIONS: Txn[] = RAW_TRANSACTIONS.map((t) => ({ ...t, rlusd: priceFor(t.viu) })).sort((a, b) =>
+  b.ts.localeCompare(a.ts),
+);
+
+export const PASS_DRAWS_TOTAL = round2(
+  TRANSACTIONS.filter((t) => t.outcome === "PASS").reduce((sum, t) => sum + t.rlusd, 0),
+);
+FACILITY.outstanding = round2(PRIOR_BALANCE + PASS_DRAWS_TOTAL);
+FACILITY.available = round2(FACILITY.limit - FACILITY.outstanding);
+
+export const UTILIZATION = +((FACILITY.outstanding / FACILITY.limit) * 100).toFixed(1);
+
+export const UTIL_SERIES = [
+  { d: "Jul 14", util: 0, spend: 0 },
+  { d: "Jul 28", util: 6.2, spend: 31 },
+  { d: "Aug 11", util: 11.8, spend: 59 },
+  { d: "Aug 25", util: 17.4, spend: 87 },
+  { d: "Sep 08", util: 22.1, spend: 110.5 },
+  { d: "Sep 15", util: 24.9, spend: 124.5 },
+  { d: "Sep 22", util: 26.4, spend: 132 },
+  { d: "Sep 28", util: UTILIZATION, spend: FACILITY.outstanding },
+];
+
 
 export type AttackCase = {
   id: string;

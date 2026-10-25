@@ -55,7 +55,7 @@ function Simulator() {
   };
 
   const detail = [
-    "Facility check: provider allowlist ✓ · profile digest ✓ · available 362.40 tRLUSD ✓",
+    `Facility check: provider allowlist ✓ · profile digest ✓ · available ${FACILITY.available.toFixed(2)} tRLUSD ✓`,
     "Northstar Compute returns a Tier-2 signed delivery receipt for 24 VIU.",
     "Kessai serialization re-derived; request/response/profile binding matches.",
     "Policy co-signs. 10.46 tRLUSD settled; XRPL facility state updated.",
@@ -159,7 +159,7 @@ function Credit() {
 
         <div className="grid gap-5">
           <Panel title="Utilization">
-            <Gauge value={UTILIZATION} label="of 500 tRLUSD drawn" />
+            <Gauge value={UTILIZATION} label={`of ${FACILITY.limit} tRLUSD drawn`} />
             <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
               <div className="rounded-md bg-surface-2 px-3 py-2.5">
                 <div className="label-xs">Available</div>
