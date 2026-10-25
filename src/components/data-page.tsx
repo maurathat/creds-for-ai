@@ -18,6 +18,7 @@ const SETTLEMENT_COLS = new Set(["xrpl_tx", "xrpl", "xrplTx"]);
 
 function label(k: string) {
   if (SETTLEMENT_COLS.has(k)) return "Settlement ref (demo)";
+  if (k === "rlusd") return "tRLUSD";
   return k.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
 }
 
