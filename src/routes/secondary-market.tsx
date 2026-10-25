@@ -24,6 +24,7 @@ function Page() {
       title="Secondary market"
       description="Order book for transferring reserved capacity and forwards."
       level="roadmap"
+      banner={<ConceptRibbon />}
       sections={[
         { title: "Bids", rows: ORDER_BOOK.bids },
         { title: "Asks", rows: ORDER_BOOK.asks },

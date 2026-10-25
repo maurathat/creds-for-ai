@@ -7,9 +7,9 @@ export const Route = createFileRoute("/forwards")({
   head: () => ({
     meta: [
       { title: "Forwards — Claw Street" },
-      { name: "description", content: "Forward contracts to hedge future verified inference prices." },
+      { name: "description", content: "Commercial forward delivery agreements for future verified inference capacity." },
       { property: "og:title", content: "Forwards — Claw Street" },
-      { property: "og:description", content: "Forward contracts to hedge future verified inference prices." },
+      { property: "og:description", content: "Commercial forward delivery agreements for future verified inference capacity." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -22,8 +22,9 @@ function Page() {
     <DataPage
       kicker="Forwards"
       title="Inference forwards"
-      description="Forward contracts to hedge future verified inference prices."
+      description="Commercial forward delivery agreements for future verified inference capacity."
       level="roadmap"
+      banner={<ConceptRibbon />}
       sections={[
         { title: "Forward contracts", rows: FORWARDS },
         { title: "Forward curve", rows: FORWARD_CURVE },

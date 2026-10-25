@@ -24,6 +24,7 @@ function Page() {
       title="Capacity reservations"
       description="Reserved VIU capacity by execution profile and delivery window."
       level="concept"
+      banner={<ConceptRibbon />}
       sections={[
         { title: "Reservations", rows: RESERVATIONS },
       ]}
