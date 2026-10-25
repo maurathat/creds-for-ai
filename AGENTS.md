@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Facility balances, prices and routing/simulation outcomes are derived in src/lib (credence.ts, routing.ts, simulation.ts), never hand-typed in pages — keeps every page consistent. Tests live in src/lib/__tests__ (run `bunx vitest run`).
