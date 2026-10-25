@@ -1,5 +1,7 @@
 # Claw Street — Powered by Credence
 
+Main Codebase:https://github.com/maurathat/credence-xrpl
+
 Claw Street is Kessai Labs' AI-agent procurement demo, powered by Credence. It demonstrates policy-governed inference purchases, signed requests and delivery receipts, response access and facility accounting.
 
 > **Judges and reviewers: start with the [complete implementation and updated project README](https://github.com/maurathat/credence-xrpl).** This repository, `creds-for-ai`, contains the frontend. The backend, contracts, tests, sponsor-integration work and submission package are in the public `credence-xrpl` repository. Its `main` branch now contains the Claw Street release, not the old Checkpoint-0 skeleton.
