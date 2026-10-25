@@ -1,305 +1,79 @@
-# Creds For Ai
+# Claw Street — Powered by Credence
 
-Build a polished full-stack web app prototype called "Credence Markets" for an XRP Ledger hackathon.
+Claw Street is Kessai Labs' AI-agent procurement demo, powered by Credence. It demonstrates policy-governed inference purchases, signed requests and delivery receipts, response access and facility accounting.
 
-PRODUCT POSITIONING
-Credence finances verified inference for autonomous agents.
-Tagline: "The hardware wallet is the constitution, not the cashier."
-Secondary line: "Buy it. Finance it. Hedge it. Verify it."
+> **Judges and reviewers: start with the [complete implementation and updated project README](https://github.com/maurathat/credence-xrpl).** This repository, `creds-for-ai`, contains the frontend. The backend, contracts, tests, sponsor-integration work and submission package are in the public `credence-xrpl` repository. Its `main` branch now contains the Claw Street release, not the old Checkpoint-0 skeleton.
 
-IMPORTANT PRODUCT BOUNDARY
-This is a product-vision prototype with ONE core flow treated as the live MVP and multiple future modules shown as realistic simulated/roadmap surfaces.
-Clearly mark features as Live MVP, Simulated, or Roadmap. Do not imply regulatory approval or production readiness.
+## Judge quick links
 
-CORE LIVE MVP: CREDENCE CREDIT
-A machine credit facility for an autonomous AI agent to purchase verified inference.
-Seed one borrower, one inference provider, one model artifact, one execution profile, Tier 2 "provider-declared and bound" evidence, one facility, one settlement asset.
-Show:
-- Borrower: ResearchBot-17
-- Facility: 500 RLUSD
-- Available: 362.40 RLUSD
-- Purpose: verified inference only
-- Approved provider: Northstar Compute
-- Model: open-weight model, use a generic invented name such as Meridian-70B-Instruct
-- Artifact digest: truncated SHA256
-- Precision: BF16
-- Evidence tier: Tier 2
-- Owner/root authority: Ledger hardware signer
-- Operational authority: Agent delegate
-- Ledger: XRPL
-- Status: Active
+| What to review | Link |
+| --- | --- |
+| Complete project and sponsor-integration overview | [Credence / Claw Street source](https://github.com/maurathat/credence-xrpl) |
+| Working local demo and walkthrough | [Release guide](https://github.com/maurathat/credence-xrpl/blob/main/release/claw-street/README.md) |
+| Demo recording | [Captioned three-minute video](https://github.com/maurathat/credence-xrpl/releases/download/claw-street-submission-2026-10-25/claw-street-demo-3min.webm) — silent, with captions |
+| Pitch deck | [Six-slide PDF](https://github.com/maurathat/credence-xrpl/releases/download/claw-street-submission-2026-10-25/claw-street-pitch.pdf) |
+| Packaged source, including frontend and custody dependency | [Source archive](https://github.com/maurathat/credence-xrpl/releases/download/claw-street-submission-2026-10-25/claw-street-source.zip) |
+| Complete submission materials | [Submission kit](https://github.com/maurathat/credence-xrpl/releases/download/claw-street-submission-2026-10-25/claw-street-submission-kit.zip) |
+| Test results and known limitations | [Validation record](https://github.com/maurathat/credence-xrpl/blob/main/release/claw-street/SUBMISSION-VALIDATION.md) and [integration disclosures](https://github.com/maurathat/credence-xrpl/blob/main/release/claw-street/DISCLOSURES.md) |
+| Public browser experience | [Claw Street website](https://creds-for-ai.lovable.app) — a seeded browser simulation, not the local backend |
 
-CORE FLOW
-1. Agent requests inference
-2. Credence checks facility
-3. Request is serialized/canonically bound
-4. Provider returns Tier-2 receipt
-5. Credence verifies request/response/profile binding
-6. Credence approves settlement
-7. XRPL facility state updates
-8. Borrower and provider reputation update
+## What we accomplished
 
-Create a live-looking transaction trace for a valid request and six rejected examples:
-- wrong provider
-- wrong model declaration
-- wrong precision declaration
-- replayed delivery receipt
-- facility overspend
-- expired / unauthorized spend
+- **Local end-to-end procurement:** Core policy evaluation, agent-signed purchase requests, reservations, delivery verification, response retrieval and acknowledgement, and facility accounting.
+- **Verifiable evidence:** canonical request/response binding, signed delivery evidence, access controls, revocation and durable purchase recovery. Evidence tiers are explicit rather than claims of proving physical execution.
+- **Real observations, honestly labelled:** recorded Nebius API inference, recorded local Qwen provider evidence, and real unpaid x402 merchant challenges and t54 capability responses. The default demo replays offline mocks rather than charging providers or buying inference again.
+- **XRPL engineering on separate branches:** standalone-ledger authorization/lending experiments, software two-signer verification, durable payment journaling and restart/finality hardening. These are not a connected marketplace payout or production lending claim.
+- **Presentation and source deliverables:** local release UI, guided/recorded demonstration, pitch deck, talk track, submission kit and source archive.
 
-INFORMATION ARCHITECTURE / PAGES
-Create a left sidebar with:
-Overview
-Credit
-Inference Market
-Providers
-Reputation
-Reservations
-Forwards
-Secondary Market
-Price Index
-Machine Credit
-Receipts
-Settings
+The validation record distinguishes successful recorded local checks from the disclosed Linux CI ownership-test failure. No fresh full-product test run is implied by this README update.
 
-OVERVIEW
-Executive dashboard with:
-- Active credit facilities
-- Verified inference purchased
-- Outstanding balance
-- Provider conformity score
-- Current VIU spot reference price
-- Recent receipt activity
-- "Market stack" diagram showing Credit → Marketplace → Reservations → Forwards → Secondary Markets
-Use seeded data and charts.
+## Sponsor and ecosystem integration status
 
-CREDIT PAGE — LIVE MVP
-Make this the strongest page.
-Include:
-- active facility card
-- utilization gauge
-- repayment schedule
-- approved execution profile
-- hardware-root signing policy
-- "Ledger approval required" for changing facility terms
-- operational purchases can proceed without touching the Ledger device
-- transaction/request table
-- attack-case verifier panel with PASS/REJECT outcomes
-- button "Simulate inference purchase"
-When clicked, show a short animated state progression through authorization → receipt → verification → settlement.
+| Technology | Accomplishment | Honest current boundary |
+| --- | --- | --- |
+| **XRP Ledger / Ripple** | Standalone-ledger experiments, software 2-of-2 authorization/payment verification, durable journal and reconciliation work. See the [XRPL adapter branch](https://github.com/maurathat/credence-xrpl/tree/maurathat/credence-multi-sig-ledger) and [standalone/Testnet research](https://github.com/maurathat/credence-xrpl/tree/maurathat/xrpl-credence-codex). | Separate workstreams, not connected purchase settlement in this frontend or the local marketplace release. No mainnet or production-ready lending claim. |
+| **Nebius Token Factory** | Built the inference adapter and retained recorded evidence from a real public-API inference run. | Scenario A is an offline mock. Tier 1 means Credence witnessed the response, not that Nebius signed it. Normal Nebius billing is separate from XRPL; no partnership is implied. |
+| **x402 / t54** | Recorded unpaid merchant challenges and facilitator `/supported` responses; implemented parsing, compatibility assessment and offline payment-proposal preparation in the backend. | No paid t54 inference, payment signing/submission, or facilitator `/verify` or `/settle` call. Observed RLUSD/Mainnet merchant terms are challenge data, not an executed payment or our accounting unit. |
+| **QuickNode** | A separate read-only XRPL adapter with offline transport, credential, deadline and reconciliation hardening. See the [QuickNode branch](https://github.com/maurathat/credence-xrpl/tree/maurathat/quicknode-xrpl-integration). | Not connected to the release. Real endpoint validation remains pending in the recorded evidence; advisory reads do not establish authoritative payment finality. |
+| **Ledger** | Defined the intended owner/agent/policy authority split; separate XRPL code uses a software two-signer baseline. | Ledger device, WebHID and Speculos integration remain unconnected. Software multisigning is not hardware-signing evidence. |
+| **Lovable** | Built this frontend, the public seeded simulation and a separate UI for the local backend release. | The public site does not execute the backend's signature verification or payment authority. |
+| **Kessai** | Uses the pinned serializer for canonical bytes and digests: JCS (RFC 8785) + NFC. | Consumed as a dependency, not reimplemented. |
+| **Local Qwen provider** | Recorded local inference and provider-signed evidence; Scenario B demonstrates the corresponding verification/accounting flow offline. | Tier 2 means the provider signed what it says it served, not proof that exact model weights ran. No model runs in the default demo. |
+| **Verifiable Intent** | Identified in the integration roadmap. | No credential issuance or verification is connected. |
 
-INFERENCE MARKET — SIMULATED
-A real marketplace-looking catalog of competing inference providers.
-Filters:
-model family
-jurisdiction
-data residency
-precision
-evidence tier
-price per VIU
-latency
-credit eligible
-Seed 6-8 fictional providers across US, France, Germany, Finland, Singapore, Japan.
-Each listing must show:
-provider name
-region
-open model
-artifact profile
-precision / quantization
-evidence tier
-RLUSD per VIU
-latency
-provider reputation
-credit eligibility
-A compare drawer for 3 providers.
-Include routing concepts:
-Cheapest
-Fastest
-Verified
-Sovereign EU
-Credit Eligible
+See the [full backend integration overview](https://github.com/maurathat/credence-xrpl#sponsor-and-ecosystem-integrations) for branch links and evidence. Published workstream code is not automatically merged into the release or accepted through its remaining review gates.
 
-PROVIDER BIDDING — SIMULATED
-Inside an inference procurement order, show buyer requirement:
-100 VIU
-Meridian-70B-Instruct
-BF16
-EU residency
-Tier 2+
-delivery window
-Then show 4 competing provider bids with price, SLA, evidence tier, capacity, reputation.
-Allow selecting a bid visually.
+## Repository and branch map
 
-PORTABLE PROVIDER REPUTATION — SIMULATED
-Create provider scorecards with:
-completed VIUs
-conforming receipts
-receipt disputes
-latency SLA performance
-availability
-evidence tiers supported
-jurisdictions served
-buyer rating
-Do not collapse into one opaque credit score; show decomposed metrics.
+- **`maurathat/creds-for-ai` — this repository:** frontend code. `main` is the Lovable-connected browser simulation; `release/claw-street-ui` is the separate frontend used by the local full-stack release.
+- **[`maurathat/credence-xrpl`](https://github.com/maurathat/credence-xrpl):** backend, Core accounting/verification, contracts, tests, integration work and release materials. Its `main` is the promoted Claw Street release; the `web` submodule pins the appropriate local-release frontend.
+- **Separate development branches:** XRPL, QuickNode, inference, integration and review checkpoints remain visible independently. Updating this README does not merge backend code into the hosted frontend.
 
-RESERVATIONS — ROADMAP
-Inference Capacity Reservations page.
-Show capacity reservation instruments such as:
-"Meridian-70B / BF16 / EU / November / 250 VIU"
-Display reserved quantity, fixed price, delivery window, provider, evidence tier, utilization.
-Make it look operational but mark Roadmap / simulated.
+## Payment and evidence limits
 
-FORWARDS — ROADMAP
-Forward delivery contracts for verified inference.
-Do not call this a regulated futures exchange.
-Use language: commercial forward delivery / capacity contract.
-Show examples with:
-contract ID
-model execution profile
-delivery month
-quantity VIU
-fixed RLUSD/VIU
-provider
-buyer
-evidence tier
-delivery status
-Include a small forward curve chart labeled "Illustrative / simulated".
+Core accounting uses **integer micro-tRLUSD**; tRLUSD is a synthetic test unit, not RLUSD and not XRP drops. No provider receives an on-chain payment in the marketplace release. Account balances, routing and purchase outcomes on the hosted site are seeded browser simulations.
 
-SECONDARY MARKET — ROADMAP
-Show transferable capacity claims only as conceptual/simulated.
-Order book style UI:
-Bid / Ask / Quantity / Delivery / Profile
-Prominent label: "Roadmap concept — transferability and regulatory treatment not implemented."
-Keep it elegant and believable.
+Native-XRP purchase authority under **X2-0R remains review-only and gated**. A separately approved one-drop Testnet demonstration would not convert or economically discharge a micro-tRLUSD inference charge. There is no live paid t54 flow, Ledger hardware signing, mainnet settlement, trustless settlement, production lending or proof that exact model weights ran. No sponsor or UOR Foundation endorsement is implied.
 
-PRICE INDEX — ROADMAP
-"Credence Verified Inference Index (CVII)"
-Show illustrative spot reference prices by execution profile and region.
-Example indexes:
-CVII Meridian-70B BF16 Global
-CVII Meridian-70B BF16 EU
-CVII OpenCoder-34B FP8 US
-Use a line chart and methodology card:
-- qualifying providers
-- evidence tier threshold
-- minimum observed volume
-- outlier handling
-Mark values as simulated demo data.
+## Frontend development
 
-MACHINE CREDIT — ROADMAP
-Broader facilities beyond inference:
-data APIs
-tool calls
-other agents
-storage
-compute
-software services
-Show a fictional ResearchBot operating-capital profile:
-monthly revenue
-verified receivables
-credit utilization
-repayment history
-approved merchant categories
-Do not imply a real credit rating agency.
-Show facility classes:
-Inference Facility
-API Facility
-Agent-to-Agent Trade Credit
-Receivables Advance
-
-RECEIPTS
-Create a detailed "Verified Inference Receipt" inspector.
-Fields:
-facility_id
-borrower_id
-provider_id
-execution_profile_digest
-request_digest
-response_digest
-output_token_count
-declared_execution_profile
-evidence_tier
-provider_signature
-completion_timestamp
-XRPL transaction hash
-Show the evidence distinction visually:
-Requested ✓
-Provider-declared and bound ✓
-Loaded artifact measured —
-Physical GPU execution proven —
-Add explanatory text:
-"Credence settles the evidence tier the parties contracted for — no more, no less."
-
-SETTINGS / AUTHORITY
-Show Root Authority:
-Ledger hardware signer
-and Operational Authority:
-ResearchBot-17
-Show facility changes requiring root approval:
-raise limit
-change providers
-change execution profile
-withdraw unrestricted funds
-rotate/revoke agent authority
-Normal in-policy inference purchases should not require hardware confirmation.
-
-VISUAL DESIGN
-High-end fintech / institutional markets aesthetic.
-Dark charcoal / near-black background with crisp white typography and restrained electric accents.
-Think institutional trading terminal + modern AI infrastructure company, not crypto casino.
-Avoid excessive gradients, neon, or meme crypto visuals.
-Dense but clean data UI.
-Use cards, tables, tiny sparklines, status chips, metric blocks, and elegant charts.
-Desktop-first but responsive.
-Use realistic names and numbers but all demo data must be visibly marked "Simulated" where appropriate.
-
-HOME HERO
-Credence
-Financial markets for machine intelligence.
-"Finance verified inference for autonomous agents."
-Buttons:
-Explore Market
-View Credit Facility
-Inspect Receipt
-
-Add a compact explanatory section:
-Open models made model artifacts portable.
-Credence makes inference contractible, financeable, and auditable across providers.
-
-XRPL ROLE
-Surface XRPL throughout:
-credit/loan state
-settlement
-account identity
-facility transaction references
-Do not pretend XRPL natively enforces application-level provider/model/amount rules.
-State that Credence policy + co-signing enforces application-level terms before settlement.
-
-TECHNICAL CLARITY
-Use the term Kessai serialization for request canonicalization/binding.
-Do not call it UOR-ADDR.
-Evidence Tier 2 means provider-declared and bound, not proof of physical execution.
-Tier 3 measured-artifact execution is Roadmap.
-
-Seed enough data so every page looks populated and demo-ready.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/307a6bdc-1e63-4463-bff7-e79d2573943f).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+This app uses React, TanStack Start/Router, Vite, TypeScript and Tailwind. Use Bun with the committed lockfile:
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+git clone https://github.com/maurathat/creds-for-ai.git
+cd creds-for-ai
+bun install --frozen-lockfile
+bun run dev
 ```
+
+Other available commands:
+
+```sh
+bun run test
+bun run build
+bun run lint
+```
+
+These commands run this frontend, not the full backend demo. Follow the [backend release guide](https://github.com/maurathat/credence-xrpl/blob/main/release/claw-street/README.md) for the full-stack setup.
+
+Continue development in the [Lovable editor](https://lovable.dev/projects/307a6bdc-1e63-4463-bff7-e79d2573943f). Commits pushed to the connected branch sync to Lovable. Do not force-push, amend or rewrite published history.
