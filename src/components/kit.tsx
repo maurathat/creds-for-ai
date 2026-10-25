@@ -105,7 +105,7 @@ export function Panel({
   return (
     <section className={cn("panel flex flex-col", className)}>
       {(title || right) && (
-        <div className="flex items-start justify-between gap-3 border-b border-border px-5 py-3.5">
+        <div className="flex min-w-0 items-start justify-between gap-3 border-b border-border px-5 py-3.5">
           <div>
             {title && <h2 className="text-sm font-semibold text-foreground">{title}</h2>}
             {subtitle && <p className="mt-1 text-xs text-muted-foreground">{subtitle}</p>}
